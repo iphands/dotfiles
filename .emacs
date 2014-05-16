@@ -1,5 +1,6 @@
 ;;2205;0cB1;2205;0c;; .emacs
 
+;; (byte-recompile-directory (expand-file-name "~/.emacs.d") 0)
 (setq-default show-trailing-whitespace t)
 
 (add-to-list 'load-path "~/.emacs.d/")
