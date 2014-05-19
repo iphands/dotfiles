@@ -9,3 +9,8 @@ do
 	ln -sf $PWD/${var} ~/
 done
 
+if [ ! -f /etc/profile.d/git-prompt.sh ]
+then
+	echo "# ln -s /usr/share/git-core/contrib/completion/git-prompt.sh  /etc/profile.d/"
+fi
+
