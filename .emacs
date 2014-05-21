@@ -109,3 +109,13 @@
 
 ;; ~/.emacs.d/elpa/yasnippet-bundle-0.6.1
 ;; (delq 'ac-source-yasnippet ac-sources)
+
+(setq flymake-gui-warnings-enabled nil)
+(custom-set-variables
+ '(help-at-pt-timer-delay 0.9)
+ '(help-at-pt-display-when-idle '(flymake-overlay)))
+
+(add-hook 'js3-mode-hook
+		  (lambda()
+			(flymake-jslint-load)))
+
