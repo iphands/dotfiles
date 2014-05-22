@@ -4,7 +4,7 @@
 
 ;; Author: Lucas Bonnet <lucas@rincevent.net>
 ;; Keywords: lisp,convenience
-;; Version: 20140515.750
+;; Version: 20140522.58
 ;; X-Original-Version: 0.5
 ;; URL : https://github.com/lukhas/buffer-move
 
@@ -67,6 +67,7 @@
 
 (require 'windmove)
 
+;;;###autoload
 (defun buf-move-up ()
   "Swap the current buffer and the buffer above the split.
 If there is no split, ie now window above the current one, an
@@ -84,6 +85,7 @@ error is signaled."
       (set-window-buffer other-win buf-this-buf)
       (select-window other-win))))
 
+;;;###autoload
 (defun buf-move-down ()
 "Swap the current buffer and the buffer under the split.
 If there is no split, ie now window under the current one, an
@@ -100,6 +102,7 @@ error is signaled."
       (set-window-buffer other-win buf-this-buf)
       (select-window other-win))))
 
+;;;###autoload
 (defun buf-move-left ()
 "Swap the current buffer and the buffer on the left of the split.
 If there is no split, ie now window on the left of the current
@@ -115,6 +118,7 @@ one, an error is signaled."
       (set-window-buffer other-win buf-this-buf)
       (select-window other-win))))
 
+;;;###autoload
 (defun buf-move-right ()
 "Swap the current buffer and the buffer on the right of the split.
 If there is no split, ie now window on the right of the current

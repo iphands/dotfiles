@@ -83,14 +83,15 @@
 (ido-mode 1)
 (global-linum-mode 1)
 (global-highline-mode 1)
-(global-auto-complete-mode 1)
+(auto-complete-mode 1)
 ;; (crosshairs-mode 1)
 
 (setq linum-format "%4d \u2502 ")
 
 ;; colors
 (set-face-foreground 'minibuffer-prompt "light sky blue")
-;; (color-theme-initialize)
+(color-theme-initialize)
+;; (load-theme 'hober t)
 ;; (setq color-theme-is-global t)
 
 
@@ -112,10 +113,11 @@
 
 (setq flymake-gui-warnings-enabled nil)
 (custom-set-variables
- '(help-at-pt-timer-delay 0.9)
+ '(help-at-pt-timer-delay 1.5)
  '(help-at-pt-display-when-idle '(flymake-overlay)))
 
 (add-hook 'js3-mode-hook
 		  (lambda()
+			(auto-complete-mode)
 			(flymake-jslint-load)))
 
