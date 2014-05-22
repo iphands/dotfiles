@@ -3,7 +3,7 @@
 current="$HOME/.dotfiles_backup/`date +%Y%m%d%H%M%S`"
 mkdir -p $current
 
-for var in ".emacs" ".emacs.d" ".bashrc" ".bash_profile"
+for var in ".emacs" ".emacs.d" ".bashrc" ".bash_profile" ".Xdefaults"
 do
 	cp -Hr ~/${var} $current
 	ln -sf $PWD/${var} ~/
