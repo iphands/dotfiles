@@ -122,3 +122,7 @@
 			(auto-complete-mode)
 			(flymake-jslint-load)))
 
+(add-hook 'python-mode-hook
+		  (lambda()
+			(auto-complete-mode)))
+
