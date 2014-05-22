@@ -27,6 +27,9 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(custom-safe-themes (quote ("e24180589c0267df991cf54bf1a795c07d00b24169206106624bb844292807b9" "c4e6fe8f5728a5d5fd0e92538f68c3b4e8b218bcfb5e07d8afff8731cc5f3df0" "42ac06835f95bc0a734c21c61aeca4286ddd881793364b4e9bc2e7bb8b6cf848" default)))
+ '(help-at-pt-display-when-idle (quote (flymake-overlay)) nil (help-at-pt))
+ '(help-at-pt-timer-delay 1.5)
  '(inhibit-startup-screen t)
  '(js2-basic-offset 4)
  '(js2-bounce-indent-p t)
@@ -69,7 +72,6 @@
 ;(require 'flymake-jslint)
 ;(add-hook 'js2-mode-hook
 ;		    (lambda () (flymake-mode t)))
-
 (setq line-number-mode t)
 (setq column-number-mode t)
 (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
@@ -84,14 +86,15 @@
 (global-linum-mode 1)
 (global-highline-mode 1)
 (auto-complete-mode 1)
+(show-paren-mode 1)
 ;; (crosshairs-mode 1)
 
 (setq linum-format "%4d \u2502 ")
 
 ;; colors
 (set-face-foreground 'minibuffer-prompt "light sky blue")
-(color-theme-initialize)
-;; (load-theme 'hober t)
+;; (color-theme-initialize)
+(load-theme 'wombat t)
 ;; (setq color-theme-is-global t)
 
 
@@ -112,9 +115,7 @@
 ;; (delq 'ac-source-yasnippet ac-sources)
 
 (setq flymake-gui-warnings-enabled nil)
-(custom-set-variables
- '(help-at-pt-timer-delay 1.5)
- '(help-at-pt-display-when-idle '(flymake-overlay)))
+
 
 (add-hook 'js3-mode-hook
 		  (lambda()
