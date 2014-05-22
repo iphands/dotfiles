@@ -126,3 +126,18 @@
 		  (lambda()
 			(auto-complete-mode)))
 
+(custom-set-variables
+  '(eclim-eclipse-dirs '("~/eclipse"))
+  '(eclim-executable "~/eclipse/eclim"))
+
+(require 'cl)
+
+;; regular auto-complete initialization
+(require 'auto-complete-config)
+(ac-config-default)
+
+;; add the emacs-eclim source
+(require 'ac-emacs-eclim-source)
+(ac-emacs-eclim-config)
+
+
