@@ -34,6 +34,7 @@
  '(js2-basic-offset 4)
  '(js2-bounce-indent-p t)
  '(js3-indent-level 4))
+(setq js3-consistent-level-indent-inner-bracket t)
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
