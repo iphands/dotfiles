@@ -10,8 +10,11 @@ fi
 
 # User specific aliases and functions
 
-EDITOR='/usr/bin/emacs -nw'
 HISTSIZE=100000
+export HISTSIZE
+
+HISTFILESIZE=$HISTSIZE
+export HISTFILESIZE
 
 # User specific aliases and functions
 alias less='less -iX'
