@@ -3,7 +3,7 @@
 ;; (byte-recompile-directory (expand-file-name "~/.emacs.d") 0)
 (setq-default show-trailing-whitespace t)
 
-(add-to-list 'load-path "~/.emacs.d/")
+(add-to-list 'load-path "~/.emacs.d/lisp")
 
 ;;; uncomment this line to disable loading of "default.el" at startup
 ;; (setq inhibit-default-init t)
@@ -64,6 +64,8 @@
 (global-set-key (kbd "<f5>") 'compile)
 (global-set-key "\C-x\\" 'delete-trailing-whitespace)
 
+
+(add-to-list 'auto-mode-alist '("\\.scss\\'" . sass-mode))
 
 ;;(load "drupal-mode")
 ;;(add-to-list 'auto-mode-alist '("\\.\\(module\\|test\\|install\\|theme\\)$" . drupal-mode))
