@@ -1,16 +1,9 @@
 ;;; tabbar-autoloads.el --- automatically extracted autoloads
 ;;
 ;;; Code:
-
+(add-to-list 'load-path (or (file-name-directory #$) (car load-path)))
 
-;;;### (autoloads (tabbar-mwheel-mode tabbar-mode tabbar-local-mode
-;;;;;;  tabbar-mwheel-switch-group tabbar-mwheel-switch-tab tabbar-mwheel-forward-tab
-;;;;;;  tabbar-mwheel-backward-tab tabbar-mwheel-forward-group tabbar-mwheel-backward-group
-;;;;;;  tabbar-mwheel-forward tabbar-mwheel-backward tabbar-press-scroll-right
-;;;;;;  tabbar-press-scroll-left tabbar-press-home tabbar-forward-tab
-;;;;;;  tabbar-backward-tab tabbar-forward-group tabbar-backward-group
-;;;;;;  tabbar-forward tabbar-backward) "tabbar" "tabbar.el" (21374
-;;;;;;  28427 878317 180000))
+;;;### (autoloads nil "tabbar" "tabbar.el" (21612 50129 973163 296000))
 ;;; Generated autoloads from tabbar.el
 
 (autoload 'tabbar-backward "tabbar" "\
@@ -172,15 +165,13 @@ Returns non-nil if the new state is enabled.
 
 ;;;***
 
-;;;### (autoloads nil nil ("tabbar-pkg.el") (21374 28427 925223 504000))
+;;;### (autoloads nil nil ("tabbar-pkg.el") (21612 50130 25337 513000))
 
 ;;;***
 
-(provide 'tabbar-autoloads)
 ;; Local Variables:
 ;; version-control: never
 ;; no-byte-compile: t
 ;; no-update-autoloads: t
-;; coding: utf-8
 ;; End:
 ;;; tabbar-autoloads.el ends here

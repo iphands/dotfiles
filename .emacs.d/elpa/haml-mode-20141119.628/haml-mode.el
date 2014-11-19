@@ -5,7 +5,7 @@
 ;; Author: Nathan Weizenbaum
 ;; URL: http://github.com/nex3/haml/tree/master
 ;; Package-Requires: ((ruby-mode "1.0"))
-;; Version: 20140807.222
+;; Version: 20141119.628
 ;; X-Original-Version: DEV
 ;; Created: 2007-03-08
 ;; By: Nathan Weizenbaum
@@ -238,7 +238,7 @@ END.")
   "Regexp to match trailing ruby code which may continue onto subsequent lines.")
 
 (defconst haml-ruby-script-re
-  (concat "^[ \t]*\\(-\\|[&!]?[=~]\\)" haml-possibly-multiline-code-re)
+  (concat "^[ \t]*\\(-\\|[&!]?\\(?:=\\|~\\)\\)[^=]" haml-possibly-multiline-code-re)
   "Regexp to match -, = or ~ blocks and any continued code lines.")
 
 (defun haml-highlight-ruby-script (limit)
@@ -503,6 +503,8 @@ changes in the initial region."
   (set (make-local-variable 'parse-sexp-lookup-properties) t)
   (set (make-local-variable 'comment-start) "-#")
   (setq font-lock-defaults '((haml-font-lock-keywords) t t))
+  (when (boundp 'electric-indent-inhibit)
+    (setq electric-indent-inhibit t))
   (setq indent-tabs-mode nil))
 
 ;; Useful functions

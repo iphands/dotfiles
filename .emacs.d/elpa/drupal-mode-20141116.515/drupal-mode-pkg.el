@@ -1,4 +1,4 @@
-(define-package "drupal-mode" "20140916.1406" "Advanced minor mode for Drupal development"
+(define-package "drupal-mode" "20141116.515" "Advanced minor mode for Drupal development"
   '((php-mode "1.5.0"))
   :url "https://github.com/arnested/drupal-mode" :keywords
   '("programming" "php" "drupal"))

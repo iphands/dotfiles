@@ -1,12 +1,10 @@
 ;;; drupal-mode-autoloads.el --- automatically extracted autoloads
 ;;
 ;;; Code:
-
+(add-to-list 'load-path (or (file-name-directory #$) (car load-path)))
 
-;;;### (autoloads (drupal-mode-bootstrap drupal-mode drupal-other-modes
-;;;;;;  drupal-info-modes drupal-js-modes drupal-css-modes drupal-php-modes
-;;;;;;  drupal-drush-program) "drupal-mode" "drupal-mode.el" (21556
-;;;;;;  27744 840905 168000))
+;;;### (autoloads nil "drupal-mode" "drupal-mode.el" (21612 50130
+;;;;;;  909154 496000))
 ;;; Generated autoloads from drupal-mode.el
 
 (put 'drupal-search-url 'safe-local-variable 'string-or-null-p)
@@ -49,6 +47,14 @@ Advanced minor mode for Drupal development.
 
 \(fn &optional ARG)" t nil)
 
+(autoload 'drupal-tail-drupal-debug-txt "drupal-mode" "\
+Tail drupal_debug.txt.
+If a drupal_debug.txt exists in the sites temporary directory
+visit it and enable `auto-revert-tail-mode' in the visiting
+buffer.
+
+\(fn)" t nil)
+
 (autoload 'drupal-mode-bootstrap "drupal-mode" "\
 Activate Drupal minor mode if major mode is supported.
 The command will activate `drupal-mode' if the current major mode
@@ -72,8 +78,8 @@ mode-hook.
 
 ;;;***
 
-;;;### (autoloads (drush-make-mode) "drush-make-mode" "drush-make-mode.el"
-;;;;;;  (21556 27744 817905 331000))
+;;;### (autoloads nil "drush-make-mode" "drush-make-mode.el" (21612
+;;;;;;  50130 882154 749000))
 ;;; Generated autoloads from drush-make-mode.el
 
 (autoload 'drush-make-mode "drush-make-mode" "\
@@ -87,16 +93,14 @@ A major mode for editing drush make files.
 
 ;;;***
 
-;;;### (autoloads nil nil ("drupal-mode-pkg.el") (21556 27745 50353
-;;;;;;  82000))
+;;;### (autoloads nil nil ("drupal-mode-pkg.el") (21612 50130 946667
+;;;;;;  936000))
 
 ;;;***
 
-(provide 'drupal-mode-autoloads)
 ;; Local Variables:
 ;; version-control: never
 ;; no-byte-compile: t
 ;; no-update-autoloads: t
-;; coding: utf-8
 ;; End:
 ;;; drupal-mode-autoloads.el ends here

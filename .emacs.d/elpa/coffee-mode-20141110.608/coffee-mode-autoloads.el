@@ -1,10 +1,10 @@
 ;;; coffee-mode-autoloads.el --- automatically extracted autoloads
 ;;
 ;;; Code:
-
+(add-to-list 'load-path (or (file-name-directory #$) (car load-path)))
 
-;;;### (autoloads (coffee-mode) "coffee-mode" "coffee-mode.el" (21556
-;;;;;;  27747 16889 711000))
+;;;### (autoloads nil "coffee-mode" "coffee-mode.el" (21612 50132
+;;;;;;  277141 633000))
 ;;; Generated autoloads from coffee-mode.el
 
 (autoload 'coffee-mode "coffee-mode" "\
@@ -24,16 +24,9 @@ Major mode for editing CoffeeScript.
 
 ;;;***
 
-;;;### (autoloads nil nil ("coffee-mode-pkg.el") (21556 27747 55906
-;;;;;;  89000))
-
-;;;***
-
-(provide 'coffee-mode-autoloads)
 ;; Local Variables:
 ;; version-control: never
 ;; no-byte-compile: t
 ;; no-update-autoloads: t
-;; coding: utf-8
 ;; End:
 ;;; coffee-mode-autoloads.el ends here

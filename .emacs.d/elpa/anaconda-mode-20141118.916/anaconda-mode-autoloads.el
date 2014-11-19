@@ -1,10 +1,10 @@
 ;;; anaconda-mode-autoloads.el --- automatically extracted autoloads
 ;;
 ;;; Code:
-
+(add-to-list 'load-path (or (file-name-directory #$) (car load-path)))
 
-;;;### (autoloads (anaconda-mode anaconda-mode-local anaconda-mode-remote)
-;;;;;;  "anaconda-mode" "anaconda-mode.el" (21585 1203 119023 359000))
+;;;### (autoloads nil "anaconda-mode" "anaconda-mode.el" (21612 50133
+;;;;;;  755127 736000))
 ;;; Generated autoloads from anaconda-mode.el
 
 (autoload 'anaconda-mode-remote "anaconda-mode" "\
@@ -26,16 +26,14 @@ Code navigation, documentation lookup and completion for Python.
 
 ;;;***
 
-;;;### (autoloads nil nil ("anaconda-mode-pkg.el") (21585 1203 934921
-;;;;;;  475000))
+;;;### (autoloads nil nil ("anaconda-mode-pkg.el") (21612 50134 599180
+;;;;;;  343000))
 
 ;;;***
 
-(provide 'anaconda-mode-autoloads)
 ;; Local Variables:
 ;; version-control: never
 ;; no-byte-compile: t
 ;; no-update-autoloads: t
-;; coding: utf-8
 ;; End:
 ;;; anaconda-mode-autoloads.el ends here
