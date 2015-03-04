@@ -107,6 +107,12 @@
 (global-set-key (kbd "<C-S-left>")   'buf-move-left)
 (global-set-key (kbd "<C-S-right>")  'buf-move-right)
 
+(global-set-key (kbd "M-[ h") 'beginning-of-line)
+(global-set-key (kbd "M-[ f") 'end-of-line)
+
+;; (global-set-key (kbd "<C-S> y") 'enlarge-window)
+;;(global-set-key (kbd "<C-S> h") 'shrink-window)
+
 ;; (require 'buffer-stack)
 ;; (global-set-key [(backtab)] 'buffer-stack-up)
 
@@ -129,9 +135,9 @@
 		  (lambda()
 			(auto-complete-mode)))
 
-(custom-set-variables
-  '(eclim-eclipse-dirs '("~/eclipse"))
-  '(eclim-executable "~/eclipse/eclim"))
+;;#(custom-set-variables
+;; '(eclim-eclipse-dirs '("~/eclipse"))
+;; '(eclim-executable "~/eclipse/eclim"))
 
 (require 'cl)
 
@@ -140,7 +146,7 @@
 (ac-config-default)
 
 ;; add the emacs-eclim source
-(require 'ac-emacs-eclim-source)
-(ac-emacs-eclim-config)
+;; (require 'ac-emacs-eclim-source)
+;; (ac-emacs-eclim-config)
 
 
