@@ -126,14 +126,14 @@
 (setq flymake-gui-warnings-enabled nil)
 
 
-(add-hook 'js3-mode-hook
-		  (lambda()
-			(auto-complete-mode)
-			(flymake-jslint-load)))
+;; (add-to-list 'load-path "/lib/node_modules/tern/emacs/")
+;; (autoload 'tern-mode "tern.el" nil t)
+;; (add-hook 'js3-mode-hook (lambda () (auto-complete-mode) (flymake-jslint-load) (tern-mode t)))
 
-(add-hook 'python-mode-hook
-		  (lambda()
-			(auto-complete-mode)))
+(add-hook 'js3-mode-hook (lambda () (auto-complete-mode) (flymake-jslint-load)))
+
+
+(add-hook 'python-mode-hook (lambda () (auto-complete-mode)))
 
 ;;#(custom-set-variables
 ;; '(eclim-eclipse-dirs '("~/eclipse"))
