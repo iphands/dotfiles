@@ -21,6 +21,10 @@ alias less='less -iX'
 alias ls='ls --color'
 alias grep='LC_ALL="C" grep --color'
 alias fgrep='LC_ALL="C" fgrep --color'
+alias yum='dnf'
+alias sshnocheck='ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
+alias chode='chown'
+alias gittug='git up'
 
 export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
 export GIT_PS1_SHOWDIRTYSTATE=1
@@ -42,3 +46,5 @@ then
 	. ~/.bashrc_redhat
 fi
 
+
+export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
