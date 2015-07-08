@@ -1,5 +1,14 @@
 ;;2205;0cB1;2205;0c;; .emacs
 
+
+;; BACKUP FILES
+(setq backup-directory-alist `(("." . "~/.saves")))
+(setq backup-by-copying t)
+(setq delete-old-versions t
+	  kept-new-versions 8
+	  kept-old-versions 4
+	  version-control t)
+
 ;; (byte-recompile-directory (expand-file-name "~/.emacs.d") 0)
 (setq-default show-trailing-whitespace t)
 
