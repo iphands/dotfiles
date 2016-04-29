@@ -50,9 +50,9 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(col-highlight ((t (:background "#000022"))))
- '(highline-face ((t (:background "#111111"))))
- '(hl-line ((t (:background "000022")))))
+ '(col-highlight ((t (:background "#202020"))))
+ '(highline-face ((t (:background "#202020"))))
+ '(hl-line ((t (:background "#202020")))))
 
 ;; Turn on tabs
 (setq indent-tabs-mode t)
@@ -86,6 +86,7 @@
 ;		    (lambda () (flymake-mode t)))
 (setq line-number-mode t)
 (setq column-number-mode t)
+; (setq column-highlight-mode t)
 (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
                          ("marmalade" . "http://marmalade-repo.org/packages/")
                          ("melpa" . "http://melpa.org/packages/")))
@@ -99,6 +100,7 @@
 (global-highline-mode 1)
 (auto-complete-mode 1)
 (show-paren-mode 1)
+(column-highlight-mode 1)
 ;; (crosshairs-mode 1)
 
 (setq linum-format "%4d \u2502 ")
