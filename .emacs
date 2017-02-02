@@ -36,14 +36,17 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(custom-safe-themes (quote ("e24180589c0267df991cf54bf1a795c07d00b24169206106624bb844292807b9" "c4e6fe8f5728a5d5fd0e92538f68c3b4e8b218bcfb5e07d8afff8731cc5f3df0" "42ac06835f95bc0a734c21c61aeca4286ddd881793364b4e9bc2e7bb8b6cf848" default)))
+ '(custom-safe-themes
+   (quote
+	("e24180589c0267df991cf54bf1a795c07d00b24169206106624bb844292807b9" "c4e6fe8f5728a5d5fd0e92538f68c3b4e8b218bcfb5e07d8afff8731cc5f3df0" "42ac06835f95bc0a734c21c61aeca4286ddd881793364b4e9bc2e7bb8b6cf848" default)))
  '(help-at-pt-display-when-idle (quote (flymake-overlay)) nil (help-at-pt))
  '(help-at-pt-timer-delay 1.5)
  '(inhibit-startup-screen t)
  '(js2-basic-offset 4)
  '(js2-bounce-indent-p t)
- '(js3-indent-level 4))
-(setq js3-consistent-level-indent-inner-bracket t)
+ '(package-selected-packages
+   (quote
+	(flymake-json flymake-jshint exec-path-from-shell web-mode json-mode ac-js2 discover-js2-refactor js2-highlight-vars js2-mode js2-refactor xref-js2 toml toml-mode cargo flycheck-rust racer rust-mode ac-php-core magit magit-filenotify magit-find-file egg yaml-mode windresize win-switch whole-line-or-region ujelly-theme twilight-theme textmate-to-yas tabbar sws-mode smooth-scrolling smooth-scroll simple-httpd shell-pop sass-mode ruby-compilation ruby-block python-environment puppetfile-mode puppet-mode php-extras php+-mode phi-rectangle nginx-mode neotree multiple-cursors move-text minimap markdown-mode+ lua-mode lineno less-css-mode jump json-rpc jade-mode igrep hl-line+ highline flymake-puppet flymake-cursor find-file-in-project epc emacs-eclim drupal-mode dockerfile-mode color-theme-railscasts color-theme-heroku color-theme-gruber-darker color-theme-github col-highlight coffee-mode buffer-stack buffer-move blank-mode birds-of-paradise-plus-theme auto-complete anaconda-mode 2048-game))))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -55,8 +58,9 @@
  '(hl-line ((t (:background "#202020")))))
 
 ;; Turn on tabs
-(setq indent-tabs-mode t)
-(setq-default indent-tabs-mode t)
+;; (setq indent-tabs-mode t)
+;; (setq-default indent-tabs-mode t)
+(setq-default indent-tabs-mode nil)
 
 
 ;; Bind the TAB key
@@ -140,13 +144,12 @@
 ;; (add-to-list 'load-path "/lib/node_modules/tern/emacs/")
 ;; (autoload 'tern-mode "tern.el" nil t)
 ;; (add-hook 'js3-mode-hook (lambda () (auto-complete-mode) (flymake-jslint-load) (tern-mode t)))
-
-(add-hook 'js3-mode-hook (lambda () (auto-complete-mode) (flymake-jslint-load)))
-
-
+;; (add-hook 'js3-mode-hook (lambda () (auto-complete-mode) (flymake-jslint-load)))
 (add-hook 'python-mode-hook (lambda () (auto-complete-mode)))
 
-;;#(custom-set-variables
+
+
+;; (custom-set-variables
 ;; '(eclim-eclipse-dirs '("~/eclipse"))
 ;; '(eclim-executable "~/eclipse/eclim"))
 
@@ -160,4 +163,46 @@
 ;; (require 'ac-emacs-eclim-source)
 ;; (ac-emacs-eclim-config)
 
+;; use web-mode for .jsx files
+(add-to-list 'auto-mode-alist '("\\.jsx$" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
+
+;; http://www.flycheck.org/manual/latest/index.html
+(require 'flycheck)
+
+;; turn on flychecking globally
+(add-hook 'after-init-hook #'global-flycheck-mode)
+
+;; disable jshint since we prefer eslint checking
+(setq-default flycheck-disabled-checkers
+  (append flycheck-disabled-checkers
+    '(javascript-jshint)))
+
+;; use eslint with web-mode for jsx files
+(flycheck-add-mode 'javascript-eslint 'web-mode)
+
+;; customize flycheck temp file prefix
+(setq-default flycheck-temp-prefix ".flycheck")
+
+;; disable json-jsonlist checking for json files
+(setq-default flycheck-disabled-checkers
+  (append flycheck-disabled-checkers
+    '(json-jsonlist)))
+
+;; for better jsx syntax-highlighting in web-mode
+;; - courtesy of Patrick @halbtuerke
+(defadvice web-mode-highlight-part (around tweak-jsx activate)
+  (if (equal web-mode-content-type "jsx")
+    (let ((web-mode-enable-part-face nil))
+      ad-do-it)
+    ad-do-it))
+
+;; adjust indents for web-mode to 2 spaces
+(defun my-web-mode-hook ()
+  "Hooks for Web mode. Adjust indents"
+  ;;; http://web-mode.org/
+  (setq web-mode-markup-indent-offset 2)
+  (setq web-mode-css-indent-offset 2)
+  (setq web-mode-code-indent-offset 2))
+(add-hook 'web-mode-hook  'my-web-mode-hook)
 

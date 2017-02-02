@@ -48,3 +48,5 @@ fi
 
 
 export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
+export PATH="$PATH:/usr/local/cuda-8.0/bin"
+
