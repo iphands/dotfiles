@@ -1,13 +1,17 @@
-;;2205;0cB1;2205;0c;; .emacs
+;;; package --- Summary
+;;; Commentary:
 
-
+;;; Code:
 ;; BACKUP FILES
-(setq backup-directory-alist `(("." . "~/.saves")))
-(setq backup-by-copying t)
-(setq delete-old-versions t
-	  kept-new-versions 8
-	  kept-old-versions 4
-	  version-control t)
+(setq make-backup-files nil)
+(setq auto-save-default nil)
+
+;; (setq backup-directory-alist `(("." . "~/.saves")))
+;; (setq backup-by-copying t)
+;; (setq delete-old-versions t
+;; 	  kept-new-versions 8
+;; 	  kept-old-versions 4
+;; 	  version-control t)
 
 ;; (byte-recompile-directory (expand-file-name "~/.emacs.d") 0)
 (setq-default show-trailing-whitespace t)
@@ -38,7 +42,7 @@
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
    (quote
-	("e24180589c0267df991cf54bf1a795c07d00b24169206106624bb844292807b9" "c4e6fe8f5728a5d5fd0e92538f68c3b4e8b218bcfb5e07d8afff8731cc5f3df0" "42ac06835f95bc0a734c21c61aeca4286ddd881793364b4e9bc2e7bb8b6cf848" default)))
+    ("e24180589c0267df991cf54bf1a795c07d00b24169206106624bb844292807b9" "c4e6fe8f5728a5d5fd0e92538f68c3b4e8b218bcfb5e07d8afff8731cc5f3df0" "42ac06835f95bc0a734c21c61aeca4286ddd881793364b4e9bc2e7bb8b6cf848" default)))
  '(help-at-pt-display-when-idle (quote (flymake-overlay)) nil (help-at-pt))
  '(help-at-pt-timer-delay 1.5)
  '(inhibit-startup-screen t)
@@ -46,7 +50,7 @@
  '(js2-bounce-indent-p t)
  '(package-selected-packages
    (quote
-	(flymake-json flymake-jshint exec-path-from-shell web-mode json-mode ac-js2 discover-js2-refactor js2-highlight-vars js2-mode js2-refactor xref-js2 toml toml-mode cargo flycheck-rust racer rust-mode ac-php-core magit magit-filenotify magit-find-file egg yaml-mode windresize win-switch whole-line-or-region ujelly-theme twilight-theme textmate-to-yas tabbar sws-mode smooth-scrolling smooth-scroll simple-httpd shell-pop sass-mode ruby-compilation ruby-block python-environment puppetfile-mode puppet-mode php-extras php+-mode phi-rectangle nginx-mode neotree multiple-cursors move-text minimap markdown-mode+ lua-mode lineno less-css-mode jump json-rpc jade-mode igrep hl-line+ highline flymake-puppet flymake-cursor find-file-in-project epc emacs-eclim drupal-mode dockerfile-mode color-theme-railscasts color-theme-heroku color-theme-gruber-darker color-theme-github col-highlight coffee-mode buffer-stack buffer-move blank-mode birds-of-paradise-plus-theme auto-complete anaconda-mode 2048-game))))
+    (groovy-mode flymake-json flymake-jshint exec-path-from-shell web-mode json-mode ac-js2 discover-js2-refactor js2-highlight-vars js2-mode js2-refactor xref-js2 toml toml-mode cargo flycheck-rust racer rust-mode ac-php-core magit magit-filenotify magit-find-file egg yaml-mode windresize win-switch whole-line-or-region ujelly-theme twilight-theme textmate-to-yas tabbar sws-mode smooth-scrolling smooth-scroll simple-httpd shell-pop sass-mode ruby-compilation ruby-block python-environment puppetfile-mode puppet-mode php-extras php+-mode phi-rectangle nginx-mode neotree multiple-cursors move-text minimap markdown-mode+ lua-mode lineno less-css-mode jump json-rpc jade-mode igrep hl-line+ highline flymake-puppet flymake-cursor find-file-in-project epc emacs-eclim drupal-mode dockerfile-mode color-theme-railscasts color-theme-heroku color-theme-gruber-darker color-theme-github col-highlight coffee-mode buffer-stack buffer-move blank-mode birds-of-paradise-plus-theme auto-complete anaconda-mode 2048-game))))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -206,3 +210,8 @@
   (setq web-mode-code-indent-offset 2))
 (add-hook 'web-mode-hook  'my-web-mode-hook)
 
+
+(add-to-list 'auto-mode-alist '("Jenkinsfile" . groovy-mode))
+(add-to-list 'auto-mode-alist '("\\.jenkinsfile\\'" . groovy-mode))
+
+;;; .emacs ends here
