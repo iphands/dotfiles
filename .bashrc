@@ -26,7 +26,7 @@ alias sshnocheck='ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=n
 alias chode='chown'
 alias gittug='git up'
 
-export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
+# export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
 export GIT_PS1_SHOWDIRTYSTATE=1
 export GIT_PS1_SHOWSTASHSTATE=1
 export GIT_PS1_SHOWUNTRACKEDFILES=1
@@ -47,6 +47,5 @@ then
 fi
 
 
-export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
 export PATH="$PATH:/usr/local/cuda-8.0/bin"
 
