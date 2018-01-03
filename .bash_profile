@@ -1,7 +1,8 @@
 # .bash_profile
 
 # Get the aliases and functions
-if [ -f ~/.bashrc ]; then
+if [ -f ~/.bashrc ]
+then
 	. ~/.bashrc
 fi
 
@@ -13,6 +14,9 @@ export PATH
 EDITOR='/usr/bin/emacs -nw'
 export EDITOR
 
-source ~/.profile
+if [ -f ~/.profile]
+then
+    source ~/.profile
+fi
 
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
