@@ -2,7 +2,7 @@
 
 # Source global definitions
 if [ -f /etc/bashrc ]; then
-	. /etc/bashrc
+    . /etc/bashrc
 fi
 
 # Uncomment the following line if you don't like systemctl's auto-paging feature:
@@ -24,12 +24,14 @@ alias fgrep='LC_ALL="C" fgrep --color'
 alias yum='dnf'
 alias sshnocheck='ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
 alias chode='chown'
-alias gittug='git up'
+alias git-tug='git pull && git pull --rebase'
+alias term='konsole'
 
 # export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
 export GIT_PS1_SHOWDIRTYSTATE=1
 export GIT_PS1_SHOWSTASHSTATE=1
 export GIT_PS1_SHOWUNTRACKEDFILES=1
+source /usr/local/share/git-prompt.sh
 
 if [ $UID -eq 0 ]
 then
@@ -43,9 +45,12 @@ fi
 # source files for work
 if [ -f ~/.bashrc_redhat ]
 then
-	. ~/.bashrc_redhat
+    . ~/.bashrc_redhat
 fi
 
 
 export PATH="$PATH:/usr/local/cuda-8.0/bin"
+export OLDHOME=/mnt/myth/bak/cosmo/cosmo/home/current/home/iphands
+export OLDROOT=/mnt/myth/bak/cosmo/cosmo/rootfs/current/rootfs
+
 
