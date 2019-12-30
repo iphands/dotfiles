@@ -2,16 +2,43 @@
 
 ;; ----- ido-last-directory-list -----
 (
+ ("/mnt/nas/bak/games/q2/" . "baseq2/")
+ ("/home/iphands/prog/cloud/e2e-deploy/buildfactory/" . "advisor/")
+ ("/home/iphands/prog/rhv-scripts/" . "ansible/")
+ ("/home/iphands/prog/rhv-scripts/ansible/" . "inventories/")
+ ("/home/iphands/prog/cloud/" . "entitlements-api-go/")
+ ("/home/iphands/prog/cloud/entitlements-api-go/" . "types/")
+ ("/home/iphands/go/src/github.com/RedHatInsights/platform-go-middlewares/" . "identity/")
+ ("/home/iphands/go/src/github.com/RedHatInsights/" . "platform-go-middlewares/")
+ ("/home/iphands/go/src/github.com/" . "RedHatInsights/")
+ ("/home/iphands/go/src/cloud.redhat.com/" . "entitlements/")
+ ("/home/iphands/go/src/" . "cloud.redhat.com/")
+ ("/home/iphands/prog/insights/entitlements-api/src/middleware/" . "identity/")
+ ("/home/iphands/prog/insights/entitlements-api/" . "src/")
+ ("/home/iphands/go/src/cloud.redhat.com/entitlements/" . "types/")
+ ("/home/iphands/prog/insights/inventory-frontend/src/components/" . "inventory/")
+ ("/home/iphands/prog/insights/inventory-frontend/src/" . "store/")
+ ("/home/iphands/prog/insights/inventory-frontend/" . "src/")
+ ("/home/iphands/prog/insights/landing-page/src/components/" . "marketing/")
+ ("/home/iphands/prog/insights/chrome/src/pug/" . "templates/")
+ ("/tmp/" . "gedit-drop-KUAA1Z/")
+ ("/home/iphands/prog/insights/entitlements-api/src/" . "util/")
+ ("/home/iphands/prog/insights/landing-page/src/" . "layout/")
+ ("/home/iphands/prog/insights/chrome/node_modules/uri-js/dist/" . "esnext/")
+ ("/home/iphands/prog/insights/chrome/node_modules/urijs/" . "src/")
+ ("/home/iphands/prog/insights/chrome/node_modules/uri-js/" . "dist/")
+ ("/home/iphands/prog/insights/chrome/src/js/jwt/insights/" . "__mocks__/")
+ ("/home/iphands/prog/fakamai/assets-puller/" . "src/")
  ("/home/iphands/prog/insights/advisor-frontend/src/" . "Utilities/")
  ("/home/iphands/prog/insights/advisor-frontend/" . "src/")
  ("/home/iphands/prog/insights/remediations-frontend/" . "src/")
- ("/home/iphands/prog/insights/akamai-smoke-test/" . "data/")
+ ("/home/iphands/prog/insights/akamai-smoke-test/" . "tests/")
  ("/home/iphands/prog/insights/chrome/src/js/jwt/" . "insights/")
  ("/home/iphands/prog/fakamai/assets-server/" . "conf/")
  ("/home/iphands/prog/insights/starter-app/src/PresentationalComponents/" . "SampleComponent/")
  ("/home/iphands/prog/insights/starter-app/src/" . "Utilities/")
  ("/home/iphands/prog/insights/tower-analytics-frontend/" . "src/")
- ("/home/iphands/prog/insights/landing-page/" . "config/")
+ ("/home/iphands/prog/insights/landing-page/" . "proxy-config/")
  ("/home/iphands/prog/fakamai/assets-poller/" . "src/")
  ("/home/iphands/prog/fakamai-assets/" . "src/")
  ("/home/iphands/prog/air-drupal/modules/addtocalendar/" . "includes/")
@@ -85,7 +112,7 @@
  ("/mnt/myth/bak/cosmo/cosmo/home/current/home/iphands/prog/insights/node-auth/lib/auth/" . "mechanisms/")
  ("/mnt/myth/bak/cosmo/cosmo/home/current/home/iphands/prog/insights/node-auth/lib/" . "auth/")
  ("/mnt/myth/bak/cosmo/cosmo/home/current/home/iphands/prog/insights/node-auth/" . "lib/")
- ("/home/iphands/prog/insights/dashboard/" . "config/")
+ ("/home/iphands/prog/insights/dashboard/" . "src/")
  ("/home/iphands/prog/deeplearn/src/agents/" . "__pycache__/")
  ("/home/iphands/prog/deeplearn/deeplearnvenv/lib/python3.6/site-packages/keras/" . "engine/")
  ("/home/iphands/prog/deeplearn/deeplearnvenv/lib/python3.6/" . "site-packages/")
@@ -111,7 +138,7 @@
  ("/home/iphands/prog/insights/apibak/" . "config/")
  ("/home/iphands/prog/insights/apibak/api/" . "phxproxy/")
  ("/home/iphands/prog/insights/api/components/" . "logger/")
- ("/home/iphands/prog/insights/chrome/" . "src/")
+ ("/home/iphands/prog/insights/chrome/" . "node_modules/")
  ("/home/iphands/prog/insights/proxy/" . "scripts/")
  ("/home/iphands/prog/insights/turbo-octo-couscous/insightsproxy/" . "config/")
  ("/home/iphands/prog/nodesi/" . "test/")
@@ -127,7 +154,7 @@
  ("/home/iphands/prog/insights/mnm/bin/mnm/" . "cert-test/")
  ("/home/iphands/prog/insights/frontend/node_modules/browserify/" . "bin/")
  ("/home/iphands/prog/insights/api/api/" . "system/")
- ("/home/iphands/prog/lsah/" . "js/")
+ ("/home/iphands/prog/lsah/" . "data/")
  ("/home/iphands/Downloads/startbootstrap-scrolling-nav-gh-pages/" . "data/")
  ("/home/iphands/prog/insights/api/config/" . "environment/")
  ("/home/iphands/prog/insights/frontend/app/js/states/getting-started/" . "views/")
@@ -162,8 +189,8 @@
  ("/home/iphands/prog/fakamai/" . "assets-poller/")
  ("/home/iphands/prog/insights/api/node_modules/insights-node-auth/lib/auth/" . "mechanisms/")
  ("/home/iphands/prog/insights/frontend/node_modules/jwt-redhat/" . "dist/")
- ("/home/iphands/" . "bin/")
- ("/home/iphands/prog/" . "fakamai-assets/")
+ ("/home/iphands/" . "Downloads/")
+ ("/home/iphands/prog/" . "lsah/")
  ("/home/iphands/prog/insights/build/frontend/" . "scripts/")
  ("/home/iphands/prog/insights/frontend/app/js/states/hidden/" . "components/")
  ("/home/iphands/prog/insights/node-auth/lib/auth/" . "mechanisms/")
@@ -186,273 +213,273 @@
 
 ;; ----- ido-work-directory-list -----
 (
- "/home/iphands/prog/insights/akamai-smoke-test/data/"
- "/home/iphands/prog/insights/akamai-smoke-test/tests/"
- "/home/iphands/prog/insights/akamai-smoke-test/"
- "/home/iphands/prog/insights/akamai-smoke-test/test/"
- "/home/iphands/prog/insights/advisor-frontend/profiles/"
- "/home/iphands/prog/insights/advisor-frontend/"
- "/home/iphands/prog/insights/advisor-frontend/src/"
- "/home/iphands/prog/insights/advisor-frontend/src/Utilities/"
- "/home/iphands/prog/insights/chrome/src/js/jwt/"
- "/home/iphands/prog/insights/chrome/src/js/App/Sidenav/"
- "/home/iphands/prog/insights/advisor-frontend/config/"
- "/home/iphands/prog/insights/remediations-frontend/src/"
- "/home/iphands/prog/insights/starter-app/src/"
- "/home/iphands/prog/insights/proxy/scripts/"
- "/home/iphands/prog/insights/dashboard/config/"
- "/home/iphands/prog/insights/dashboard/src/SmartComponents/Cards/"
- "/home/iphands/prog/insights/dashboard/src/"
- "/home/iphands/prog/insights/dashboard/profiles/"
- "/home/iphands/prog/insights/chrome/src/js/jwt/insights/"
- "/home/iphands/prog/insights/chrome/src/js/"
- "/home/iphands/prog/insights/dashboard/.travis/"
- "/home/iphands/prog/fakamai/assets-puller/"
- "/home/iphands/prog/fakamai/assets-puller/src/"
- "/home/iphands/prog/fakamai/fakamai/"
- "/home/iphands/prog/fakamai/assets-server/conf/"
- "/home/iphands/prog/insights/start-app/src/"
- "/home/iphands/prog/insights/starter-app/profiles/"
- "/home/iphands/prog/insights/starter-app/"
- "/home/iphands/prog/insights/starter-app/src/Utilities/"
- "/home/iphands/prog/insights/starter-app/src/PresentationalComponents/SampleComponent/"
- "/home/iphands/prog/insights/starter-app/config/"
+ "/mnt/nas/bak/games/q2/baseq2/"
+ "/mnt/nas/bak/games/q2/3zb2/"
  "/home/iphands/prog/tray/src/"
- "/home/iphands/shotwell/"
- "/home/iphands/prog/insights/starter-app/proxy-configs/"
- "/home/iphands/prog/insights/start-app/"
- "/home/iphands/prog/insights/proxy/"
- "/home/iphands/prog/insights/tower-analytics-frontend/config/"
- "/home/iphands/prog/insights/tower-analytics-frontend/"
- "/home/iphands/prog/insights/tower-analytics-frontend/src/"
+ "/home/iphands/docker/quake2/"
+ "/home/iphands/"
+ "/home/iphands/prog/lsah/data/"
  "/home/iphands/prog/lsah/"
  "/home/iphands/prog/lsah/js/"
- "/home/iphands/prog/insights/dashboard/"
- "/home/iphands/prog/insights/dashboard/proxy/"
- "/home/iphands/prog/insights/landing-page/config/"
+ "/home/iphands/prog/lsah/sass/"
+ "/home/iphands/prog/lsah/css/"
+ "/home/iphands/prog/fakamai/fakamai/"
+ "/home/iphands/prog/insights/chrome/node_modules/keycloak-js/dist/"
+ "/home/iphands/prog/insights/chrome/src/js/jwt/"
+ "/home/iphands/prog/rhv-scripts/ansible/inventories/"
+ "/home/iphands/prog/insights/chrome/src/js/redux/"
+ "/home/iphands/prog/insights/chrome/src/js/App/Sidenav/"
  "/home/iphands/prog/insights/landing-page/src/"
- "/home/iphands/prog/fakamai/assets-server/"
- "/home/iphands/prog/fakamai/assets-poller/src/"
- "/home/iphands/prog/fakamai/assets/"
- "/home/iphands/prog/fakamai-assets/src/"
- "/home/iphands/prog/fakamai-assets/src/test_scripts/"
+ "/home/iphands/prog/air-drupal/"
+ "/home/iphands/prog/cloud/e2e-deploy/buildfactory/advisor/"
+ "/home/iphands/prog/cloud/e2e-deploy/buildfactory/entitlements/"
+ "/home/iphands/prog/cloud/e2e-deploy/buildfactory/"
+ "/home/iphands/prog/cloud/e2e-deploy/buildfactory/aiops/"
+ "/home/iphands/prog/cloud/entitlements-api-go/types/"
+ "/home/iphands/prog/cloud/entitlements-api-go/controllers/"
+ "/home/iphands/prog/cloud/entitlements-api-go/server/"
+ "/home/iphands/prog/cloud/entitlements-api-go/local/"
+ "/home/iphands/prog/cloud/entitlements-api-go/config/"
+ "/home/iphands/prog/insights/akamai-smoke-test/"
+ "/home/iphands/prog/rhv-scripts/ansible/playbooks/"
+ "/home/iphands/prog/rhv-scripts/private/"
+ "/home/iphands/prog/rhv-scripts/"
+ "/home/iphands/Downloads/"
+ "/home/iphands/prog/cloud/entitlements-api-go/scripts/"
+ "/home/iphands/prog/cloud/entitlements-api-go/logger/"
+ "/home/iphands/go/src/github.com/RedHatInsights/platform-go-middlewares/identity/"
+ "/home/iphands/prog/rhv-scripts/ansible-playbooks/"
+ "/home/iphands/rhev/"
+ "/home/iphands/prog/cloud/entitlements-api-go/"
+ "/home/iphands/go/src/cloud.redhat.com/entitlements/types/"
+ "/home/iphands/go/src/cloud.redhat.com/entitlements/server/"
+ "/home/iphands/go/src/cloud.redhat.com/entitlements/middleware/"
+ "/tmp/entitlements-api-go/scripts/"
+ "/home/iphands/go/src/cloud.redhat.com/entitlements/controllers/"
+ "/home/iphands/go/src/cloud.redhat.com/entitlements/config/"
+ "/home/iphands/prog/insights/entitlements-api/src/util/"
+ "/home/iphands/prog/insights/entitlements-api/src/middleware/identity/"
+ "/home/iphands/prog/insights/entitlements-api/src/middleware/"
+ "/home/iphands/go/src/cloud.redhat.com/entitlements/scripts/"
+ "/home/iphands/go/src/cloud.redhat.com/entitlements/"
+ "/home/iphands/prog/insights/akamai-smoke-test/tests/"
 )
 
 ;; ----- ido-work-file-list -----
 (
- "main.yml"
- "utils.py"
- "run_all.sh"
- "pytest.ini"
- ".gitignore"
- "run.sh"
- "test.py"
- "decorators.py"
- "local-frontend-and-api.js"
- ".eslintrc.yml"
+ "server.cfg"
+ "addbot.cfg"
+ "3ZBConfig.cfg"
+ "monitor.js"
+ "Dockerfile"
+ "fifi.txt"
+ "countries.js"
+ "members.js"
+ "index.html"
+ "main.js"
 )
 
 ;; ----- ido-dir-file-cache -----
 (
- ("/home/iphands/prog/insights/akamai-smoke-test/" (23724 52864 587798 315000) "run_stage.sh" "run_prod.sh" "run_all.sh" "tests/" "venv/" "tmp/" ".gitignore" "prep.sh" "requirements.txt" "data/" ".pytest_cache/" ".git/" "../" "./")
+ ("/mnt/nas/bak/games/q2/baseq2/" (24057 40046 342651 167000) "maps.lst~" "maps.lst" "server.cfg~" "server.cfg" "maps/" "pak2.pak" "pak1.pak" "pak0.pak" "../" "./")
 
- ("/home/iphands/prog/insights/akamai-smoke-test/tests/" (23726 4993 50894 639000) ".pytest_cache/" "pytest.ini" "__pycache__/" "conftest.py" "test.py" "decorators.py" "utils.py" "__init.py__" "../" "./")
+ ("/mnt/nas/bak/games/q2/3zb2/" (24058 5162 104711 952000) "game.cfg" "addbot.cfg" "3ZBConfig.cfg" "game.so" "pak6.pak" "../" "./")
 
- ("/home/iphands/prog/fakamai/assets-server/" (23723 28178 874600 899000) "dev_launch.sh" "test.sh" "conf/" "base/" "Dockerfile" ".git/" "../" "./")
-
- ("/home/iphands/prog/insights/starter-app/profiles/" (23723 21551 300274 595000) "local-frontend.js" "local-frontend-and-api.js" "../" "./")
-
- ("/home/iphands/prog/fakamai/assets-puller/src/" (23723 26235 244505 206000) "platformApps.json" "git_helper.sh" "test_scripts/" "launch.sh" "cert.chain.txt" "do_platform_apps.py" "init.sh" "../" "./")
-
- ("/home/iphands/prog/insights/chrome/src/js/" (23723 45128 990435 428000) "analytics.js" "iqeEnablement.js" "entry.js" "chrome.js" "chrome.test.js" "auth.js" "vulnerabilitiesStyles.js" "remediationsStyles.js" "remediations.js" "redux-config.js" "jwt/" "inventory.js" "externalDependencies.js" "complianceStyles.js" "async-loader.js" "advisorStyles.js" "App/" "utils.js" "inventoryStyles.js" "test/" "redux/" "nav/" "../" "./")
-
- ("/home/iphands/prog/insights/advisor-frontend/config/" (23723 24949 381441 897000) "webpack.common.js" "base.webpack.plugins.js" "base.webpack.config.js" "setupTests.js" "prod.webpack.config.js" "../" "./")
-
- ("/home/iphands/prog/insights/chrome/src/js/App/Sidenav/" (23723 23135 772352 605000) "NavigationItem.js" "Navigation.js" "index.js" "../" "./")
-
- ("/home/iphands/prog/insights/advisor-frontend/src/Utilities/" (23719 65010 536693 147000) "getBaseName.js" "Api.js" "asyncComponent.js" "../" "./")
-
- ("/home/iphands/prog/insights/advisor-frontend/src/" (23720 399 752738 700000) "App.js" "Routes.js" "index.html" "entry.js" "entry-dev.js" "AppConstants.js" "AppReducer.js" "AppActions.js" "App.scss" "Utilities/" "Store/" "SmartComponents/" "PresentationalComponents/" "../" "./")
-
- ("/home/iphands/prog/insights/advisor-frontend/" (23723 24924 231440 659000) "profiles/" "node_modules/" "package.json" "package-lock.json" "README.md" "coverage/" "dist/" "webpack.config.js" ".babelrc" "LICENSE" ".travis.yml" ".stylelintrc.json" ".gitignore" ".firebaserc" ".eslintrc.yml" ".eslintignore" "static/" "src/" "config/" ".travis/" ".git/" "../" "./")
-
- ("/home/iphands/prog/insights/advisor-frontend/profiles/" (23723 25038 50446 263000) "local-frontend.js" "local-frontend-and-api.js" "../" "./")
-
- ("/home/iphands/prog/insights/akamai-smoke-test/test/" (23724 51245 45718 578000) "test.py" "decorators.py" "utils.py" "__pycache__/" "__init.py__" "../" "./")
-
- ("/home/iphands/prog/insights/akamai-smoke-test/data/" (23724 50634 406688 514000) "main.yml" "small.yml" "../" "./")
-
- ("/home/iphands/prog/insights/chrome/src/js/jwt/" (23719 50746 647990 874000) "logger.js" "jwt.js" "utils.js" "store.js" "insights/" "docs.MD" "../" "./")
-
- ("/home/iphands/prog/insights/chrome/" (23719 49785 298943 542000) "node_modules/" "package.json" "package-lock.json" ".travis.yml" ".gitignore" ".babelrc" "static/" "README.md" ".eslintrc.yml" "coverage/" "upload.sh" ".stylelintrc.json" "src/" "config/" "build/" ".travis/" ".git/" ".cache/" "../" "./")
-
- ("/home/iphands/prog/insights/chrome/src/js/App/" (23715 46713 608885 810000) "index.js" "Sidenav/" "Header/" "Footer.js" "../" "./")
-
- ("/home/iphands/prog/insights/chrome/src/" (23569 5598 162016 580000) "sass/" "pug/" "js/" "../" "./")
-
- ("/home/iphands/prog/fakamai/assets-puller/" (23719 34217 123177 53000) "test.sh" "dev_launch.sh" "ocp/" "src/" "Dockerfile" ".git/" "../" "./")
-
- ("/home/iphands/prog/insights/chrome/src/js/jwt/insights/" (23719 46974 627805 160000) "user.js" "entitlements.js" "url.js" "../" "./")
-
- ("/home/iphands/prog/insights/remediations-frontend/" (23701 35840 392552 472000) "package.json" "package-lock.json" "README.md" ".eslintrc.yml" ".babelrc" "starter.enc" "LICENSE" ".travis.yml" ".stylelintrc.json" ".gitignore" ".firebaserc" ".eslintignore" "static/" "src/" "config/" ".travis/" ".git/" "../" "./")
-
- ("/home/iphands/prog/insights/" (23718 22600 366378 484000) "akamai-smoke-test/" "chrome-bak/" "tower-analytics-frontend/" "landing-page-frontend-build/" "landing-page/" "tower-analytics/" "cert-test/" "insights-3scale/" "start-app/" "remediations-api/" "compliance-frontend/" "turbo-octo-couscous/" "tmp/" "telemetryapi/" "swagger/" "storybook/" "starter-app/" "spec/" "services/" "sat5-plugin/" "remediations-frontend/" "proxy/" "npm-cache/" "node-auth/" "mnm/" "misc/" "koku-ui/" "inventory-frontend/" "frontend/" "frontend-components/" "frontend-builder-common/" "dashboard/" "content/" "client/" "chrome/" "chrome-build/" "build/" "api/" "advisor-frontend/" "../" "./")
-
- ("/home/iphands/prog/fakamai/assets-server/conf/" (23719 27180 126830 590000) "generate_index.py" "cloud.conf" "access.conf" "server-common.conf" "gzip.conf" "nginx.conf" "../" "./")
-
- ("/home/iphands/prog/insights/chrome/src/js/redux/" (23718 19017 781202 97000) "reducers.js" "actions.js" "reducers.test.js" "index.js" "action-types.js" "../" "./")
-
- ("/home/iphands/prog/insights/frontend-builder-common/src/" (23717 4335 428252 596000) "release.sh" "bootstrap.sh" "Jenkinsfile" "migrate.sh" "after_success.sh" "../" "./")
-
- ("/home/iphands/prog/insights/chrome/src/pug/" (23717 16951 642873 747000) "templates/" "sidebar-new.pug" "head.pug" "head-staging.pug" "after.pug" "landing.pug" "body.pug" "sidebar.pug" "landing-header.pug" "imageFilter.pug" "header.pug" "globalNav.pug" "../" "./")
-
- ("/home/iphands/prog/fakamai/" (23706 51926 628423 937000) "fakamai-tmp/" "fakamai-test/" "assets-puller/" "assets-server/" "secrets/" "fakamai/" "../" "./")
-
- ("/home/iphands/prog/insights/landing-page/src/" (23715 46634 950881 937000) "consts.js" "App.scss" "App.js" "index.html" "entry.js" "entry-dev.js" "store/" "layout/" "components/" "../" "./")
-
- ("/home/iphands/prog/insights/landing-page/config/" (23715 46634 950881 937000) "webpack.common.js" "base.webpack.plugins.js" "base.webpack.config.js" "test.webpack.plugins.js" "test.webpack.config.js" "setupTests.js" "prod.webpack.config.js" "dev.webpack.plugins.js" "dev.webpack.config.js" "../" "./")
-
- ("/home/iphands/prog/insights/dashboard/proxy/" (23715 50241 50059 481000) "example-local-frontend.js" "../" "./")
-
- ("/home/iphands/prog/insights/dashboard/" (23717 64796 648229 367000) "profiles/" "package.json" "package-lock.json" ".travis.yml" ".stylelintrc.json" ".gitignore" ".eslintrc.yml" ".babelrc" "node_modules/" "proxy/" "README.md" "LICENSE" ".stylelint.json" ".firebaserc" ".eslintignore" "static/" "src/" "dist/" "coverage/" "config/" ".travis/" ".git/" "../" "./")
-
- ("/home/iphands/prog/insights/starter-app/config/" (23717 2974 102185 572000) "webpack.common.js" "dev.webpack.config.js" "base.webpack.plugins.js" "test.webpack.plugins.js" "test.webpack.config.js" "setupTests.js" "prod.webpack.config.js" "dev.webpack.plugins.js" "base.webpack.config.js" "../" "./")
-
- ("/home/iphands/prog/insights/starter-app/src/Utilities/" (23717 2974 105185 572000) "getBaseName.js" "asyncComponent.js" "../" "./")
-
- ("/home/iphands/prog/insights/starter-app/" (23717 28505 802442 609000) "node_modules/" "profiles/" "package.json" "package-lock.json" "README.md" ".travis.yml" ".eslintrc.yml" "coverage/" "LICENSE" ".stylelintrc.json" ".gitignore" ".firebaserc" ".eslintignore" ".babelrc" "static/" "src/" "dist/" "config/" ".travis/" ".git/" "../" "./")
-
- ("/home/iphands/prog/fakamai/fakamai/" (23707 49143 249143 186000) "staging_cloud_helper.sh" "package-lock.json" "dev_launch.sh" "config.js" "app.js" "hack.js" "README.md" "Dockerfile" "package.json" "node_modules/" ".gitkeep" ".gitignore" "ssl/" "ocp/" ".openshift/" ".git/" "../" "./")
-
- ("/home/iphands/prog/insights/dashboard/.travis/" (23716 43192 104939 56000) "custom_release.sh" "deploy_key.enc" ".gitkeep" "../" "./")
-
- ("/home/iphands/prog/insights/dashboard/profiles/" (23717 64796 648229 367000) "local-frontend.js" "../" "./")
-
- ("/home/iphands/prog/insights/dashboard/src/" (23717 64796 649229 367000) "index.html" "entry.test.js" "entry.js" "entry-dev.js" "Routes.js" "App.scss" "App.js" "AppReducer.js" "AppConstants.js" "AppActions.js" "Store/" "SmartComponents/" "Utilities.scss" "Utilities/" "PresentationalComponents/" "../" "./")
-
- ("/home/iphands/prog/insights/dashboard/src/SmartComponents/Cards/" (23717 64796 648229 367000) "VulnerabilityCard.js" "InsightsCard.js" "CostManagementCard.js" "ComplianceCard.js" "_cards.scss" "../" "./")
-
- ("/home/iphands/prog/insights/dashboard/config/" (23717 64796 646229 367000) "webpack.common.js" "prod.webpack.plugins.js" "prod.webpack.config.js" "dev.webpack.config.js" "base.webpack.plugins.js" "dev.webpack.plugins.js" "test.webpack.plugins.js" "test.webpack.config.js" "setupTests.js" "base.webpack.config.js" "../" "./")
-
- ("/home/iphands/prog/insights/dashboard/src/SmartComponents/" (23715 50236 576059 261000) "Cards/" "../" "./")
-
- ("/home/iphands/prog/insights/starter-app/src/" (23717 2974 105185 572000) "index.html" "entry.test.js" "entry.js" "entry-dev.js" "Routes.js" "App.js" "Utilities.scss" "App.scss" "store/" "Utilities/" "SmartComponents/" "PresentationalComponents/" "../" "./")
-
- ("/home/iphands/prog/insights/advisor-frontend/.travis/" (23715 65507 784811 130000) "custom_release.sh" "deploy_key.enc" "../" "./")
-
- ("/home/iphands/prog/insights/start-app/src/" (23706 21955 12948 303000) "store/" "index.html" "entry.js" "entry-dev.js" "Utilities/" "Utilities.scss" "SmartComponents/" "Routes.js" "PresentationalComponents/" "App.scss" "App.js" "../" "./")
-
- ("/home/iphands/prog/insights/chrome/config/" (23651 13651 242788 845000) "graphql-externals.js" "patternfly-react-externals.js" "react-router-dom-externals.js" "react-external.js" "pf-react-icons-externals.js" "pf-react-core-externals.js" "../" "./")
-
- ("/home/iphands/prog/insights/remediations-frontend/src/" (23701 35840 394552 472000) "skeletons/" "index.html" "hooks/" "entry.js" "entry-dev.js" "containers/" "constants.js" "config.js" "api.js" "actions.js" "Routes.js" "App.scss" "App.js" "Utilities.scss" "store/" "routes/" "components/" "Utilities/" "../" "./")
-
- ("/home/iphands/prog/insights/proxy/scripts/" (23700 62803 566653 363000) "dev_build.sh" "run.sh" "update.sh" "patch-etc-hosts.sh" "env.sh" "../" "./")
-
- ("/home/iphands/prog/insights/tower-analytics-frontend/src/" (23700 13395 364220 780000) "index.html" "entry.js" "entry-dev.js" "Routes.js" "store/" "Utilities/" "Utilities.scss" "SmartComponents/" "PresentationalComponents/" "App.scss" "App.js" "../" "./")
-
- ("/home/iphands/prog/insights/tower-analytics-frontend/" (23700 13419 868221 987000) "node_modules/" "dist/" "static/" "src/" "package.json" "package-lock.json" "config/" "README.md" "LICENSE" ".travis/" ".travis.yml" ".stylelintrc.json" ".gitignore" ".firebaserc" ".eslintrc.yml" ".eslintignore" ".babelrc" ".git/" "../" "./")
-
- ("/home/iphands/prog/insights/starter-app/src/PresentationalComponents/SampleComponent/" (23521 48839 56577 818000) "sample-component.test.js" "sample-component.scss" "sample-component.js" "../" "./")
-
- ("/home/iphands/prog/insights/starter-app/src/PresentationalComponents/" (23367 19818 244534 806000) "SampleComponent/" "Rules/" "../" "./")
-
- ("/home/iphands/prog/insights/tower-analytics-frontend/config/" (23700 13395 363220 780000) "webpack.common.js" "spandx.config.js" "dev.webpack.config.js" "base.webpack.plugins.js" "test.webpack.plugins.js" "test.webpack.config.js" "setupTests.js" "prod.webpack.config.js" "dev.webpack.plugins.js" "base.webpack.config.js" "../" "./")
-
- ("/home/iphands/shotwell/" (23703 62351 628309 911000) "Dockerfile" "Dockerfile.fedora" "Dockerfile.ubuntu" "prod" "stg" "launch.sh" "../" "./")
+ ("/mnt/nas/bak/games/q2/" (24057 36793 258449 151000) "3zb2/" "tnp/" "baseq2/" "../" "./")
 
  ("/home/iphands/prog/tray/src/" (23704 63675 874549 154000) "vol.js" "utils.js" "monitor.js" "mic.js" "index.js" "compositor.js" "../" "./")
 
- ("/home/iphands/prog/insights/chrome/src/js/nav/" (23699 53148 331951 368000) "globalNav.js" "../" "./")
+ ("/home/iphands/docker/quake2/" (24054 63174 574664 762000) "compile" "Dockerfile" "../" "./")
 
- ("/home/iphands/prog/insights/chrome/.travis/" (23699 53148 327951 368000) "custom_release.sh" "deploy_key.enc" "../" "./")
+ ("/home/iphands/Downloads/" (23966 14078 705390 294000) ".tmp.txt" ".~lock.IPMI Firmware Update.doc#" "../" "./")
 
- ("/home/iphands/prog/insights/chrome/src/js/App/Header/" (23699 56276 109105 363000) "UserToggle.js" "UserIcon.js" "Tools.js" "ToolbarToggle.js" "Logo.js" "InsightsAbout.js" "Brand.js" "InsightsAbout.scss" "index.js" "../" "./")
+ ("/home/iphands/prog/lsah/sass/" (23929 36590 997335 683000) "application.scss" "page.scss" "nav.scss" "../" "./")
 
- ("/home/iphands/prog/insights/tower-analytics/src/" (23700 6861 632899 96000) "index.html" "entry.js" "entry-dev.js" "Routes.js" "App.js" "Utilities.scss" "App.scss" "store/" "Utilities/" "SmartComponents/" "PresentationalComponents/" "../" "./")
+ ("/home/iphands/prog/lsah/js/" (23930 20266 298250 786000) "main.js" "../" "./")
 
- ("/home/iphands/prog/insights/proxy/" (23699 64752 428522 689000) "spandx.config.js" "package.json" "package-lock.json" "README.md" "node_modules/" "LICENSE" "Dockerfile" ".gitignore" "ssl/" "scripts/" "patches/" "certs/" ".git/" ".admin/" "../" "./")
+ ("/home/iphands/prog/lsah/" (23947 34773 80265 326000) "node_modules/" "index.html" "package-lock.json" "package.json" "deploy.sh" "vendor/" "css/" "vendor-keep/" "sass/" "lsah.nginx.conf" "js/" "images/" "images-src/" "gulpfile.js" "data/" ".travis.yml" ".gitignore" ".git/" "../" "./")
 
- ("/home/iphands/prog/insights/starter-app/proxy-configs/" (23700 9065 861007 620000) "local-frontend-and-api.js" "local-frontend.js" "../" "./")
+ ("/home/iphands/prog/lsah/data/" (23947 34885 425270 857000) "members.js" "countries.js" "../" "./")
 
- ("/home/iphands/prog/insights/tower-analytics/config/" (23700 7817 294946 147000) "webpack.common.js" "spandx.config.js" "dev.webpack.config.js" "base.webpack.plugins.js" "test.webpack.plugins.js" "test.webpack.config.js" "setupTests.js" "prod.webpack.config.js" "dev.webpack.plugins.js" "base.webpack.config.js" "../" "./")
+ ("/home/iphands/" (23967 6651 569251 249000) "xjoin.txt" "sat.tagging.txt" ".Xauthority" "oculus.hints.txt" "evga_gtx970.dump" ".steampid" ".steampath" "test.sh" "SideQuest-0.7.1/" ".tig_history" ".lesshst" ".cmake/" "meetings/" "inv.talk.loic" "robnotes.txt" "lel/" "intvw.txt" "test.blob" "fail" "notes.xjoin.txt" "pqsl_cheat_sheet.txt" "out.txt" "test.x509" "uhc-portal/" "tfdsf" "csv" ".mupdf.history" "docker.deps.txt" "bak.tar.bz2" "test.vpn" ".nmcli-history" "README.md" "go/" "go.bak/" "id.json.gpg" "t.json" "test.png" "users.txt" "oldhomesize" "rebuild.txt" "identity.json" "onboot.sh" "qa-certs/" "android-platform-tools/" "pixel-stuff/" ".android/" ".ansible/" "rhev/" "docker/" "output.log" "Downloads/" ".v8flags.6.8.275.32-node.51.c3c7079bcee0948c409cfd6ba8d6f038.json" "DigiCertGlobalRootCA.crt" ".python_history" "notes" "test-akamai.sh" ".~lock.Untitled 1.odt#" ".nvm/" "shotwell/" "test/" ".minishift/" "Pictures/" "images/" "known_hosts" "perfnotes" "jeromekey" "t/" "keys/" ".vuescan/" ".sane/" "i4.html" "docsproxy/" "oc.log" ".parallel/" "oom.txt" "insights_akamai.json" ".openoffice/" "text_anim/" "tmp" "oot/" ".q3a/" ".dvdcss/" "xmas/" ".yq2/" ".minetest/" ".Superposition/" ".Heaven/" ".xauth3jR50J" "cdkey" "cfkey/" ".npm/" ".weechat/" ".icons/" ".wine/" ".winecemu/" "cemu.sh" ".pulse-cookie" ".xauthhe2afy" ".xsession-errors" ".xsession-errors.old" ".dmrc" ".bash_history" ".gambit_history" "winetricks" "video.mpg" "out" "nvme.csv" "nvme" "notes.txt" "id.json" "convery_btrfs_bench.py" "blender.times.txt" ".yarnrc" ".wget-hsts" ".v8flags.6.8.275.32-node.28.c3c7079bcee0948c409cfd6ba8d6f038.json" ".v8flags.6.2.414.66.c3c7079bcee0948c409cfd6ba8d6f038.json" ".v8flags.6.2.414.54.c3c7079bcee0948c409cfd6ba8d6f038.json" ".v8flags.6.2.414.50.c3c7079bcee0948c409cfd6ba8d6f038.json" ".rnd" ".nvidia-settings-rc" ".npmrc" ".node_repl_history" ".jackdrc" ".gtkrc-2.0-kde4" ".gitignore_global" ".gitconfig" ".face" ".esd_auth" ".e-crashdump.txt" ".bashrc_redhat" ".bash_logout" ".Xresources" "ssl/" "saber/" "rpmbuild/" "ps3/" "prog/" "printing/" "pi/" "packaging-work/" "ml/" "logs/" "dotfiles/" "cuda-workspace/" "bak/" "apps/" "Webcam/" "Videos/" "Templates/" "Steam/" "Public/" "Music/" "Documents/" "Desktop/" ".zsnes/" ".yarn/" ".vscode/" ".thumbnails/" ".theano/" ".steam/" ".slack/" ".sabnzbd/" ".pcsxr/" ".oracle_jre_usage/" ".nv/" ".node-gyp/" ".mplayer/" ".mozilla/" ".macromedia/" ".lpass/" ".kube/" ".keras/" ".kde/" ".gvfs/" ".gphoto/" ".gnupg/" ".gnome2/" ".gimp-2.8/" ".gens/" ".fceux/" ".esmtp_queue/" ".elementary/" ".eclipse/" ".e/" ".dotfiles_backup/" ".docker/" ".dgen/" ".conky/" ".cargo/" ".audacity-data/" ".WorldOfGoo/" ".face.icon" ".emacs.d/" ".emacs" ".bashrc" ".bash_profile" ".Xdefaults" "bin/" ".gnome/" ".pki/" ".cache/" ".config/" ".local/" ".w3m/" ".fluxbox/" ".dbus/" ".ssh/" "../" "./")
 
- ("/home/iphands/prog/lsah/" (23697 32165 839465 59000) "package.json" "package-lock.json" "index.html" "deploy.sh" "vendor/" "css/" "node_modules/" "vendor-keep/" "sass/" "lsah.nginx.conf" "js/" "images/" "images-src/" "gulpfile.js" "data/" ".travis.yml" ".gitignore" ".git/" "../" "./")
+ ("/home/iphands/prog/lsah/css/" (23726 48951 460058 905000) "main.css" "../" "./")
 
- ("/home/iphands/prog/lsah/js/" (23697 31213 344418 163000) "main.js" "../" "./")
+ ("/home/iphands/prog/insights/chrome/src/js/" (23872 36894 175200 999000) "redux-config.js" "iqeEnablement.js" "entry.js" "utils.test.js" "utils.js" "sentry.js" "remediationsStyles.js" "remediations.js" "inventoryStyles.js" "inventory.js" "externalDependencies.js" "consts.js" "chrome.js" "auth.test.js" "auth.js" "analytics.test.js" "analytics.js" "jwt/" "chrome.test.js" "App/" "test/" "redux/" "nav/" "../" "./")
 
- ("/home/iphands/prog/insights/cert-test/" (23690 44814 309725 284000) "package-lock.json" "node_modules/" "resources/" "package.json" "index.js" "config.js" "README.md" ".gitignore" ".git/" "../" "./")
+ ("/home/iphands/prog/insights/chrome/src/js/nav/" (23872 25334 821631 881000) "sourceOfTruth.js" "globalNav.js" "../" "./")
 
- ("/home/iphands/prog/insights/landing-page/" (23689 23221 412435 546000) "proxy-config/" "node_modules/" "package.json" "package-lock.json" "Jenkinsfile" ".eslintrc.yml" ".babelrc" ".travis/" "coverage/" "dist/" "webpack.config.js" "static/" "src/" "config/" "README.md" "LICENSE" ".travis.yml" ".stylelintrc.json" ".gitignore" ".eslintignore" ".git/" "../" "./")
+ ("/home/iphands/prog/rhv-scripts/ansible/playbooks/" (23856 45371 314023 851000) "bz1730643.yaml" "update.retry" "update.yml" "prep_vm.retry" "rhel8.retry" "rhel8.yml" "rhel6_tmplt.retry" "rhel6_tmplt.yml" "rhel7_tmplt.retry" "rhel7_tmplt.yml" "yum_update.yml" "test.yml" "reboot.yml" "prep_vm.yml" "prep.yml" "ping.yml" "hosts_hack.yml" "hostname.yml" "goferd_solution_3391431.yml" "excludes.yml" "../" "./")
 
- ("/home/iphands/prog/fakamai/assets-poller/src/" (23687 60400 487812 785000) "platformApps.json" "test_scripts/" "launch.sh" "cert.chain.txt" "git_helper.sh" "do_platform_apps.py" "init.sh" "../" "./")
+ ("/home/iphands/prog/insights/chrome/src/js/App/Sidenav/" (23872 25334 821631 881000) "Navigation.js" "index.js" "NavigationItem.js" "../" "./")
 
- ("/home/iphands/prog/insights/landing-page/.travis/" (23689 19074 802231 390000) "custom_release.sh" "deploy_key.enc" "../" "./")
+ ("/home/iphands/prog/insights/chrome/src/js/redux/" (23872 25334 821631 881000) "reducers.test.js" "reducers.js" "index.js" "actions.js" "action-types.js" "../" "./")
 
- ("/home/iphands/prog/insights/landing-page/src/layout/" (23689 5215 154549 19000) "Header.js" "Foot.js" "Body.js" "../" "./")
+ ("/home/iphands/prog/rhv-scripts/ansible/inventories/" (23855 29779 953029 595000) "templates" "rhel6" "vms" "single" "hypervisors" "../" "./")
 
- ("/home/iphands/prog/fakamai/assets-poller/" (23682 51658 606213 854000) "ocp/" "src/" "dev_launch.sh" "Dockerfile" ".git/" "../" "./")
+ ("/home/iphands/prog/insights/chrome/node_modules/keycloak-js/dist/" (23872 33607 72039 160000) "org.keycloak,keycloak-js-adapter,4.8.3.Final,Apache Software License 2.0.txt" "org.keycloak,keycloak-js-adapter,4.0.0.Beta2,Apache Software License 2.0.txt" "org.keycloak,keycloak-js-adapter,4.0.0.Beta1,Apache Software License 2.0.txt" "org.keycloak,keycloak-js-adapter,3.4.3.Final,Apache Software License 2.0.txt" "org.keycloak,keycloak-js-adapter,3.4.2.Final,Apache Software License 2.0.txt" "org.keycloak,keycloak-js-adapter,3.4.1.Final,Apache Software License 2.0.txt" "org.keycloak,keycloak-js-adapter,3.4.1.CR1,Apache Software License 2.0.txt" "licenses.xsl" "licenses.xml" "licenses.html" "licenses.css" "keycloak.min.js.map" "keycloak.min.js" "keycloak.js" "keycloak.d.ts" "keycloak-authz.min.js.map" "keycloak-authz.min.js" "keycloak-authz.js" "keycloak-authz.d.ts" "../" "./")
 
- ("/home/iphands/prog/fakamai/assets/" (23683 56125 809489 971000) "nginx.conf" "dev_launch.sh" "Dockerfile" "base/" "../" "./")
+ ("/home/iphands/prog/fakamai/fakamai/" (23873 59522 706541 725000) "staging_cloud_helper.sh" "package.json" "package-lock.json" "logger.js" "dev_launch.sh" "config.js" "app.js" "Dockerfile" ".gitignore" "README.md" "node_modules/" ".gitkeep" "ssl/" "ocp/" ".openshift/" ".git/" "../" "./")
 
- ("/home/iphands/prog/fakamai-assets/src/" (23683 49563 583166 884000) "test_scripts/" "launch.sh" "platformApps.json" "cert.chain.txt" "git_helper.sh" "do_platform_apps.py" "init.sh" "../" "./")
+ ("/home/iphands/prog/lsah/vendor/" (23929 16370 207340 124000) "values.js" "angular.min.js" "isInViewport.min.js" "flags/" "jquery/" "jquery-easing/" "flag-icon-css/" "bootstrap/" "../" "./")
 
- ("/home/iphands/prog/fakamai-assets/src/test_scripts/" (23683 48319 829105 648000) "vendor_js_direct_gzip.sh" "vendor_js_direct.sh" "vendor_js_proxy_gzip.sh" "vendor_js_proxy.sh" "../" "./")
+ ("/home/iphands/prog/insights/chrome/node_modules/keycloak-js/" (23829 8565 599736 376000) "dist/" "README.md" "License.html" "bower.json" "package.json" "../" "./")
 
- ("/home/iphands/prog/fakamai-assets/" (23682 51658 606213 854000) "ocp/" "src/" "dev_launch.sh" "Dockerfile" ".git/" "../" "./")
+ ("/home/iphands/prog/insights/chrome/node_modules/" (23829 8568 281751 715000) ".bin/" "@fortawesome/" "object-keys/" "popper.js/" "string_decoder/" "xtend/" "buffer-from/" "readable-stream/" "through2/" "array-slice/" "kind-of/" "arr-union/" "babel-helper-builder-react-jsx/" "arr-diff/" "extend-shallow/" "ansi-red/" "ansi-cyan/" "color-support/" "parse-node-version/" "html-tokenize/" "babel-plugin-transform-react-jsx/" "time-stamp/" "babel-plugin-transform-object-rest-spread/" "ansi-gray/" "babel-plugin-transform-es3-member-expression-literals/" "multipipe/" "ansi-wrap/" "plugin-error/" "universalify/" "babel-plugin-transform-class-properties/" "babel-plugin-transform-react-display-name/" "jsonfile/" "babel-plugin-syntax-trailing-function-commas/" "babel-plugin-transform-es3-property-literals/" "babel-plugin-syntax-flow/" "babel-plugin-transform-flow-strip-types/" "babel-plugin-syntax-object-rest-spread/" "babel-plugin-syntax-class-properties/" "lower-case/" "create-emotion-server/" "nopt/" "ansi-colors/" "fancy-log/" "babel-preset-fbjs/" "babel-plugin-macros/" "upper-case/" "touch/" "no-case/" "css/" "stylis-rule-sheet/" "fs-extra/" "cssstyle/" "babel-plugin-syntax-jsx/" "relative/" "csstype/" "find-root/" "fbjs-scripts/" "emotion-server/" "camel-case/" "stylis/" "@emotion/" "tabbable/" "babel-plugin-emotion/" "create-emotion/" "tippy.js/" "focus-trap/" "emotion/" "exenv/" "@tippy.js/" "focus-trap-react/" "chownr/" "fs-minipass/" "minizlib/" "minipass/" "uri-js/" "trim/" "unist-util-remove-position/" "vfile-location/" "collapse-white-space/" "trim-trailing-lines/" "is-word-character/" "is-alphabetical/" "character-entities/" "character-reference-invalid/" "character-entities-legacy/" "is-hexadecimal/" "is-alphanumerical/" "p-try/" "character-entities-html4/" "num2fraction/" "p-limit/" "unist-util-visit-parents/" "parse-entities/" "normalize-range/" "unist-util-visit/" "p-locate/" "stringify-entities/" "is-whitespace-character/" "markdown-escapes/" "unherit/" "state-toggle/" "is-decimal/" "is-alphanumeric/" "ccount/" "longest-streak/" "markdown-table/" "mdast-util-compact/" "locate-path/" "replace-ext/" "vfile-message/" "unist-util-stringify-position/" "trough/" "find-up/" "x-is-string/" "vfile/" "bail/" "flatted/" "remark-parse/" "remark-stringify/" "unified/" "is-supported-regexp-flag/" "is-regexp/" "camelcase/" "unist-util-is/" "dir-glob/" "is-plain-obj/" "quick-lru/" "remark/" "minimist-options/" "decamelize-keys/" "gonzales-pe/" "unist-util-find-all-after/" "postcss-safe-parser/" "known-css-properties/" "clone-regexp/" "postcss-scss/" "emoji-regex/" "global-prefix/" "specificity/" "postcss-html/" "sugarss/" "postcss-syntax/" "normalize-selector/" "svg-tags/" "style-search/" "postcss-sass/" "postcss-reporter/" "postcss-markdown/" "resolve-from/" "postcss-jsx/" "mathml-tag-names/" "postcss-less/" "html-tags/" "import-lazy/" "globjoin/" "global-modules/" "execall/" "lazy-cache/" "longest/" "center-align/" "align-text/" "punycode/" "request-promise-core/" "right-align/" "token-stream/" "character-parser/" "stealthy-require/" "is-expression/" "lodash.sortby/" "tr46/" "acorn-walk/" "whatwg-encoding/" "whatwg-url/" "browser-process-hrtime/" "webidl-conversions/" "cssom/" "window-size/" "parse5/" "symbol-tree/" "acorn-globals/" "xml-name-validator/" "request-promise-native/" "nwsapi/" "html-encoding-sniffer/" "whatwg-mimetype/" "abab/" "w3c-hr-time/" "pn/" "data-urls/" "left-pad/" "domexception/" "array-equal/" "nan/" "uglify-to-browserify/" "asap/" "json-schema-traverse/" "fast-deep-equal/" "promise/" "clean-css/" "jstransformer/" "with/" "void-elements/" "pug-walk/" "js-stringify/" "pug-strip-comments/" "pug-error/" "pug-attrs/" "pug-filters/" "constantinople/" "doctypes/" "pug-lexer/" "pug-runtime/" "pug-parser/" "pug-load/" "pug-linker/" "pug-code-gen/" "vlq/" "escodegen/" "isarray/" "foreach/" "shallow-copy/" "falafel/" "merge-source-map/" "static-eval/" "duplexer2/" "magic-string/" "object-inspect/" "chardet/" "iconv-lite/" "tmp/" "is-promise/" "mute-stream/" "run-async/" "external-editor/" "rx-lite/" "rx-lite-aggregates/" "through/" "cli-width/" "figures/" "acorn-jsx/" "invert-kv/" "is-path-inside/" "acorn/" "array-uniq/" "block-stream/" "array-union/" "neo-async/" "uglify-js/" "wordwrap/" "deep-is/" "is-path-in-cwd/" "optimist/" "fast-levenshtein/" "is-path-cwd/" "globby/" "lcid/" "write/" "del/" "circular-json/" "type-check/" "prelude-ls/" "slice-ansi/" "typedarray/" "callsites/" "flat-cache/" "ajv-keywords/" "caller-path/" "optionator/" "cross-spawn/" "text-table/" "inquirer/" "path-is-inside/" "progress/" "json-stable-stringify-without-jsonify/" "pluralize/" "functional-red-black-tree/" "require-uncached/" "file-entry-cache/" "strip-json-comments/" "regexpp/" "levn/" "table/" "espree/" "concat-stream/" "esquery/" "ignore/" "eslint-scope/" "fstream/" "tar/" "mdn-data/" "abbrev/" "osenv/" "asn1/" "growly/" "jsbn/" "ecc-jsbn/" "tiny-inflate/" "safer-buffer/" "tweetnacl/" "getpass/" "bcrypt-pbkdf/" "pako/" "dashdash/" "buffer-equal/" "aproba/" "wide-align/" "shellwords/" "has-unicode/" "static-module/" "quote-stream/" "css-what/" "delegates/" "des.js/" "sigmund/" "nth-check/" "boolbase/" "minimalistic-crypto-utils/" "buffer-xor/" "amdefine/" "indent-string/" "asn1.js/" "hmac-drbg/" "strip-indent/" "q/" "mimic-fn/" "brorand/" "proto-list/" "minimalistic-assert/" "hash.js/" "ini/" "pinkie/" "handlebars/" "is-utf8/" "js-base64/" "editorconfig/" "config-chain/" "pinkie-promise/" "sprintf-js/" "onetime/" "psl/" "upath/" "rgba-regex/" "asynckit/" "pseudomap/" "browserify-rsa/" "hex-color-regex/" "array-find-index/" "hsl-regex/" "rgb-regex/" "hsla-regex/" "simple-swizzle/" "css-color-names/" "evp_bytestokey/" "browserify-des/" "defaults/" "stylehacks/" "yallist/" "delayed-stream/" "mime-db/" "browserify-aes/" "json-schema/" "parse-asn1/" "verror/" "postcss-selector-parser/" "extsprintf/" "hash-base/" "is-obj/" "currently-unhandled/" "css-unit-converter/" "restore-cursor/" "gauge/" "console-control-strings/" "are-we-there-yet/" "unicode-trie/" "sax/" "normalize-url/" "redent/" "elliptic/" "miller-rabin/" "bn.js/" "sha.js/" "color-string/" "har-schema/" "ripemd160/" "sshpk/" "jsprim/" "assert-plus/" "brfs/" "object.values/" "builtin-status-codes/" "read-pkg-up/" "scss-tokenizer/" "ajv/" "cipher-base/" "csso/" "globule/" "coa/" "path-dirname/" "lodash.memoize/" "html-comment-regex/" "lodash.uniq/" "md5.js/" "dot-prop/" "argparse/" "cssnano-util-same-parent/" "big-integer/" "esprima/" "log-symbols/" "glob-to-regexp/" "css-select-base-adapter/" "cli-spinners/" "uniqs/" "call-me-maybe/" "to-arraybuffer/" "is-color-stop/" "trim-newlines/" "clones/" "lru-cache/" "unquote/" "stable/" "css-tree/" "css-url-regex/" "bindings/" "timsort/" "css-select/" "cli-cursor/" "vendors/" "camelcase-keys/" "uuid/" "math-random/" "map-obj/" "loud-rejection/" "wcwidth/" "node-addon-api/" "alphanum-sort/" "cssnano-util-get-match/" "caniuse-api/" "is-svg/" "qs/" "performance-now/" "oauth-sign/" "mime-types/" "tough-cookie/" "json-stringify-safe/" "is-typedarray/" "public-encrypt/" "setprototypeof/" "isstream/" "tunnel-agent/" "randomfill/" "is-directory/" "merge2/" "date-now/" "forever-agent/" "create-hash/" "combined-stream/" "caseless/" "aws4/" "aws-sign2/" "randombytes/" "http-signature/" "form-data/" "create-hmac/" "js-sha3/" "extend/" "default-require-extensions/" "detect-node/" "har-validator/" "diffie-hellman/" "microseconds/" "create-ecdh/" "browserify-cipher/" "fastparse/" "unload/" "pbkdf2/" "browserify-sign/" "querystring/" "nano-time/" "@nodelib/" "jest-serializer/" "cssnano-util-get-arguments/" "color/" "base64-js/" "ieee754/" "@mrmlnc/" "indexof/" "ee-first/" "npmlog/" "node-gyp/" "async-foreach/" "gaze/" "safer-eval/" "regjsparser/" "meow/" "in-publish/" "ora/" "true-case-path/" "stdout-stream/" "is-finite/" "postcss-reduce-transforms/" "js-beautify/" "is-wsl/" "grapheme-breaker/" "sass-graph/" "tslib/" "domelementtype/" "postcss-unique-selectors/" "regjsgen/" "randomatic/" "postcss-minify-selectors/" "postcss-normalize-display-values/" "is-number/" "postcss-normalize-whitespace/" "postcss-normalize-url/" "postcss-normalize-timing-functions/" "postcss-reduce-initial/" "postcss-normalize-string/" "postcss-normalize-unicode/" "postcss-normalize-repeat-style/" "postcss-ordered-values/" "postcss-convert-values/" "postcss-minify-gradients/" "postcss-discard-duplicates/" "postcss-svgo/" "postcss-minify-params/" "dom-serializer/" "postcss-discard-overridden/" "postcss-discard-empty/" "postcss-minify-font-values/" "postcss-merge-rules/" "postcss-merge-longhand/" "postcss-normalize-charset/" "postcss-normalize-positions/" "postcss-colormin/" "postcss-calc/" "postcss-discard-comments/" "css-declaration-sorter/" "cssnano-util-raw-cache/" "append-transform/" "setimmediate/" "css-selector-tokenizer/" "is-absolute-url/" "statuses/" "http-errors/" "tty-browserify/" "util/" "events/" "is-html/" "range-parser/" "on-finished/" "vm-browserify/" "request/" "destroy/" "depd/" "process/" "mime/" "url/" "querystring-es3/" "etag/" "fresh/" "os-browserify/" "stream-http/" "stream-browserify/" "https-browserify/" "timers-browserify/" "constants-browserify/" "domain-browser/" "path-browserify/" "crypto-browserify/" "console-browserify/" "browserify-zlib/" "postcss-modules-scope/" "async-limiter/" "cosmiconfig/" "assert/" "buffer/" "cssnano-preset-default/" "postcss-modules-values/" "diff-sequences/" "fileset/" "is-resolvable/" "isobject/" "icss-replace-symbols/" "istanbul-reports/" "compare-versions/" "is-primitive/" "postcss-modules-local-by-default/" "postcss-modules-extract-imports/" "parseurl/" "escape-html/" "istanbul-lib-hook/" "domutils/" "fill-range/" "detect-newline/" "domhandler/" "preserve/" "istanbul-lib-report/" "send/" "uncss/" "encodeurl/" "svgo/" "normalize-html-whitespace/" "entities/" "async/" "astral-regex/" "physical-cpu-count/" "uniq/" "repeating/" "natural-compare/" "expand-range/" "lodash.clone/" "babel-helper-hoist-variables/" "is-symbol/" "for-own/" "regenerator-transform/" "babel-plugin-transform-strict-mode/" "is-posix-bracket/" "glob-base/" "immediate/" "node-releases/" "copy-descriptor/" "cssesc/" "is-date-object/" "is-equal-shallow/" "node-notifier/" "electron-to-chromium/" "regexpu-core/" "is-dotfile/" "babel-helper-regex/" "spdx-exceptions/" "istanbul-lib-source-maps/" "jest-worker/" "string-length/" "caniuse-lite/" "htmlparser2/" "istanbul-api/" "indexes-of/" "jest-leak-detector/" "jest-docblock/" "ws/" "detect-indent/" "clone/" "serve-static/" "serialize-to-js/" "is-url/" "command-exists/" "v8-compile-cache/" "terser/" "js-yaml/" "postcss/" "opn/" "@iarna/" "node-libs-browser/" "dotenv/" "cssnano/" "posthtml/" "css-modules-loader-core/" "posthtml-parser/" "node-forge/" "deasync/" "fast-glob/" "get-port/" "filesize/" "posthtml-render/" "htmlnano/" "@parcel/" "babel-helper-optimise-call-expression/" "dotenv-expand/" "array-unique/" "babylon-walk/" "ansi-to-html/" "browserslist/" "babel-helper-call-delegate/" "babel-helper-function-name/" "babel-helper-define-map/" "filename-regex/" "extglob/" "object.omit/" "parse-glob/" "babel-helper-replace-supers/" "regex-cache/" "babel-helper-get-function-arity/" "braces/" "expand-brackets/" "unicode-canonical-property-names-ecmascript/" "has-values/" "unicode-property-aliases-ecmascript/" "babel-plugin-transform-regenerator/" "babel-plugin-transform-es2015-modules-systemjs/" "babel-plugin-transform-es2015-modules-commonjs/" "babel-plugin-transform-es2015-modules-amd/" "babel-plugin-transform-es2015-arrow-functions/" "babel-plugin-check-es2015-constants/" "object-copy/" "babel-plugin-transform-es2015-spread/" "babel-plugin-transform-es2015-shorthand-properties/" "babel-plugin-transform-es2015-typeof-symbol/" "babel-plugin-transform-es2015-template-literals/" "babel-plugin-transform-es2015-sticky-regex/" "babel-plugin-transform-es2015-function-name/" "babel-plugin-transform-es2015-for-of/" "babel-plugin-transform-es2015-destructuring/" "babel-plugin-transform-es2015-computed-properties/" "node-modules-regexp/" "babel-plugin-transform-es2015-object-super/" "babel-plugin-transform-es2015-unicode-regex/" "babel-plugin-transform-es2015-duplicate-keys/" "babel-plugin-transform-es2015-literals/" "babel-plugin-transform-es2015-modules-umd/" "babel-plugin-transform-es2015-block-scoping/" "babel-plugin-transform-es2015-block-scoped-functions/" "babel-plugin-transform-es2015-parameters/" "babel-plugin-transform-es2015-classes/" "jsesc/" "globals/" "jest-diff/" "to-fast-properties/" "number-is-nan/" "spdx-expression-parse/" "set-value/" "unicode-match-property-value-ecmascript/" "unicode-match-property-ecmascript/" "is-regex/" "os-homedir/" "postcss-resolve-nested-selector/" "spdx-license-ids/" "end-of-stream/" "private/" "json5/" "lie/" "jest-pnp-resolver/" "p-reduce/" "is-arrayish/" "object-visit/" "map-visit/" "posix-character-classes/" "regenerate/" "doctrine/" "array-includes/" "binary-extensions/" "static-extend/" "micromatch/" "os-tmpdir/" "jsdom/" "jsx-ast-utils/" "regenerator-runtime/" "postcss-value-parser/" "is-callable/" "unset-value/" "postcss-media-query-parser/" "code-point-at/" "regenerate-unicode-properties/" "has-value/" "es-to-primitive/" "to-object-path/" "decode-uri-component/" "babel-generator/" "jest-snapshot/" "jest-resolve-dependencies/" "is-generator-fn/" "path-parse/" "util-deprecate/" "jest-haste-map/" "font-awesome/" "has/" "union-value/" "spdx-correct/" "babel-preset-es2015/" "broadcast-channel/" "classnames/" "babylon/" "resolve-url/" "react-is/" "for-in/" "get-value/" "collection-visit/" "urix/" "js-cookie/" "source-map-url/" "babel-messages/" "jwt-redhat/" "co/" "atob/" "babel-code-frame/" "json-parse-better-errors/" "sisteransi/" "kleur/" "babel-traverse/" "babel-types/" "error-ex/" "browser-resolve/" "jest-matcher-utils/" "jest-runtime/" "babel-template/" "throat/" "expect/" "babel-helpers/" "is-buffer/" "jest-mock/" "jest-changed-files/" "jest-message-util/" "jest-each/" "rimraf/" "p-each-series/" "jest-watcher/" "pirates/" "ansi-escapes/" "core-util-is/" "process-nextick-args/" "pascalcase/" "jest-runner/" "source-map-support/" "home-or-tmp/" "mixin-deep/" "component-emitter/" "node-int64/" "class-utils/" "cache-base/" "glob-parent/" "fsevents/" "is-extglob/" "builtin-modules/" "is-binary-path/" "is-windows/" "anymatch/" "readdirp/" "symbol-observable/" "async-each/" "is-glob/" "ret/" "react-content-loader/" "core-js-pure/" "isexe/" "harmony-reflect/" "strip-bom/" "tmpl/" "parse-json/" "is-data-descriptor/" "leven/" "wrappy/" "is-builtin-module/" "validate-npm-package-license/" "hosted-git-info/" "find-index/" "querystringify/" "user-home/" "js-tokens/" "path-exists/" "object-assign/" "requires-port/" "scheduler/" "resolve-cwd/" "is-accessor-descriptor/" "babel-register/" "shebang-regex/" "trim-right/" "to-regex-range/" "snapdragon-util/" "repeat-string/" "is-descriptor/" "remove-trailing-separator/" "regexp-tree/" "is-extendable/" "slash/" "output-file-sync/" "fs-readdir-recursive/" "babel-polyfill/" "path-is-absolute/" "inherits/" "inflight/" "v8flags/" "fs.realpath/" "loose-envify/" "is-plain-object/" "once/" "makeerror/" "react/" "load-json-file/" "split-string/" "concat-map/" "balanced-match/" "stack-utils/" "ansi-styles/" "glob2base/" "source-map-resolve/" "has-symbols/" "function-bind/" "stylelint-config-recommended/" "rsvp/" "bser/" "wrap-ansi/" "get-stdin/" "base/" "safe-regex/" "pify/" "use/" "keycloak-js/" "prop-types/" "map-cache/" "jest-jasmine2/" "jest-get-type/" "jest-environment-node/" "arr-flatten/" "nice-try/" "debug/" "path-type/" "normalize-package-data/" "arrify/" "jest-environment-jsdom/" "shebang-command/" "snapdragon-node/" "repeat-element/" "date-fns/" "rx/" "spawn-command/" "tree-kill/" "ansi-regex/" "jsonify/" "array-reduce/" "array-map/" "normalize-path/" "ms/" "string.prototype.padend/" "pidtree/" "memorystream/" "pretty-format/" "jest-resolve/" "which/" "color-name/" "pump/" "path-key/" "es-abstract/" "assign-symbols/" "core-js-compat/" "js-levenshtein/" "estraverse/" "esrecurse/" "walker/" "glob/" "array-filter/" "minimist/" "regex-not/" "react-dom/" "react-redux/" "realpath-native/" "url-parse/" "source-map/" "import-local/" "istanbul-lib-coverage/" "read-pkg/" "brace-expansion/" "to-regex/" "has-flag/" "snapdragon/" "duplexer/" "object.pick/" "nanomatch/" "define-property/" "fragment-cache/" "chokidar/" "supports-color/" "@cnakazawa/" "strip-ansi/" "has-ansi/" "exec-sh/" "capture-exit/" "get-stream/" "is-stream/" "subarg/" "p-finally/" "shell-quote/" "strip-eof/" "npm-run-path/" "redux/" "invariant/" "minimatch/" "is-fullwidth-code-point/" "axios/" "stylelint-scss/" "identity-obj-proxy/" "babel-core/" "ci-info/" "commander/" "fb-watchman/" "fast-json-stable-stringify/" "chalk/" "define-properties/" "merge-stream/" "object.getownpropertydescriptors/" "test-exclude/" "istanbul-lib-instrument/" "decamelize/" "object.assign/" "cliui/" "deep-diff/" "p-defer/" "color-convert/" "escape-string-regexp/" "graceful-fs/" "sane/" "p-is-promise/" "imurmurhash/" "signal-exit/" "prompts/" "pkg-dir/" "semver/" "@sentry/" "execa/" "map-age-cleaner/" "safe-buffer/" "which-module/" "is-ci/" "set-blocking/" "require-main-filename/" "esutils/" "mem/" "babel-plugin-jest-hoist/" "yargs-parser/" "y18n/" "follow-redirects/" "jest-validate/" "make-dir/" "resolve/" "emojis-list/" "jest-regex-util/" "write-file-atomic/" "stylelint-config-recommended-scss/" "eslint-plugin-react/" "babel-cli/" "os-locale/" "string-width/" "jest-config/" "require-directory/" "urijs/" "babel-plugin-istanbul/" "get-caller-file/" "jest-util/" "eslint-visitor-keys/" "exit/" "babel-preset-jest/" "convert-source-map/" "@types/" "util.promisify/" "stylelint/" "eslint-config-prettier/" "commondir/" "lodash/" "pug-cli/" "cpx/" "mkdirp/" "@jest/" "big.js/" "@redhat-cloud-services/" "yargs/" "jest-mock-promise/" "core-js/" "pug/" "concurrently/" "redux-logger/" "eslint/" "npm-run-all/" "babel-plugin-transform-inline-environment-variables/" "find-cache-dir/" "parcel/" "babel-runtime/" "loader-utils/" "node-sass/" "babel-plugin-dynamic-import-node/" "@patternfly/" "babel-plugin-rewire/" "jest-mock-axios/" "babel-jest/" "localforage/" "babel-loader/" "@babel/" "axios-cache-adapter/" "jest/" "babel-eslint/" "../" "./")
 
- ("/home/iphands/prog/fakamai/assets/src/" (23682 51946 841228 45000) ".#init.sh" "launch.sh" "nginx.conf" "platformApps.json" "cert.chain.txt" "git_helper.sh" "do_platform_apps.py" "init.sh" "../" "./")
+ ("/home/iphands/prog/insights/chrome/" (23872 25334 820631 881000) "package.json" "package-lock.json" "testdata/" "README.md" ".travis.yml" ".eslintrc.yml" ".babelrc" "node_modules/" "static/" ".gitignore" "upload.sh" ".stylelintrc.json" "src/" "config/" "build/" ".travis/" ".git/" ".cache/" "../" "./")
 
- ("/home/iphands/prog/" (23682 47339 801001 221000) "fakamai-assets/" "jwt-redhat/" "fakamaibak/" "containers/" "uhc-portal-frontend-build/" "air-drupal/" "grub2/" "air/" "xorg-xwd/" "webpack-dev-server/" "webcam/" "vulnerability-engine/" "vulkano-examples/" "v4l2loopback/" "tray/" "spandx/" "shared_sources/" "rustation/" "rocketlauncher/" "psxact/" "phoenix-container/" "octoprint-docker/" "mytf/" "lsah/" "libretro-fceumm/" "kwin-tiling/" "keras-rl/" "insights/" "homectrl/" "gymtest/" "gnome-video-effects/" "gl_vk_supersampled/" "fork/" "fakamai/" "fakamai-secrets/" "fakamai-old/" "dolphin/" "docker-slack-desktop/" "deeplearn/" "ddpg/" "bin_x64/" "RetroArch/" "../" "./")
+ ("/home/iphands/prog/insights/chrome/src/js/jwt/" (23872 25492 374639 638000) "logger.js" "jwt.unit.test.js" "jwt.js" "docs.MD" "constants.js" "__mocks__/" "insights/" "../" "./")
 
- ("/home/iphands/prog/air-drupal/" (23679 2403 77564 974000) ".launch.sh" "air-drupal-secrets/" "test.sh" "Dockerfile" "themes/" "start.sh" "sites/" "profiles/" "ports.conf" "modules/" "helpers/" ".gitignore" ".git/" "../" "./")
+ ("/home/iphands/prog/insights/proxy/" (23848 53508 452611 479000) "spandx.config.js" "node_module/" "package.json" "package-lock.json" "README.md" "node_modules/" "LICENSE" "Dockerfile" ".gitignore" "ssl/" "scripts/" "patches/" "certs/" ".git/" ".admin/" "../" "./")
 
- ("/home/iphands/prog/fakamai/conf/" (23682 28870 638091 903000) "fakamai.nginx.conf" "launch.sh" "fakamai.vcl" "../" "./")
+ ("/home/iphands/prog/insights/landing-page/src/" (23849 15443 12963 976000) "entry.js" "entry-dev.js" "consts.js" "not-signed.html" "index.html" "App.scss" "NotFound.js" "routes/" "not-found.js" "not-found-dev.js" "logout.js" "logout-dev.js" "App.js" "store/" "layout/" "components/" "../" "./")
 
- ("/home/iphands/prog/fakamai/assets/base/" (23677 32903 531613 395000) "Dockerfile" "../" "./")
+ ("/home/iphands/prog/insights/chrome/src/js/App/" (23829 9063 202642 132000) "index.js" "Footer.js" "Sidenav/" "Header/" "../" "./")
 
- ("/home/iphands/prog/fakamai/node_modules/http-proxy/" (23575 63193 367925 870000) "package.json" "lib/" "coverage/" ".nyc_output/" "README.md" "LICENSE" "index.js" "codecov.yml" "CODE_OF_CONDUCT.md" "../" "./")
+ ("/home/iphands/prog/insights/chrome/src/js/App/Header/" (23829 9152 218162 156000) "Login.js" "index.js" "UserToggle.js" "Tools.js" "ToolbarToggle.js" "Logo.js" "InsightsAbout.scss" "InsightsAbout.js" "Brand.js" "UserIcon.js" "../" "./")
 
- ("/home/iphands/prog/fakamai/node_modules/" (23679 12542 933064 203000) "nodemon/" "update-notifier/" "undefsafe/" "touch/" "pstree.remy/" "ignore-by-default/" "chokidar/" "boxen/" "term-size/" "execa/" "lru-cache/" "yallist/" "configstore/" "xdg-basedir/" "write-file-atomic/" "widest-line/" "readdirp/" "util-deprecate/" "anymatch/" "micromatch/" "nanomatch/" "extglob/" "expand-brackets/" "braces/" "snapdragon/" "use/" "latest-version/" "package-json/" "got/" "url-parse-lax/" "source-map-resolve/" "urix/" "upath/" "unzip-response/" "base/" "cache-base/" "unset-value/" "unique-string/" "union-value/" "fill-range/" "to-regex-range/" "to-regex/" "to-object-path/" "timed-out/" "registry-url/" "registry-auth-token/" "rc/" "strip-json-comments/" "strip-eof/" "ansi-align/" "string-width/" "strip-ansi/" "class-utils/" "static-extend/" "set-value/" "split-string/" "source-map-url/" "source-map/" "snapdragon-node/" "snapdragon-util/" "signal-exit/" "semver-diff/" "regex-not/" "safe-regex/" "ret/" "resolve-url/" "repeat-string/" "repeat-element/" "remove-trailing-separator/" "pseudomap/" "process-nextick-args/" "prepend-http/" "posix-character-classes/" "is-installed-globally/" "is-path-inside/" "path-is-inside/" "path-is-absolute/" "glob-parent/" "path-dirname/" "pascalcase/" "p-finally/" "object.pick/" "collection-visit/" "map-visit/" "object-visit/" "object-copy/" "npm-run-path/" "normalize-path/" "nopt/" "mixin-deep/" "fragment-cache/" "map-cache/" "make-dir/" "lowercase-keys/" "define-property/" "kind-of/" "extend-shallow/" "is-plain-object/" "has-value/" "isobject/" "is-windows/" "is-stream/" "is-retry-allowed/" "is-redirect/" "dot-prop/" "is-obj/" "has-values/" "is-number/" "is-npm/" "is-glob/" "is-fullwidth-code-point/" "is-extglob/" "is-extendable/" "is-descriptor/" "is-data-descriptor/" "is-ci/" "is-accessor-descriptor/" "is-buffer/" "is-binary-path/" "global-dirs/" "ini/" "imurmurhash/" "import-lazy/" "get-value/" "get-stream/" "for-in/" "duplexer3/" "deep-extend/" "decode-uri-component/" "crypto-random-string/" "create-error-class/" "copy-descriptor/" "component-emitter/" "cli-boxes/" "ci-info/" "capture-stack-trace/" "camelcase/" "binary-extensions/" "atob/" "async-each/" "assign-symbols/" "array-unique/" "arr-union/" "arr-flatten/" "arr-diff/" "ansi-regex/" "abbrev/" ".bin/" "url-parse/" "transformer-proxy/" "npm-run-all/" "nodesi/" "http-proxy/" "harmon/" "express/" "client-certificate-auth/" "trumpet/" "html-select/" "stream-splicer/" "through2/" "xtend/" "cross-spawn/" "which/" "good-guy-http/" "request/" "http-signature/" "jsprim/" "verror/" "vary/" "read-pkg/" "normalize-package-data/" "validate-npm-package-license/" "uuid/" "utils-merge/" "util/" "body-parser/" "raw-body/" "finalhandler/" "unpipe/" "underscore/" "type-is/" "sshpk/" "bcrypt-pbkdf/" "tweetnacl/" "tunnel-agent/" "tough-cookie/" "split/" "cssauron/" "through/" "chalk/" "supports-color/" "load-json-file/" "strip-bom/" "readable-wrap/" "duplexer2/" "readable-stream/" "html-tokenize/" "string_decoder/" "string.prototype.padend/" "stream/" "serve-static/" "send/" "http-errors/" "statuses/" "spdx-correct/" "spdx-expression-parse/" "spdx-license-ids/" "spdx-exceptions/" "shell-quote/" "shebang-command/" "shebang-regex/" "setprototypeof/" "semver/" "ecc-jsbn/" "asn1/" "safer-buffer/" "safe-buffer/" "requires-port/" "range-parser/" "querystringify/" "qs/" "punycode/" "proxy-addr/" "promise/" "path-type/" "pify/" "pidtree/" "performance-now/" "path-to-regexp/" "path-key/" "parseurl/" "parse-json/" "on-finished/" "object-keys/" "oauth-sign/" "nice-try/" "accepts/" "negotiator/" "follow-redirects/" "debug/" "ms/" "minimist/" "minimatch/" "form-data/" "mime-types/" "mime-db/" "mime/" "methods/" "merge-descriptors/" "memorystream/" "media-typer/" "jsonify/" "json-stringify-safe/" "har-validator/" "ajv/" "json-schema-traverse/" "json-schema/" "json-parse-better-errors/" "jsbn/" "isstream/" "isexe/" "isarray/" "is-typedarray/" "es-abstract/" "es-to-primitive/" "is-symbol/" "is-regex/" "is-date-object/" "is-callable/" "is-builtin-module/" "error-ex/" "is-arrayish/" "ipaddr.js/" "inherits/" "indexof/" "iconv-lite/" "hosted-git-info/" "has-symbols/" "has-flag/" "has/" "har-schema/" "graceful-fs/" "getpass/" "function-bind/" "fresh/" "forwarded/" "forever-agent/" "fast-json-stable-stringify/" "fast-deep-equal/" "extsprintf/" "extend/" "eventemitter3/" "etag/" "escape-string-regexp/" "escape-html/" "encodeurl/" "emitter-component/" "ee-first/" "destroy/" "depd/" "combined-stream/" "delayed-stream/" "define-properties/" "dashdash/" "core-util-is/" "cookie-signature/" "cookie/" "content-type/" "content-disposition/" "brace-expansion/" "concat-map/" "ansi-styles/" "color-convert/" "color-name/" "co/" "clone/" "caseless/" "capitalize/" "bytes/" "builtin-modules/" "balanced-match/" "aws4/" "aws-sign2/" "asynckit/" "assert-plus/" "asap/" "array-reduce/" "array-map/" "array-flatten/" "array-filter/" "@schibstedpl/" "../" "./")
+ ("/home/iphands/prog/insights/chrome/src/js/jwt/insights/" (23829 9063 202642 132000) "user.unit.test.js" "user.js" "offline.test.js" "offline.js" "entitlements.js" "__mocks__/" "url.js" "../" "./")
 
- ("/home/iphands/" (23652 26540 860650 83000) "i4.html" "docsproxy/" "ttt" "test.123" ".python_history" ".Xauthority" ".tig_history" ".lesshst" "oc.log" "test2.sh" "test.txt" "t" ".parallel/" "oom.txt" "Untitled 1.odt" "oc" "insights_akamai.json" ".steampid" ".steampath" ".openoffice/" "text_anim/" "tmp" "test/" "oot/" ".q3a/" ".dvdcss/" "bitmap.png" "xmas/" ".yq2/" ".minetest/" "free-book.jpg" ".Superposition/" ".Heaven/" ".xauth3jR50J" "cdkey" "cfkey/" ".npm/" ".weechat/" ".icons/" "package-lock.json" ".wine/" "raw.githubusercontent.com/" ".winecemu/" "cemu.sh" ".pulse-cookie" ".xauthhe2afy" "tt" ".xsession-errors" ".xsession-errors.old" ".dmrc" ".bash_history" ".gambit_history" "winetricks" "video.mpg" "test2.py" "test.sh" "test.py" "test.json" "screenshot.jpg" "piss_on_vim.jpg" "out" "nvme.csv" "nvme" "notes.txt" "id.json" "convery_btrfs_bench.py" "blender.times.txt" ".yarnrc" ".wget-hsts" ".v8flags.6.8.275.32-node.28.c3c7079bcee0948c409cfd6ba8d6f038.json" ".v8flags.6.2.414.66.c3c7079bcee0948c409cfd6ba8d6f038.json" ".v8flags.6.2.414.54.c3c7079bcee0948c409cfd6ba8d6f038.json" ".v8flags.6.2.414.50.c3c7079bcee0948c409cfd6ba8d6f038.json" ".rnd" ".nvidia-settings-rc" ".npmrc" ".node_repl_history" ".jackdrc" ".gtkrc-2.0-kde4" ".gitignore_global" ".gitconfig" ".face" ".esd_auth" ".e-crashdump.txt" ".bashrc_redhat" ".bash_logout" ".Xresources" "ssl/" "saber/" "rpmbuild/" "ps3/" "prog/" "printing/" "pi/" "packaging-work/" "node_modules/" "ml/" "logs/" "dotfiles/" "cuda-workspace/" "bak/" "apps/" "Webcam/" "Videos/" "Templates/" "Steam/" "Public/" "Pictures/" "Music/" "Downloads/" "Documents/" "Desktop/" ".zsnes/" ".yarn/" ".vscode/" ".thumbnails/" ".theano/" ".steam/" ".slack/" ".sabnzbd/" ".pcsxr/" ".oracle_jre_usage/" ".nv/" ".node-gyp/" ".mplayer/" ".mozilla/" ".macromedia/" ".lpass/" ".kube/" ".keras/" ".kde/" ".gvfs/" ".gphoto/" ".gnupg/" ".gnome2/" ".gimp-2.8/" ".gens/" ".fceux/" ".esmtp_queue/" ".elementary/" ".eclipse/" ".e/" ".dotfiles_backup/" ".docker/" ".dgen/" ".conky/" ".cargo/" ".audacity-data/" ".WorldOfGoo/" ".face.icon" ".emacs.d/" ".emacs" ".bashrc" ".bash_profile" ".Xdefaults" "bin/" ".gnome/" ".pki/" ".cache/" ".config/" ".local/" ".w3m/" ".fluxbox/" ".dbus/" ".ssh/" "../" "./")
+ ("/home/iphands/prog/insights/akamai-smoke-test/tests/" (23810 38934 215504 818000) "test_ui.py" "test_api.py" "__init__.py" ".pytest_cache/" "__pycache__/" "../" "./")
 
- ("/home/iphands/docsproxy/" (23650 821 273930 545000) "conf.conf" "docs-proxy.conf" "Dockerfile" "../" "./")
+ ("/home/iphands/prog/insights/akamai-smoke-test/" (23810 38934 215504 818000) "utils.py" "data/" "conftest.py" "run_both_stable.sh" "run_prod_stable.sh" "run_stage.sh" "run_prod.sh" "run_all.sh" "pytest.ini" "prep.sh" "__pycache__/" "venv/" "requirements.txt" ".gitignore" "tests/" "tmp/" ".pytest_cache/" ".git/" "../" "./")
 
- ("/home/iphands/bin/" (23644 31274 80688 964000) "akamai" "send_it_errywhere.sh" "start_tray" "kernel_helper.sh" "steam" "vpn" "toggle_xcompmgr" "toggle_compositor" "oc" "doggo.sh" "desktop.sh" "demo-x" "../" "./")
+ ("/home/iphands/prog/air-drupal/" (23819 33314 918793 630000) "stack.yml" ".launch.sh" "air-drupal-secrets/" "test.sh" "Dockerfile" "themes/" "start.sh" "sites/" "profiles/" "ports.conf" "modules/" "helpers/" ".gitignore" ".git/" "../" "./")
 
- ("/home/iphands/prog/insights/build/frontend/" (23478 16497 239392 809000) "Jenkinsfile" "Dockerfile" "2015-RH-IT-Root-CA.pem" "ssl/" "scripts/" "nginx/" ".ssh/" "../" "./")
+ ("/home/iphands/prog/insights/chrome/src/" (23829 9063 201642 126000) "__mocks__/" "sass/" "pug/" "js/" "../" "./")
 
- ("/tmp/" (23643 12628 371544 329000) "pulse-PKdhtXMmr18n/" "screen/" ".X11-unix/" ".ICE-unix/" ".XIM-unix/" ".font-unix/" ".Test-unix/" ".X0-lock" ".com.google.Chrome.Zyuy0d/" "net-export/" "Slack Crashes/" "v8-compile-cache-1000/" ".org.chromium.Chromium.fOgysy/" "pms-fce9cfd0-4b1c-4e10-9569-453ac1f72b40/" "quit.blend" "glew.EDlNwC/" "glew.t73Kks/" "krb5cc_1000" ".wine-1000/" ".com.google.Chrome.dmfYhU/" ".com.google.Chrome.LDpvjC" "mozilla_iphands0/" "systray_eL3oOb" ".org.chromium.Chromium.V451BP/" "../" "./")
+ ("/home/iphands/prog/insights/" (23782 59574 412689 596000) "entitlements-go/" "entitlements-meta/" "cloud-services-config/" "insights-rbac-ui/" "3scale/" "akamai-smoke-test/" "tower-analytics-frontend/" "landing-page/" "tower-analytics/" "cert-test/" "insights-3scale/" "start-app/" "remediations-api/" "compliance-frontend/" "telemetryapi/" "swagger/" "storybook/" "starter-app/" "spec/" "services/" "sat5-plugin/" "remediations-frontend/" "proxy/" "npm-cache/" "node-auth/" "mnm/" "misc/" "koku-ui/" "inventory-frontend/" "frontend/" "frontend-components/" "frontend-builder-common/" "dashboard/" "content/" "client/" "chrome/" "chrome-build/" "api/" "advisor-frontend/" "../" "./")
 
- ("/home/iphands/prog/fakamai/node_modules/http-proxy/lib/" (23575 63193 112925 858000) "http-proxy/" "http-proxy.js" "../" "./")
+ ("/home/iphands/prog/insights/advisor-frontend/" (23847 39511 194695 708000) "package.json" "package-lock.json" ".travis.yml" ".eslintrc.yml" ".babelrc" "node_modules/" "README.md" "coverage/" "dist/" "LICENSE" ".stylelintrc.json" ".gitignore" ".firebaserc" ".eslintignore" "static/" "src/" "config/" ".travis/" ".git/" "../" "./")
 
- ("/home/iphands/prog/fakamai/node_modules/http-proxy/lib/http-proxy/" (23575 63193 115925 858000) "passes/" "index.js" "common.js" "../" "./")
+ ("/home/iphands/prog/insights/advisor-frontend/src/" (23847 39511 196695 708000) "index.html" "entry.js" "entry-dev.js" "Routes.js" "AppSvgs.js" "AppReducer.js" "AppConstants.js" "AppActions.js" "App.scss" "App.js" "Utilities/" "Store/" "SmartComponents/" "PresentationalComponents/" "../" "./")
 
- ("/home/iphands/prog/insights/dashboard/src/Utilities/" (23616 51848 570809 522000) "skeletonAsyncCard.js" "Api.js" "asyncComponent.js" "ReducerRegistry.js" "../" "./")
+ ("/home/iphands/prog/fakamai/" (23706 51926 628423 937000) "fakamai-tmp/" "fakamai-test/" "assets-puller/" "assets-server/" "secrets/" "fakamai/" "../" "./")
 
- ("/home/iphands/prog/air-drupal/themes/bootstrap_air/js/" (23641 53586 521107 629000) "air.js" "../" "./")
+ ("/home/iphands/prog/cloud/e2e-deploy/buildfactory/advisor/" (23792 7019 315425 890000) "insights-advisor-service.yml" "insights-advisor-api.yml" "content-server.yml" "content-server-image-copier.yml" "_cfg.yml" "../" "./")
 
- ("/home/iphands/prog/air-drupal/modules/addtocalendar/includes/" (23641 53586 536107 629000) "addtocalendar.build.inc" "addtocalendar.form.inc" "../" "./")
+ ("/home/iphands/prog/cloud/e2e-deploy/buildfactory/entitlements/" (23792 7511 905450 142000) "service.yml" "../" "./")
 
- ("/home/iphands/prog/air-drupal/modules/addtocalendar/src/" (23641 52697 804063 873000) "AddToCalendarApiWidget.php" "Plugin/" "../" "./")
+ ("/home/iphands/prog/cloud/entitlements-api-go/" (23789 14884 157133 236000) "go.mod" "go.sum" "ocp/" "resources/" "local/" "types/" "main.go" "logger/" "config/" "README.md" ".gitignore" ".travis.yml" "modd.conf" "coverage.txt" "server/" "scripts/" "controllers/" ".git/" "../" "./")
 
- ("/home/iphands/prog/air-drupal/modules/addtocalendar/" (23614 41003 804903 249000) "addtocalendar.services.yml" "addtocalendar.module" "addtocalendar.libraries.yml" "addtocalendar.info.yml" "README.md" "LICENSE.txt" "LICENSE" "src/" "includes/" "config/" "../" "./")
+ ("/home/iphands/prog/cloud/entitlements-api-go/config/" (23783 9083 904430 351000) "main.go" "../" "./")
 
- ("/home/iphands/prog/insights/start-app/" (23640 38992 595162 481000) "static/" "src/" "package.json" "package-lock.json" "config/" "README.md" "LICENSE" ".travis/" ".travis.yml" ".stylelintrc.json" ".gitignore" ".firebaserc" ".eslintrc.yml" ".eslintignore" ".babelrc" ".git/" "../" "./")
+ ("/home/iphands/prog/cloud/entitlements-api-go/local/" (23783 8009 579377 457000) "prod.sh" "development.iphands.sh" "../" "./")
 
- ("/home/iphands/prog/air-drupal/themes/bootstrap_air/templates/" (23572 3411 78838 146000) "views-view-fields.html.twig" "README.md" "../" "./")
+ ("/home/iphands/prog/cloud/entitlements-api-go/controllers/" (23789 15227 435150 137000) "subscriptions.go" "lubdub.go" "controllers_test.go" "controllers_suite_test.go" "../" "./")
 
- ("/home/iphands/prog/air-drupal/themes/bootstrap_air/scss/" (23613 6264 47791 969000) "style.scss" "jquery-ui/" "component/" "air/" "_overrides.scss" "_default-variables.scss" "_air.scss" "../" "./")
+ ("/home/iphands/prog/cloud/entitlements-api-go/types/" (23789 14651 468121 780000) "main.go" "../" "./")
 
- ("/home/iphands/prog/air-drupal/themes/bootstrap_air/scss/air/" (23572 3411 77838 146000) "homepage/" "_vars.scss" "_footer.scss" "../" "./")
+ ("/home/iphands/prog/cloud/e2e-deploy/buildfactory/" (23792 7448 865447 39000) "entitlements/" "vulnerability/" "vmaas/" "topological-inventory/" "sources/" "platform/" "mnm/" "hooks/" "engine/" "compliance/" "catalog/" "approval/" "aiops/" "advisor/" "_cfg.yml" "README.md" "../" "./")
 
- ("/home/iphands/prog/air-drupal/themes/bootstrap_air/scss/air/homepage/" (23615 57581 913865 175000) "_main.scss" "_block.scss" "../" "./")
+ ("/home/iphands/prog/cloud/e2e-deploy/buildfactory/aiops/" (23792 7019 315425 890000) "aiops-volume-type-validation.yml" "aiops-publisher.yml" "aiops-outlier-detection.yml" "aiops-instance-type-validation.yml" "aiops-incoming-listener.yml" "aiops-idle-cost-savings.yml" "aiops-dummy-ai-service.yml" "aiops-data-collector.yml" "aiops-consumer.yml" "aiops-clustering.yml" "_cfg.yml" "../" "./")
 
- ("/home/iphands/.q3a/baseq3/" (23586 27243 867082 18000) "q3history" "q3config.cfg" "pak8.pk3" "pak7.pk3" "pak6.pk3" "pak5.pk3" "pak4.pk3" "pak3.pk3" "pak2.pk3" "pak1.pk3" "pak0.pk3" "crashlog.txt" "../" "./")
+ ("/home/iphands/prog/cloud/entitlements-api-go/server/" (23783 8620 365407 529000) "routes.go" "main.go" "../" "./")
 
- ("/home/iphands/prog/insights/dashboard/src/PresentationalComponents/Dashboard/" (23614 3315 84873 403000) "_dashboard.scss" "Dashboard.js" "../" "./")
+ ("/home/iphands/prog/rhv-scripts/ansible/" (23782 38885 513670 990000) "playbooks/" "inventories/" "ansible.cfg" "../" "./")
 
- ("/home/iphands/prog/insights/dashboard/src/PresentationalComponents/" (23614 3315 84873 403000) "Loading/" "Dashboard/" "Modal/" "GaugeWidget/" "GaugeSection/" "../" "./")
+ ("/home/iphands/rhev/" (23780 39204 390779 737000) ".ansible.cfg" "../" "./")
+
+ ("/home/iphands/prog/cloud/entitlements-api-go/scripts/" (23781 38385 15966 21000) "dev_deps.sh" "xrhid_helper.sh" "watch.sh" "../" "./")
+
+ ("/home/iphands/prog/rhv-scripts/private/" (23782 38662 465660 9000) "env" "../" "./")
+
+ ("/home/iphands/prog/rhv-scripts/" (23782 38435 448648 832000) "private/" "ansible/" ".gitignore" "java-webstart-container/" "README.md" ".git/" "../" "./")
+
+ ("/home/iphands/prog/cloud/entitlements-api-go/logger/" (23781 37756 224935 63000) "main.go" "../" "./")
+
+ ("/home/iphands/prog/cloud/" (23774 44362 816673 960000) "entitlements-api-go/" "enc/" ".enc/" "../" "./")
+
+ ("/home/iphands/prog/" (23781 35422 71820 142000) "frontend-sizes-grafana/" "rhv-scripts/" "sharing-is-caring/" "cloud/" "spandx/" "koku/" "uhc-portal-frontend-deploy/" "fakamai-secrets/" "rhev/" "lsah/" "docker-tools/" "fakamai/" "jwt-redhat/" "fakamaibak/" "containers/" "air-drupal/" "grub2/" "air/" "xorg-xwd/" "webpack-dev-server/" "webcam/" "vulnerability-engine/" "vulkano-examples/" "v4l2loopback/" "tray/" "shared_sources/" "rustation/" "rocketlauncher/" "psxact/" "phoenix-container/" "octoprint-docker/" "mytf/" "libretro-fceumm/" "kwin-tiling/" "keras-rl/" "insights/" "homectrl/" "gymtest/" "gnome-video-effects/" "gl_vk_supersampled/" "fork/" "fakamai-old/" "dolphin/" "docker-slack-desktop/" "deeplearn/" "ddpg/" "bin_x64/" "RetroArch/" "../" "./")
+
+ ("/home/iphands/go/" (23775 10759 371246 140000) "src/" "bin/" "pkg/" "../" "./")
+
+ ("/home/iphands/go/src/" (23775 10932 470254 662000) "gopkg.in/" "golang.org/" "github.com/" "../" "./")
+
+ ("/home/iphands/go/src/github.com/" (23775 10920 162254 56000) "hpcloud/" "onsi/" "RedHatInsights/" "../" "./")
+
+ ("/home/iphands/go/src/github.com/RedHatInsights/" (23775 10759 371246 140000) "platform-go-middlewares/" "../" "./")
+
+ ("/home/iphands/go/src/github.com/RedHatInsights/platform-go-middlewares/identity/" (23781 37272 298911 237000) "identity_suite_test.go" "identity.go" "../" "./")
+
+ ("/home/iphands/go/src/github.com/RedHatInsights/platform-go-middlewares/" (23775 10759 639246 153000) "identity/" ".travis.yml" ".git/" "../" "./")
+
+ ("/home/iphands/prog/rhv-scripts/ansible-playbooks/" (23781 24824 108298 358000) "ddns.yml" ".#prep_vm.yml" ".#excludes.yml" "yum_update.yml" "vms.inv" "test.yaml" "single" "reboot.yml" "prep_vm.yml" "prep_vm.tml" "prep.yaml" "ping.yml" "inventory" "hosts_hack.yml" "hostname.yml" "goferd_solution_3391431.yml" "excludes.yml" "ansible.cfg" "../" "./")
+
+ ("/home/iphands/prog/insights/landing-page/src/routes/" (23774 48870 510895 894000) "Logout.js" "Landing.scss" "Landing.js" "404.scss" "404.js" "Logout.scss" "../" "./")
+
+ ("/home/iphands/prog/insights/entitlements-api/src/middleware/" (23770 6862 203890 240000) "prettyJson.ts" "identity/" "../" "./")
+
+ ("/tmp/entitlements-api-go/scripts/" (23770 56684 239343 197000) "test.sh" "watch.sh" "../" "./")
+
+ ("/home/iphands/go/src/cloud.redhat.com/entitlements/types/" (23770 56419 641330 170000) "types.go" "../" "./")
+
+ ("/home/iphands/go/src/cloud.redhat.com/entitlements/" (23771 9820 861262 532000) "go.sum" "go.mod" "scripts/" "config/" "types/" "server/" "main.go" "controllers/" ".git/" "../" "./")
+
+ ("/home/iphands/go/src/cloud.redhat.com/entitlements/server/" (23771 9773 787260 215000) "server.go" "routes.go" "../" "./")
+
+ ("/home/iphands/go/src/cloud.redhat.com/entitlements/middleware/" (23771 9481 205245 810000) ".#identity.go" "identity.go" "../" "./")
+
+ ("/home/iphands/go/src/cloud.redhat.com/" (23770 56419 638330 170000) "entitlements/" "../" "./")
+
+ ("/home/iphands/go/src/github.com/RedHatInsights/platform-go-middleware/" (23771 9456 172244 577000) "identity/" "../" "./")
+
+ ("/home/iphands/go/src/github.com/RedHatInsights/platform-go-middleware/identity/" (23771 9465 484245 36000) ".#identity.go" "../" "./")
+
+ ("/home/iphands/go/src/cloud.redhat.com/entitlements/controllers/" (23770 10380 298063 451000) "subscriptions.go" "lubdub.go" "../" "./")
+
+ ("/home/iphands/prog/insights/entitlements-api/src/util/" (23752 29595 802805 250000) "log.ts" "cls.ts" "../" "./")
+
+ ("/home/iphands/prog/insights/entitlements-api/src/middleware/identity/" (23756 22692 295349 531000) "impl.ts" "utils.ts" "identity.unit.ts" "fallback.ts" "demo.ts" "../" "./")
+
+ ("/home/iphands/go/src/cloud.redhat.com/entitlements/scripts/" (23770 6515 474873 169000) ".#test.sh" "watch.sh" "../" "./")
+
+ ("/home/iphands/go/src/cloud.redhat.com/entitlements/config/" (23770 6438 891869 398000) "development.iphands.sh" "config.go" "../" "./")
+
+ ("/home/iphands/prog/insights/proxy/scripts/" (23757 57847 781717 504000) "dev_build.sh" "run.sh" "update.sh" "patch-etc-hosts.sh" "env.sh" "../" "./")
+
+ ("/home/iphands/prog/insights/dashboard/src/SmartComponents/Cards/" (23757 61397 169892 256000) "VulnerabilityCard.js" "_cards.scss" "ComplianceCard.js" "../" "./")
+
+ ("/home/iphands/prog/insights/dashboard/src/" (23757 61397 169892 256000) "index.html" "AppConstants.js" "AppReducer.js" "AppActions.js" "entry.test.js" "entry.js" "entry-dev.js" "Routes.js" "App.scss" "App.js" "Store/" "SmartComponents/" "Utilities.scss" "Utilities/" "PresentationalComponents/" "../" "./")
+
+ ("/home/iphands/prog/insights/landing-page/config/" (23757 55656 538609 620000) "base.webpack.config.js" "webpack.common.js" "base.webpack.plugins.js" "test.webpack.plugins.js" "test.webpack.config.js" "setupTests.js" "prod.webpack.config.js" "dev.webpack.plugins.js" "dev.webpack.config.js" "../" "./")
+
+ ("/home/iphands/prog/insights/landing-page/proxy-config/" (23757 63454 99993 528000) "local-frontend.js" "../" "./")
+
+ ("/home/iphands/prog/insights/entitlements-api/src/subscriptions/" (23758 19101 46036 457000) "subscription.services.ts" "../" "./")
+
+ ("/home/iphands/prog/insights/entitlements-api/src/config/" (23756 30158 207717 111000) "index.ts" "../" "./")
+
+ ("/home/iphands/prog/insights/landing-page/" (23757 55351 676594 610000) "node_modules/" "package-lock.json" "package.json" "proxy-config/" "Jenkinsfile" ".eslintrc.yml" ".babelrc" ".travis/" "coverage/" "dist/" "webpack.config.js" "static/" "src/" "config/" "README.md" "LICENSE" ".travis.yml" ".stylelintrc.json" ".gitignore" ".eslintignore" ".git/" "../" "./")
+
+ ("/home/iphands/prog/insights/chrome/node_modules/uri-js/dist/esnext/" (23757 54550 720555 175000) "util.js.map" "util.js" "util.d.ts" "uri.js.map" "uri.js" "uri.d.ts" "schemes/" "regexps-uri.js.map" "regexps-uri.js" "regexps-uri.d.ts" "regexps-iri.js.map" "regexps-iri.js" "regexps-iri.d.ts" "index.js.map" "index.js" "index.d.ts" "../" "./")
+
+ ("/home/iphands/prog/insights/chrome/node_modules/urijs/src/" (23757 54548 781555 80000) "URITemplate.js" "URI.min.js" "URI.js" "URI.fragmentURI.js" "URI.fragmentQuery.js" "SecondLevelDomains.js" "punycode.js" "jquery.URI.min.js" "jquery.URI.js" "IPv6.js" "../" "./")
+
+ ("/home/iphands/prog/insights/akamai-smoke-test/data/" (23756 39442 935174 239000) "main.yml" "small.yml" "../" "./")
+
+ ("/home/iphands/prog/insights/chrome/src/__mocks__/" (23753 55068 636577 290000) "axios.js" "../" "./")
+
+ ("/home/iphands/prog/insights/chrome/testdata/" (23753 55068 646577 290000) "user.json" "token.json" "encodedToken.json" "decodedToken.json" "../" "./")
+
+ ("/home/iphands/prog/insights/chrome/src/js/jwt/insights/__mocks__/" (23753 55068 637577 290000) "entitlements.js" "../" "./")
+
+ ("/home/iphands/prog/insights/entitlements-api/" (23756 23970 160412 446000) "package.json" "certs/" "docker-compose.yml" "deploy-prod.sh" "deploy.sh" "node_modules/" "dist/" "tslint.json" "tsconfig.json" "swagger/" "src/" "package-lock.json" "README.md" "Dockerfile" ".travis.yml" ".gitignore" ".git/" "../" "./")
+
+ ("/home/iphands/prog/insights/chrome/src/pug/templates/" (23753 55068 639577 290000) "head-block.pug" "../" "./")
+
+ ("/home/iphands/prog/insights/inventory-frontend/src/" (23755 17597 579185 675000) "index.html" "api.js" "actions.test.js" "actions.js" "constants.js" "entry.js" "entry-dev.js" "config.js" "Routes.js" "__mocks__/" "App.scss" "App.js" "Utilities.scss" "store/" "routes/" "components/" "Utilities/" "../" "./")
+
+ ("/home/iphands/prog/insights/inventory-frontend/src/store/" (23755 19699 126289 143000) "reducers.js" "index.js" "reducers.test.js" "../" "./")
+
+ ("/home/iphands/prog/insights/chrome/src/pug/" (23756 31590 594787 633000) "landing-header.pug" "header.pug" "landing.pug" "templates/" "sidebar-new.pug" "head.pug" "head-staging.pug" "after.pug" "body.pug" "sidebar.pug" "imageFilter.pug" "globalNav.pug" "../" "./")
+
+ ("/home/iphands/prog/insights/inventory-frontend/src/components/inventory/" (23755 16094 791111 686000) "AsyncInventory.js" "../" "./")
+
+ ("/home/iphands/prog/insights/inventory-frontend/src/components/" (23577 4814 26494 462000) "Alerts.scss" "inventory/" "../" "./")
+
+ ("/home/iphands/prog/insights/inventory-frontend/" (23755 16287 839121 190000) "node_modules/" "package.json" "package-lock.json" ".babelrc" ".eslintrc.yml" ".travis.yml" ".gitignore" "README.md" "yarn.lock" "LICENSE" "Jenkinsfile" ".stylelint.json" ".firebaserc" ".eslintignore" "static/" "src/" "dist/" "config/" ".travis/" ".git/" "../" "./")
 )
 
 ;; ----- ido-unc-hosts-cache -----
