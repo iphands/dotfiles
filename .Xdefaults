@@ -116,8 +116,8 @@ xosview*page:               False
 ! Network Meter Resources
 
 xosview*net:                True
-!xosview*netBandwidth:       10000000  ! for 100Mbit/s
-xosview*netBandwidth:       3000000  ! for 100Mbit/s
+!xosview*netBandwidth:      10000000  ! for 100Mbit/s
+xosview*netBandwidth:       100000000
 xosview*netInColor:         red
 xosview*netOutColor:        green
 xosview*netBackground:      #111111
