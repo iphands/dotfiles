@@ -6,6 +6,12 @@
 (setq make-backup-files nil)
 (setq auto-save-default nil)
 
+;; rebuild all of the things!
+(defun rebuild-emacsd ()
+ "Rebuild all things in .emacs.d"
+ (interactive)
+ (byte-recompile-directory (expand-file-name "~/.emacs.d") 0))
+
 ;; (setq backup-directory-alist `(("." . "~/.saves")))
 ;; (setq backup-by-copying t)
 ;; (setq delete-old-versions t
@@ -213,10 +219,5 @@
 
 (add-to-list 'auto-mode-alist '("Jenkinsfile" . groovy-mode))
 (add-to-list 'auto-mode-alist '("\\.jenkinsfile\\'" . groovy-mode))
-
-(defun rebuild-emacsd ()
- "Rebuild all things in .emacs.d"
- (interactive)
- (byte-recompile-directory (expand-file-name "~/.emacs.d") 0))
 
 ;;; .emacs ends here
