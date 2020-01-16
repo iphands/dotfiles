@@ -2,6 +2,8 @@
 
 ;; ----- ido-last-directory-list -----
 (
+ ("/home/iphands/prog/lessuploads/data/" . "templates/")
+ ("/home/iphands/prog/lessuploads/" . "data/")
  ("/mnt/nas/bak/games/q2/" . "baseq2/")
  ("/home/iphands/prog/cloud/e2e-deploy/buildfactory/" . "advisor/")
  ("/home/iphands/prog/rhv-scripts/" . "ansible/")
@@ -213,6 +215,11 @@
 
 ;; ----- ido-work-directory-list -----
 (
+ "/home/iphands/prog/lessuploads/data/templates/"
+ "/home/iphands/prog/lessuploads/"
+ "/home/iphands/prog/lessuploads/data/"
+ "/mnt/nas/pics/sorter/"
+ "/mnt/nas/scratch/wyze/"
  "/mnt/nas/bak/games/q2/baseq2/"
  "/mnt/nas/bak/games/q2/3zb2/"
  "/home/iphands/prog/tray/src/"
@@ -258,50 +265,57 @@
  "/home/iphands/go/src/cloud.redhat.com/entitlements/controllers/"
  "/home/iphands/go/src/cloud.redhat.com/entitlements/config/"
  "/home/iphands/prog/insights/entitlements-api/src/util/"
- "/home/iphands/prog/insights/entitlements-api/src/middleware/identity/"
- "/home/iphands/prog/insights/entitlements-api/src/middleware/"
- "/home/iphands/go/src/cloud.redhat.com/entitlements/scripts/"
- "/home/iphands/go/src/cloud.redhat.com/entitlements/"
- "/home/iphands/prog/insights/akamai-smoke-test/tests/"
 )
 
 ;; ----- ido-work-file-list -----
 (
+ "rh_accounts.sql"
+ "all.sql"
+ "hints"
+ "run.sh"
+ "sort.py"
+ "mylist.txt"
  "server.cfg"
  "addbot.cfg"
  "3ZBConfig.cfg"
  "monitor.js"
- "Dockerfile"
- "fifi.txt"
- "countries.js"
- "members.js"
- "index.html"
- "main.js"
 )
 
 ;; ----- ido-dir-file-cache -----
 (
- ("/mnt/nas/bak/games/q2/baseq2/" (24057 40046 342651 167000) "maps.lst~" "maps.lst" "server.cfg~" "server.cfg" "maps/" "pak2.pak" "pak1.pak" "pak0.pak" "../" "./")
+ ("/home/iphands/prog/lessuploads/data/templates/" (24092 28848 699768 690000) "rh_accounts.sql" "all.sql" "../" "./")
 
- ("/mnt/nas/bak/games/q2/3zb2/" (24058 5162 104711 952000) "game.cfg" "addbot.cfg" "3ZBConfig.cfg" "game.so" "pak6.pak" "../" "./")
+ ("/home/iphands/prog/lessuploads/data/" (24087 21146 93154 951000) "templates/" "run.sh" "test" "../" "./")
+
+ ("/home/iphands/prog/lessuploads/" (24087 21051 249147 271000) "test/" "run.sh" "data/" "scripts/" "hints" ".git/" "../" "./")
+
+ ("/home/iphands/Downloads/" (24086 10952 786023 51000) "test1.jpg" "test.sql" "hints.txt" "hints" "list_norh.csv" "DataFromDB_NoRH.txt" "badaccounts" "chart.png" "DataFromDB.txt" ".tmp.txt" ".~lock.IPMI Firmware Update.doc#" "../" "./")
+
+ ("/home/iphands/prog/rhv-scripts/ansible/inventories/" (24085 61924 444843 757000) "templates" "rhel6" "vms" "single" "hypervisors" "../" "./")
+
+ ("/home/iphands/prog/lsah/" (24052 6262 150386 928000) "package-lock.json" "index.html" "node_modules/" "package.json" "deploy.sh" "vendor/" "css/" "vendor-keep/" "sass/" "lsah.nginx.conf" "js/" "images/" "images-src/" "gulpfile.js" "data/" ".travis.yml" ".gitignore" ".git/" "../" "./")
+
+ ("/home/iphands/prog/lsah/data/" (24052 6345 264384 612000) "members.js" "countries.js" "../" "./")
+
+ ("/home/iphands/" (24087 15535 198700 629000) "tmp.json" "test.sql" "ba.txt" ".Xauthority" ".lesshst" ".tig_history" ".var/" "tmp2/" "sab/" "tmp.emerge.msg.txt" "list4" "list3" "accounts.sh" "list2" "list" ".q3a/" ".q3abak/" ".testcontainers.properties" ".m2/" ".steampid" ".steampath" "www/" "usr/" "tmp/" "sys/" "sbin/" "root/" "rom/" "proc/" "overlay/" "lib/" "dev/" "unifi.sh" ".minecraft/" "minecraft-launcher/" "minecraft/" "nvidia" "xjoin.txt" "sat.tagging.txt" "oculus.hints.txt" "test.sh" "SideQuest-0.7.1/" ".cmake/" "meetings/" "inv.talk.loic" "robnotes.txt" "lel/" "test.blob" "notes.xjoin.txt" "pqsl_cheat_sheet.txt" "uhc-portal/" ".mupdf.history" ".nmcli-history" "go/" "go.bak/" "users.txt" "oldhomesize" "rebuild.txt" "onboot.sh" "qa-certs/" "android-platform-tools/" "pixel-stuff/" ".android/" ".ansible/" "rhev/" "docker/" "Downloads/" ".v8flags.6.8.275.32-node.51.c3c7079bcee0948c409cfd6ba8d6f038.json" ".python_history" "notes" "test-akamai.sh" ".~lock.Untitled 1.odt#" ".nvm/" "shotwell/" "test/" ".minishift/" "Pictures" "images/" "known_hosts" "t/" "keys/" ".vuescan/" ".sane/" "docsproxy/" ".parallel/" "oom.txt" ".openoffice/" "text_anim/" "oot/" ".dvdcss/" "xmas/" ".yq2/" ".minetest/" ".Superposition/" ".Heaven/" ".xauth3jR50J" "cdkey" "cfkey/" ".npm/" ".weechat/" ".icons/" ".wine/" ".winecemu/" "cemu.sh" ".pulse-cookie" ".xauthhe2afy" ".xsession-errors" ".xsession-errors.old" ".dmrc" ".bash_history" ".gambit_history" "winetricks" "nvme" "notes.txt" "convery_btrfs_bench.py" ".yarnrc" ".wget-hsts" ".v8flags.6.8.275.32-node.28.c3c7079bcee0948c409cfd6ba8d6f038.json" ".v8flags.6.2.414.66.c3c7079bcee0948c409cfd6ba8d6f038.json" ".v8flags.6.2.414.54.c3c7079bcee0948c409cfd6ba8d6f038.json" ".v8flags.6.2.414.50.c3c7079bcee0948c409cfd6ba8d6f038.json" ".rnd" ".nvidia-settings-rc" ".npmrc" ".node_repl_history" ".jackdrc" ".gtkrc-2.0-kde4" ".gitignore_global" ".gitconfig" ".face" ".esd_auth" ".e-crashdump.txt" ".bashrc_redhat" ".bash_logout" ".Xresources" "ssl/" "saber/" "rpmbuild/" "ps3/" "prog/" "printing/" "pi/" "packaging-work/" "ml/" "logs/" "dotfiles/" "cuda-workspace/" "bak/" "apps/" "Webcam/" "Videos/" "Templates/" "Steam/" "Public/" "Music/" "Documents/" "Desktop/" ".zsnes/" ".yarn/" ".vscode/" ".thumbnails/" ".theano/" ".steam/" ".slack/" ".sabnzbd/" ".pcsxr/" ".oracle_jre_usage/" ".nv/" ".node-gyp/" ".mplayer/" ".mozilla/" ".macromedia/" ".lpass/" ".kube/" ".keras/" ".kde/" ".gvfs/" ".gphoto/" ".gnupg/" ".gnome2/" ".gimp-2.8/" ".gens/" ".fceux/" ".esmtp_queue/" ".elementary/" ".eclipse/" ".e/" ".dotfiles_backup/" ".docker/" ".dgen/" ".conky/" ".cargo/" ".audacity-data/" ".WorldOfGoo/" ".face.icon" ".emacs.d/" ".emacs" ".bashrc" ".bash_profile" ".Xdefaults" "bin/" ".gnome/" ".pki/" ".cache/" ".config/" ".local/" ".w3m/" ".fluxbox/" ".dbus/" ".ssh/" "../" "./")
+
+ ("/home/iphands/docker/quake2/" (24054 64103 144638 888000) "server.cfg" "compile" "Dockerfile" "../" "./")
+
+ ("/home/iphands/prog/tray/src/" (24055 58180 745060 672000) "vol.js" "utils.js" "monitor.js" "mic.js" "index.js" "compositor.js" "../" "./")
+
+ ("/mnt/nas/bak/games/q2/3zb2/" (24068 11417 992793 481000) "pak6.pak" "game.so" "game.cfg" "addbot.cfg" "3ZBConfig.cfg~" "3ZBConfig.cfg" "3zb2/" "../" "./")
+
+ ("/mnt/nas/bak/games/q2/baseq2/" (24058 5172 782356 692000) "server.cfg~" "server.cfg" "pak2.pak" "pak1.pak" "pak0.pak" "maps.lst~" "maps.lst" "maps/" "../" "./")
+
+ ("/mnt/nas/scratch/wyze/" (24084 60662 208657 630000) "timelapse.mkv" "output.orig.mkv" "mylist.txt" "makecat.sh" "makelist.sh" "test.sh" "../" "./")
+
+ ("/mnt/nas/pics/sorter/" (24079 31778 241104 149000) "zero.list.md5.txt" "logs/" "zero.list.txt" ".all.good" ".gitignore" "tmp/" ".git/" "addexif.py" "old/" "list.trim.txt" "venv/" "sort.py" "../" "./")
 
  ("/mnt/nas/bak/games/q2/" (24057 36793 258449 151000) "3zb2/" "tnp/" "baseq2/" "../" "./")
-
- ("/home/iphands/prog/tray/src/" (23704 63675 874549 154000) "vol.js" "utils.js" "monitor.js" "mic.js" "index.js" "compositor.js" "../" "./")
-
- ("/home/iphands/docker/quake2/" (24054 63174 574664 762000) "compile" "Dockerfile" "../" "./")
-
- ("/home/iphands/Downloads/" (23966 14078 705390 294000) ".tmp.txt" ".~lock.IPMI Firmware Update.doc#" "../" "./")
 
  ("/home/iphands/prog/lsah/sass/" (23929 36590 997335 683000) "application.scss" "page.scss" "nav.scss" "../" "./")
 
  ("/home/iphands/prog/lsah/js/" (23930 20266 298250 786000) "main.js" "../" "./")
-
- ("/home/iphands/prog/lsah/" (23947 34773 80265 326000) "node_modules/" "index.html" "package-lock.json" "package.json" "deploy.sh" "vendor/" "css/" "vendor-keep/" "sass/" "lsah.nginx.conf" "js/" "images/" "images-src/" "gulpfile.js" "data/" ".travis.yml" ".gitignore" ".git/" "../" "./")
-
- ("/home/iphands/prog/lsah/data/" (23947 34885 425270 857000) "members.js" "countries.js" "../" "./")
-
- ("/home/iphands/" (23967 6651 569251 249000) "xjoin.txt" "sat.tagging.txt" ".Xauthority" "oculus.hints.txt" "evga_gtx970.dump" ".steampid" ".steampath" "test.sh" "SideQuest-0.7.1/" ".tig_history" ".lesshst" ".cmake/" "meetings/" "inv.talk.loic" "robnotes.txt" "lel/" "intvw.txt" "test.blob" "fail" "notes.xjoin.txt" "pqsl_cheat_sheet.txt" "out.txt" "test.x509" "uhc-portal/" "tfdsf" "csv" ".mupdf.history" "docker.deps.txt" "bak.tar.bz2" "test.vpn" ".nmcli-history" "README.md" "go/" "go.bak/" "id.json.gpg" "t.json" "test.png" "users.txt" "oldhomesize" "rebuild.txt" "identity.json" "onboot.sh" "qa-certs/" "android-platform-tools/" "pixel-stuff/" ".android/" ".ansible/" "rhev/" "docker/" "output.log" "Downloads/" ".v8flags.6.8.275.32-node.51.c3c7079bcee0948c409cfd6ba8d6f038.json" "DigiCertGlobalRootCA.crt" ".python_history" "notes" "test-akamai.sh" ".~lock.Untitled 1.odt#" ".nvm/" "shotwell/" "test/" ".minishift/" "Pictures/" "images/" "known_hosts" "perfnotes" "jeromekey" "t/" "keys/" ".vuescan/" ".sane/" "i4.html" "docsproxy/" "oc.log" ".parallel/" "oom.txt" "insights_akamai.json" ".openoffice/" "text_anim/" "tmp" "oot/" ".q3a/" ".dvdcss/" "xmas/" ".yq2/" ".minetest/" ".Superposition/" ".Heaven/" ".xauth3jR50J" "cdkey" "cfkey/" ".npm/" ".weechat/" ".icons/" ".wine/" ".winecemu/" "cemu.sh" ".pulse-cookie" ".xauthhe2afy" ".xsession-errors" ".xsession-errors.old" ".dmrc" ".bash_history" ".gambit_history" "winetricks" "video.mpg" "out" "nvme.csv" "nvme" "notes.txt" "id.json" "convery_btrfs_bench.py" "blender.times.txt" ".yarnrc" ".wget-hsts" ".v8flags.6.8.275.32-node.28.c3c7079bcee0948c409cfd6ba8d6f038.json" ".v8flags.6.2.414.66.c3c7079bcee0948c409cfd6ba8d6f038.json" ".v8flags.6.2.414.54.c3c7079bcee0948c409cfd6ba8d6f038.json" ".v8flags.6.2.414.50.c3c7079bcee0948c409cfd6ba8d6f038.json" ".rnd" ".nvidia-settings-rc" ".npmrc" ".node_repl_history" ".jackdrc" ".gtkrc-2.0-kde4" ".gitignore_global" ".gitconfig" ".face" ".esd_auth" ".e-crashdump.txt" ".bashrc_redhat" ".bash_logout" ".Xresources" "ssl/" "saber/" "rpmbuild/" "ps3/" "prog/" "printing/" "pi/" "packaging-work/" "ml/" "logs/" "dotfiles/" "cuda-workspace/" "bak/" "apps/" "Webcam/" "Videos/" "Templates/" "Steam/" "Public/" "Music/" "Documents/" "Desktop/" ".zsnes/" ".yarn/" ".vscode/" ".thumbnails/" ".theano/" ".steam/" ".slack/" ".sabnzbd/" ".pcsxr/" ".oracle_jre_usage/" ".nv/" ".node-gyp/" ".mplayer/" ".mozilla/" ".macromedia/" ".lpass/" ".kube/" ".keras/" ".kde/" ".gvfs/" ".gphoto/" ".gnupg/" ".gnome2/" ".gimp-2.8/" ".gens/" ".fceux/" ".esmtp_queue/" ".elementary/" ".eclipse/" ".e/" ".dotfiles_backup/" ".docker/" ".dgen/" ".conky/" ".cargo/" ".audacity-data/" ".WorldOfGoo/" ".face.icon" ".emacs.d/" ".emacs" ".bashrc" ".bash_profile" ".Xdefaults" "bin/" ".gnome/" ".pki/" ".cache/" ".config/" ".local/" ".w3m/" ".fluxbox/" ".dbus/" ".ssh/" "../" "./")
 
  ("/home/iphands/prog/lsah/css/" (23726 48951 460058 905000) "main.css" "../" "./")
 
@@ -314,8 +328,6 @@
  ("/home/iphands/prog/insights/chrome/src/js/App/Sidenav/" (23872 25334 821631 881000) "Navigation.js" "index.js" "NavigationItem.js" "../" "./")
 
  ("/home/iphands/prog/insights/chrome/src/js/redux/" (23872 25334 821631 881000) "reducers.test.js" "reducers.js" "index.js" "actions.js" "action-types.js" "../" "./")
-
- ("/home/iphands/prog/rhv-scripts/ansible/inventories/" (23855 29779 953029 595000) "templates" "rhel6" "vms" "single" "hypervisors" "../" "./")
 
  ("/home/iphands/prog/insights/chrome/node_modules/keycloak-js/dist/" (23872 33607 72039 160000) "org.keycloak,keycloak-js-adapter,4.8.3.Final,Apache Software License 2.0.txt" "org.keycloak,keycloak-js-adapter,4.0.0.Beta2,Apache Software License 2.0.txt" "org.keycloak,keycloak-js-adapter,4.0.0.Beta1,Apache Software License 2.0.txt" "org.keycloak,keycloak-js-adapter,3.4.3.Final,Apache Software License 2.0.txt" "org.keycloak,keycloak-js-adapter,3.4.2.Final,Apache Software License 2.0.txt" "org.keycloak,keycloak-js-adapter,3.4.1.Final,Apache Software License 2.0.txt" "org.keycloak,keycloak-js-adapter,3.4.1.CR1,Apache Software License 2.0.txt" "licenses.xsl" "licenses.xml" "licenses.html" "licenses.css" "keycloak.min.js.map" "keycloak.min.js" "keycloak.js" "keycloak.d.ts" "keycloak-authz.min.js.map" "keycloak-authz.min.js" "keycloak-authz.js" "keycloak-authz.d.ts" "../" "./")
 
@@ -470,16 +482,6 @@
  ("/home/iphands/prog/insights/chrome/src/pug/templates/" (23753 55068 639577 290000) "head-block.pug" "../" "./")
 
  ("/home/iphands/prog/insights/inventory-frontend/src/" (23755 17597 579185 675000) "index.html" "api.js" "actions.test.js" "actions.js" "constants.js" "entry.js" "entry-dev.js" "config.js" "Routes.js" "__mocks__/" "App.scss" "App.js" "Utilities.scss" "store/" "routes/" "components/" "Utilities/" "../" "./")
-
- ("/home/iphands/prog/insights/inventory-frontend/src/store/" (23755 19699 126289 143000) "reducers.js" "index.js" "reducers.test.js" "../" "./")
-
- ("/home/iphands/prog/insights/chrome/src/pug/" (23756 31590 594787 633000) "landing-header.pug" "header.pug" "landing.pug" "templates/" "sidebar-new.pug" "head.pug" "head-staging.pug" "after.pug" "body.pug" "sidebar.pug" "imageFilter.pug" "globalNav.pug" "../" "./")
-
- ("/home/iphands/prog/insights/inventory-frontend/src/components/inventory/" (23755 16094 791111 686000) "AsyncInventory.js" "../" "./")
-
- ("/home/iphands/prog/insights/inventory-frontend/src/components/" (23577 4814 26494 462000) "Alerts.scss" "inventory/" "../" "./")
-
- ("/home/iphands/prog/insights/inventory-frontend/" (23755 16287 839121 190000) "node_modules/" "package.json" "package-lock.json" ".babelrc" ".eslintrc.yml" ".travis.yml" ".gitignore" "README.md" "yarn.lock" "LICENSE" "Jenkinsfile" ".stylelint.json" ".firebaserc" ".eslintignore" "static/" "src/" "dist/" "config/" ".travis/" ".git/" "../" "./")
 )
 
 ;; ----- ido-unc-hosts-cache -----

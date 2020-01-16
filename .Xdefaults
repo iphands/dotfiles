@@ -113,7 +113,7 @@ xosview*page:               False
 ! xosview*pageUsedFormat:     autoscale
 
 
-! Network Meter Resources
+! Network Meter Resources LAN
 
 xosview*net:                True
 !xosview*netBandwidth:      10000000  ! for 100Mbit/s
@@ -126,6 +126,7 @@ xosview*netDecay:           True
 xosview*netGraph:           True
 xosview*netUsedFormat:	    autoscale
 xosview*netIface:           False
+
 
 ! Linux-only resources:
 
