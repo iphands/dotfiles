@@ -3,7 +3,7 @@
 # Get the aliases and functions
 if [ -f ~/.bashrc ]
 then
-	. ~/.bashrc
+    . ~/.bashrc
 fi
 
 # User specific environment and startup programs
@@ -11,7 +11,7 @@ fi
 PATH=$PATH:$HOME/.local/bin:$HOME/bin
 export PATH
 
-EDITOR='/usr/bin/emacs -nw'
+EDITOR=emacs
 export EDITOR
 
 if [ -f ~/.profile ]
@@ -19,4 +19,4 @@ then
     source ~/.profile
 fi
 
-[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
+source "$HOME/.cargo/env"
