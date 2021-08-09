@@ -6,10 +6,17 @@
                          (or (file-name-directory #$) (car load-path))))
 
 
-;;;### (autoloads nil "pos-tip" "pos-tip.el" (0 0 0 0))
-;;; Generated autoloads from pos-tip.el
+;;;### (autoloads "actual autoloads are elsewhere" "pos-tip" "../../../../../.emacs.d/elpa/pos-tip-20191227.1356/pos-tip.el"
+;;;;;;  (0 0 0 0))
+;;; Generated autoloads from ../../../../../.emacs.d/elpa/pos-tip-20191227.1356/pos-tip.el
 
 (if (fboundp 'register-definition-prefixes) (register-definition-prefixes "pos-tip" '("pos-tip-")))
+
+;;;***
+
+;;;### (autoloads nil nil ("../../../../../.emacs.d/elpa/pos-tip-20191227.1356/pos-tip-autoloads.el"
+;;;;;;  "../../../../../.emacs.d/elpa/pos-tip-20191227.1356/pos-tip.el")
+;;;;;;  (0 0 0 0))
 
 ;;;***
 

@@ -2,11 +2,16 @@
 ;;; Commentary:
 
 ;;; Code:
-;; BACKUP FILES
-(setq make-backup-files nil)
-(setq auto-save-default nil)
+
+(menu-bar-mode -1)
+
+(setq max-lisp-eval-depth 1024)
+(setq lsp-ui-imenu-auto-refresh t)
+(setq lsp-enable-file-watchers nil)
 
 (setq nxml-child-indent 4 nxml-attribute-indent 4)
+
+(add-hook 'c++-mode-hook (lambda () (setq flycheck-gcc-language-standard "c++11")))
 
 ;; rebuild all of the things!
 (defun rebuild-emacsd ()
@@ -53,10 +58,11 @@
  '(help-at-pt-display-when-idle '(flymake-overlay) nil (help-at-pt))
  '(help-at-pt-timer-delay 1.5)
  '(inhibit-startup-screen t)
+ '(js-indent-level 2)
  '(js2-basic-offset 4)
  '(js2-bounce-indent-p t)
  '(package-selected-packages
-   '(cmake-mode go-mode rjsx-mode vcl-mode jsx-mode tide groovy-mode flymake-json flymake-jshint exec-path-from-shell web-mode json-mode ac-js2 discover-js2-refactor js2-highlight-vars js2-mode js2-refactor xref-js2 toml toml-mode cargo flycheck-rust racer rust-mode ac-php-core magit magit-filenotify magit-find-file egg yaml-mode windresize win-switch whole-line-or-region ujelly-theme twilight-theme textmate-to-yas tabbar sws-mode smooth-scrolling smooth-scroll simple-httpd shell-pop sass-mode ruby-compilation ruby-block python-environment puppetfile-mode puppet-mode php-extras php+-mode phi-rectangle nginx-mode neotree multiple-cursors move-text minimap markdown-mode+ lua-mode lineno less-css-mode jump json-rpc jade-mode igrep hl-line+ highline flymake-puppet flymake-cursor find-file-in-project epc emacs-eclim drupal-mode dockerfile-mode color-theme-railscasts color-theme-heroku color-theme-gruber-darker color-theme-github col-highlight coffee-mode buffer-stack buffer-move blank-mode birds-of-paradise-plus-theme auto-complete anaconda-mode 2048-game)))
+   '(bazel tide go-imenu lsp-ui yasnippet typescript-mode protobuf-mode lsp-mode rustic racer eldoc go-eldoc helm-ls-git helm helm-git helm-go-package smex company company-box company-c-headers company-cmake company-ctags company-go company-shell yafolding flymake-shellcheck cmake-mode go-mode groovy-mode flymake-json flymake-jshint web-mode json-mode js2-highlight-vars js2-mode xref-js2 toml-mode cargo flycheck-rust rust-mode magit magit-filenotify magit-find-file yaml-mode python-environment puppetfile-mode puppet-mode phi-rectangle nginx-mode neotree multiple-cursors move-text minimap markdown-mode+ lua-mode lineno json-rpc highline epc drupal-mode dockerfile-mode coffee-mode)))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -71,9 +77,10 @@
   "turn tab mode on"
   (interactive)
   (progn
-    (setq c-basic-indent 8
-	  c-basic-offset 8
+    (setq c-basic-indent    8
+	  c-basic-offset    8
 	  default-tab-width 8
+	  sh-basic-offset   8
 	  indent-tabs-mode  t)
     (message "tabson %s" indent-tabs-mode)))
 
@@ -98,7 +105,7 @@
 (tabsoff)
 
 ;; bind compile
-(global-set-key (kbd "<f5>") 'compile)
+;; (global-set-key (kbd "<f5>") 'compile)
 (global-set-key "\C-x\\" 'delete-trailing-whitespace)
 
 
@@ -112,23 +119,61 @@
 ;(require 'flymake-jslint)
 ;(add-hook 'js2-mode-hook
 ;		    (lambda () (flymake-mode t)))
-(setq line-number-mode t)
+;; (setq line-number-mode t)
 (setq column-number-mode t)
-; (setq column-highlight-mode t)
+;; (setq column-highlight-mode t)
 (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
-                         ("marmalade" . "http://marmalade-repo.org/packages/")
                          ("melpa" . "http://melpa.org/packages/")))
 
 (setq package-enable-at-startup nil)
 (package-initialize)
 
+;; from https://gist.github.com/samertm/8bccfeb30c0902194de5
+(setq company-idle-delay 0)
+(setq gofmt-command "goimports")
+
+;; (add-hook 'before-save-hook 'gofmt-before-save)
+
+;; UPDATE: gofmt-before-save is more convenient then having a command
+;; for running gofmt manually. In practice, you want to
+;; gofmt/goimports every time you save anyways.
+;; (add-hook 'before-save-hook 'gofmt-before-save)
+;; (global-set-key (kbd "C-c M-n") 'company-complete)
+;; (global-set-key (kbd "C-c C-n") 'company-complete)
+(defun my-go-mode-hook ()
+  "Setup my go mode stuff"
+  ;; (toggle-debug-on-error)
+  (company-mode)
+  (lsp-deferred)
+  (yas-minor-mode)
+  (add-to-list 'company-backends 'company-go)
+  ;; (set (make-local-variable 'company-backends) '(company-go))
+  (go-eldoc-setup)
+  (local-set-key (kbd "C-x a") 'gofmt-before-save))
+
+(add-hook 'go-mode-hook 'my-go-mode-hook)
+
+
+(defun my-rust-mode-hook()
+  "Setup my rust mode stuff"
+  ;; (toggle-debug-on-error)
+  (company-mode)
+  (racer-mode)
+  (rustic-mode)
+  (local-set-key (kbd "C-x a") 'rust-format-buffer))
+(add-hook 'rust-mode-hook 'my-rust-mode-hook)
+
+(if (version<= "26.0.50" emacs-version)
+    (global-display-line-numbers-mode 1)
+  (global-linum-mode 1))
+
 ;; enable minor modes I like
 (ido-mode 1)
-(global-linum-mode 1)
+;; (global-linum-mode 1)
 (global-highline-mode 1)
-(auto-complete-mode 1)
+;; (auto-complete-mode 1)
 (show-paren-mode 1)
-(column-highlight-mode 1)
+;; (column-highlight-mode 1)
 ;; (crosshairs-mode 1)
 
 (setq linum-format "%4d \u2502 ")
@@ -140,11 +185,11 @@
 ;; (setq color-theme-is-global t)
 
 
-(require 'buffer-move)
-(global-set-key (kbd "<C-S-up>")     'buf-move-up)
-(global-set-key (kbd "<C-S-down>")   'buf-move-down)
-(global-set-key (kbd "<C-S-left>")   'buf-move-left)
-(global-set-key (kbd "<C-S-right>")  'buf-move-right)
+;; (require 'buffer-move)
+;; (global-set-key (kbd "<C-S-up>")     'buf-move-up)
+;; (global-set-key (kbd "<C-S-down>")   'buf-move-down)
+;; (global-set-key (kbd "<C-S-left>")   'buf-move-left)
+;; (global-set-key (kbd "<C-S-right>")  'buf-move-right)
 
 (global-set-key (kbd "M-[ h") 'beginning-of-line)
 (global-set-key (kbd "M-[ f") 'end-of-line)
@@ -169,7 +214,7 @@
 ;; (autoload 'tern-mode "tern.el" nil t)
 ;; (add-hook 'js3-mode-hook (lambda () (auto-complete-mode) (flymake-jslint-load) (tern-mode t)))
 ;; (add-hook 'js3-mode-hook (lambda () (auto-complete-mode) (flymake-jslint-load)))
-(add-hook 'python-mode-hook (lambda () (auto-complete-mode)))
+;; (add-hook 'python-mode-hook (lambda () (auto-complete-mode)))
 
 
 
@@ -177,11 +222,11 @@
 ;; '(eclim-eclipse-dirs '("~/eclipse"))
 ;; '(eclim-executable "~/eclipse/eclim"))
 
-(require 'cl)
+;; (require 'cl)
 
 ;; regular auto-complete initialization
-(require 'auto-complete-config)
-(ac-config-default)
+;; (require 'auto-complete-config)
+;; (ac-config-default)
 
 ;; add the emacs-eclim source
 ;; (require 'ac-emacs-eclim-source)
@@ -233,5 +278,34 @@
 
 (add-to-list 'auto-mode-alist '("Jenkinsfile" . groovy-mode))
 (add-to-list 'auto-mode-alist '("\\.jenkinsfile\\'" . groovy-mode))
+
+(defun my-setup-sh-mode ()
+  "My preferences for sh-mode"
+  (setq sh-basic-offset 2)
+  (setq sh-indent-after-continuation 'always)
+  (setq sh-indent-for-case-alt '+)
+  (setq sh-indent-for-case-label 0))
+
+(add-hook 'sh-mode-hook #'my-setup-sh-mode)
+
+;; SMEX smex
+(global-set-key (kbd "M-x") 'smex)
+(global-set-key (kbd "M-X") 'smex-major-mode-commands)
+;; This is your old M-x.
+(global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
+
+;; HELM helm
+(global-set-key (kbd "C-x C-d") 'helm-browse-project)
+
+;; highlight-symbol
+;; (require 'highlight-symbol)
+;; (global-set-key [(control f3)] 'highlight-symbol)
+;; (global-set-key [f3] 'highlight-symbol-next)
+;; (global-set-key [(shift f3)] 'highlight-symbol-prev)
+;; (global-set-key [(meta f3)] 'highlight-symbol-query-replace)
+
+;; BACKUP FILES
+(setq make-backup-files nil)
+(setq auto-save-default nil)
 
 ;;; .emacs ends here

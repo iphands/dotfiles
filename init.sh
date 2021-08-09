@@ -1,16 +1,27 @@
 #!/bin/bash
 
 current="$HOME/.dotfiles_backup/`date +%Y%m%d%H%M%S`"
-mkdir -p $current
+mkdir -p "$current"
 
-for var in ".emacs" ".emacs.d" ".bashrc" ".bash_profile" ".Xdefaults"
+for var in ".Xdefaults"\
+  ".alacritty.yml" \
+  ".bash_profile" \
+  ".bashrc" \
+  ".emacs" \
+  ".emacs.d" \
+  ".gitconfig" \
+  ".gitconfig-personal" \
+  ".gitconfig-tanium" \
+  ".gitignore" \
+  ".tmux.conf" \
+  ".tmux.conf.local"
 do
-	cp -Hr ~/${var} $current
-	ln -sf $PWD/${var} ~/
+  cp -HR ~/${var} "$current"
+  ln -sf "$PWD/${var}" ~/
 done
 
 if [ ! -f /etc/profile.d/git-prompt.sh ]
 then
-	echo "# ln -s /usr/share/git-core/contrib/completion/git-prompt.sh  /etc/profile.d/"
+  echo "# ln -s /usr/share/git-core/contrib/completion/git-prompt.sh  /etc/profile.d/"
 fi
 
