@@ -52,12 +52,12 @@ if [[ "$HOSTNAME" =~ "cosmo" ]]; then
   export OLDROOT=/mnt/myth/bak/cosmo/cosmo/rootfs/current/rootfs
 fi
 
-eval "$(nodenv init -)"
-eval "$(direnv hook bash)"
-source "${HOME}/.cargo/env"
+which nodenv >/dev/null 2>&1 && eval "$(nodenv init -)"
+which direnv >/dev/null 2>&1 && eval "$(direnv hook bash)"
+[[ -f "${HOME}/.cargo/env" ]] && source "${HOME}/.cargo/env"
 
 export GPG_TTY=$(tty)
 
-if [[ -f ${HOME}/.taniumrc ]]; then
+if [[ -f "${HOME}/.taniumrc" ]]; then
   source "${HOME}/.taniumrc"
 fi
