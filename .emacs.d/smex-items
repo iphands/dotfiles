@@ -1,18 +1,18 @@
 
 ;; ----- smex-history -----
 (
+ package-list-packages
  fundamental-mode
  comment-region
  js-jsx-mode
  uncomment-region
  gofmt-before-save
- package-list-packages
  flyspell-buffer
 )
 
 ;; ----- smex-data -----
 (
- (package-list-packages . 15)
+ (package-list-packages . 16)
  (package-autoremove . 1)
  (helm-M-x . 1)
  (helm-top . 1)
