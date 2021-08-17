@@ -2,17 +2,17 @@
 ;; ----- smex-history -----
 (
  package-list-packages
- indent-region
- mark-whole-buffer
+ lsp
+ lsp-modeline-diagnostics-mode
+ company-complete
  company-mode
- js-jsx-mode
- js2-jsx-mode
- comment-region
+ rjsx-mode
+ flow-minor-mode
 )
 
 ;; ----- smex-data -----
 (
- (package-list-packages . 17)
+ (package-list-packages . 19)
  (package-autoremove . 1)
  (helm-M-x . 1)
  (helm-top . 1)
@@ -43,9 +43,9 @@
  (tooltip-mode . 2)
  (company-go . 4)
  (global-eldoc-mode . 2)
- (company-complete . 7)
+ (company-complete . 9)
  (rust-format-buffer . 28)
- (company-mode . 7)
+ (company-mode . 8)
  (racer-mode . 5)
  (racer-describe . 3)
  (rustic-mode . 5)
@@ -65,7 +65,7 @@
  (yas-minor-mode . 4)
  (yas-expand . 7)
  (yas-about . 1)
- (lsp . 8)
+ (lsp . 10)
  (lsp-mode . 2)
  (lsp-ui-mode . 2)
  (lsp-ui-imenu . 5)
@@ -94,4 +94,7 @@
  (js2-jsx-mode . 1)
  (mark-whole-buffer . 1)
  (indent-region . 1)
+ (rjsx-mode . 4)
+ (flow-minor-mode . 2)
+ (lsp-modeline-diagnostics-mode . 2)
 )

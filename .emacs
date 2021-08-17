@@ -62,7 +62,7 @@
  '(js2-basic-offset 4)
  '(js2-bounce-indent-p t)
  '(package-selected-packages
-   '(systemd bazel tide go-imenu lsp-ui yasnippet typescript-mode protobuf-mode lsp-mode rustic racer eldoc go-eldoc helm-ls-git helm helm-git helm-go-package smex company company-box company-c-headers company-cmake company-ctags company-go company-shell yafolding flymake-shellcheck cmake-mode go-mode groovy-mode flymake-json flymake-jshint web-mode json-mode js2-highlight-vars js2-mode xref-js2 toml-mode cargo flycheck-rust rust-mode magit magit-filenotify magit-find-file yaml-mode python-environment puppetfile-mode puppet-mode phi-rectangle nginx-mode neotree multiple-cursors move-text minimap markdown-mode+ lua-mode lineno json-rpc highline epc drupal-mode dockerfile-mode coffee-mode)))
+   '(flow-minor-mode rjsx-mode systemd bazel tide go-imenu lsp-ui yasnippet typescript-mode protobuf-mode lsp-mode rustic racer eldoc go-eldoc helm-ls-git helm helm-git helm-go-package smex company company-box company-c-headers company-cmake company-ctags company-go company-shell yafolding flymake-shellcheck cmake-mode go-mode groovy-mode flymake-json flymake-jshint web-mode json-mode js2-highlight-vars js2-mode xref-js2 toml-mode cargo flycheck-rust rust-mode magit magit-filenotify magit-find-file yaml-mode python-environment puppetfile-mode puppet-mode phi-rectangle nginx-mode neotree multiple-cursors move-text minimap markdown-mode+ lua-mode lineno json-rpc highline epc drupal-mode dockerfile-mode coffee-mode)))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -171,7 +171,7 @@
 		   (mark-whole-buffer)
 		   (indent-region (region-beginning) (region-end))
 		   (delete-trailing-whitespace))))
-(add-hook 'js-jsx-mode-hook 'my-jsx-mode-hook)
+(add-hook 'rjsx-mode-hook 'my-jsx-mode-hook)
 
 (if (version<= "26.0.50" emacs-version)
     (global-display-line-numbers-mode 1)
@@ -243,9 +243,9 @@
 ;; (ac-emacs-eclim-config)
 
 ;; use web-mode for .jsx files
-(add-to-list 'auto-mode-alist '("\\.jsx$" . js-jsx-mode))
-(add-to-list 'auto-mode-alist '("\\.tsx$" . js-jsx-mode))
-(add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
+(add-to-list 'auto-mode-alist '("\\.jsx$" . rjsx-mode))
+(add-to-list 'auto-mode-alist '("\\.tsx$" . rjsx-mode))
+(add-to-list 'auto-mode-alist '("\\.js$" .  rjsx-mode))
 
 ;; http://www.flycheck.org/manual/latest/index.html
 (require 'flycheck)
