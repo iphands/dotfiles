@@ -2,17 +2,17 @@
 ;; ----- smex-history -----
 (
  package-list-packages
- fundamental-mode
- comment-region
+ indent-region
+ mark-whole-buffer
+ company-mode
  js-jsx-mode
- uncomment-region
- gofmt-before-save
- flyspell-buffer
+ js2-jsx-mode
+ comment-region
 )
 
 ;; ----- smex-data -----
 (
- (package-list-packages . 16)
+ (package-list-packages . 17)
  (package-autoremove . 1)
  (helm-M-x . 1)
  (helm-top . 1)
@@ -33,7 +33,7 @@
  (go-imports-insert-import . 1)
  (gofmt-before-save . 38)
  (set-mark-command . 2)
- (comment-region . 21)
+ (comment-region . 25)
  (gofmt . 1)
  (flyspell-mode . 7)
  (column-number-mode . 1)
@@ -45,14 +45,14 @@
  (global-eldoc-mode . 2)
  (company-complete . 7)
  (rust-format-buffer . 28)
- (company-mode . 6)
+ (company-mode . 7)
  (racer-mode . 5)
  (racer-describe . 3)
  (rustic-mode . 5)
  (rustic-popup . 1)
  (rustic-compile . 1)
  (rustic-cargo-fmt . 2)
- (uncomment-region . 2)
+ (uncomment-region . 3)
  (ispell-word . 5)
  (protobuf-mode . 1)
  (shell . 1)
@@ -65,7 +65,7 @@
  (yas-minor-mode . 4)
  (yas-expand . 7)
  (yas-about . 1)
- (lsp . 6)
+ (lsp . 8)
  (lsp-mode . 2)
  (lsp-ui-mode . 2)
  (lsp-ui-imenu . 5)
@@ -79,7 +79,7 @@
  (yas-global-mode . 2)
  (yas--minor-mode-menu . 1)
  (fill-region . 1)
- (js-jsx-mode . 11)
+ (js-jsx-mode . 14)
  (bazelrc-mode . 3)
  (bazel-mode . 1)
  (lsp-ui-sideline-apply-code-actions . 16)
@@ -87,8 +87,11 @@
  (lsp-completion-mode . 2)
  (shell-script-mode . 1)
  (ido-mode . 2)
- (lsp-find-definition . 13)
- (lsp-find-declaration . 5)
+ (lsp-find-definition . 29)
+ (lsp-find-declaration . 6)
  (lsp-find-references . 4)
  (fundamental-mode . 1)
+ (js2-jsx-mode . 1)
+ (mark-whole-buffer . 1)
+ (indent-region . 1)
 )

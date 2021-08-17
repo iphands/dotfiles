@@ -153,7 +153,6 @@
 
 (add-hook 'go-mode-hook 'my-go-mode-hook)
 
-
 (defun my-rust-mode-hook()
   "Setup my rust mode stuff"
   ;; (toggle-debug-on-error)
@@ -162,6 +161,17 @@
   (rustic-mode)
   (local-set-key (kbd "C-x a") 'rust-format-buffer))
 (add-hook 'rust-mode-hook 'my-rust-mode-hook)
+
+(defun my-jsx-mode-hook()
+  "Setup my jsx mode stuff"
+  ;; (toggle-debug-on-error)
+  (company-mode)
+  (local-set-key (kbd "C-x a")
+		 (lambda () (interactive)
+		   (mark-whole-buffer)
+		   (indent-region (region-beginning) (region-end))
+		   (delete-trailing-whitespace))))
+(add-hook 'js-jsx-mode-hook 'my-jsx-mode-hook)
 
 (if (version<= "26.0.50" emacs-version)
     (global-display-line-numbers-mode 1)
@@ -233,7 +243,8 @@
 ;; (ac-emacs-eclim-config)
 
 ;; use web-mode for .jsx files
-(add-to-list 'auto-mode-alist '("\\.jsx$" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.jsx$" . js-jsx-mode))
+(add-to-list 'auto-mode-alist '("\\.tsx$" . js-jsx-mode))
 (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
 
 ;; http://www.flycheck.org/manual/latest/index.html
