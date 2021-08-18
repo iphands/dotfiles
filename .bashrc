@@ -17,27 +17,29 @@ export HISTSIZE
 HISTFILESIZE=$HISTSIZE
 export HISTFILESIZE
 
+if [[ "`uname`" == "Linux" ]]; then
+  alias ls='ls --color'
+else
+  alias ls='ls -G'
+fi
+
 # User specific aliases and functions
 alias less='less -iX'
-alias ls='ls -G'
+alias egrep='grep -E --colour=auto'
 alias grep='LC_ALL="C" grep --color'
 alias fgrep='LC_ALL="C" fgrep --color'
-alias yum='dnf'
 alias sshnocheck='ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
 alias scpnocheck='scp -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
-alias chode='chown'
-alias git-tug='git pull && git pull --rebase'
-# alias term='konsole'
 alias groot='cd "`git rev-parse --show-toplevel`"'
 
 get_pwd() {
-    d=$(echo "$PWD" | sed -e "s|$HOME|~|")
-    if [ ${#d} -gt 25 ]
-    then
-        echo $(echo "$d" | sed -e "s|\([^/]\)[^/]*/|\1/|g")
-    else
-        echo "$d"
-    fi
+  d=$(echo "$PWD" | sed -e "s|$HOME|~|")
+  if [ ${#d} -gt 25 ]
+  then
+    echo $(echo "$d" | sed -e "s|\([^/]\)[^/]*/|\1/|g")
+  else
+    echo "$d"
+  fi
 }
 
 export PS1='\[\033[1;37m\][\[\033[1;32m\]\u\[\033[0m\]@\[\e[0m\]\[\e[1;33m\]\h\[\e[0m\] \[\033[1;34m\]`dirchomp`\[\033[0;35m\]\[\033[1;37m\]]\[\033[0m\] '
