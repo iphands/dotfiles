@@ -42,6 +42,7 @@ get_pwd() {
   fi
 }
 
+[[ $(type -t __git_ps1) == function ]] || __git_ps1() { echo -n ; }
 
 export PS1='\[\033[1;37m\][\[\033[1;32m\]\u\[\033[0m\]@\[\e[0m\]\[\e[1;33m\]\h\[\e[0m\] \[\033[1;34m\]`dirchomp`\[\033[0;35m\]$(__git_ps1 " %s")\[\033[1;37m\]]\[\033[0m\] '
 if [[ "$USER" == "root" ]]; then
