@@ -32,22 +32,28 @@ alias sshnocheck='ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=n
 alias scpnocheck='scp -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
 alias groot='cd "`git rev-parse --show-toplevel`"'
 
-__my_git_ps1() {
+_my_git_ps1() {
   if [[ -d ./.git ]]; then
     printf " %s" `git branch --show-current`
     [[ $(git status --porcelain) ]] && echo '!'
   fi
 }
 
-export PS1='\[\033[1;37m\][\[\033[1;32m\]\u\[\033[0m\]@\[\e[0m\]\[\e[1;33m\]\h\[\e[0m\] \[\033[1;34m\]`dirchomp`\[\033[0;35m\]$(__my_git_ps1 " %s")\[\033[1;37m\]]\[\033[0m\] '
+_path_if() {
+  if [[ -d "$1" ]]; then
+    export PATH="${1}:${PATH}"
+  fi
+}
+
+export PS1='\[\033[1;37m\][\[\033[1;32m\]\u\[\033[0m\]@\[\e[0m\]\[\e[1;33m\]\h\[\e[0m\] \[\033[1;34m\]`dirchomp`\[\033[0;35m\]$(_my_git_ps1 " %s")\[\033[1;37m\]]\[\033[0m\] '
 if [[ "$USER" == "root" ]]; then
-  export PS1='\[\033[1;37m\][\[\033[1;31m\]\u\[\033[0m\]@\[\e[0m\]\[\e[1;33m\]\h\[\e[0m\] \[\033[1;34m\]`dirchomp`\[\033[0;35m\]$(__my_git_ps1 " %s")\[\033[1;37m\]]\[\033[0m\] '
+  export PS1='\[\033[1;37m\][\[\033[1;31m\]\u\[\033[0m\]@\[\e[0m\]\[\e[1;33m\]\h\[\e[0m\] \[\033[1;34m\]`dirchomp`\[\033[0;35m\]$(_my_git_ps1 " %s")\[\033[1;37m\]]\[\033[0m\] '
 fi
-# export PATH="$PATH:$HOME/bin/:/usr/local/cuda-8.0/bin"
-# export PATH="$PATH:${HOME}/.nodenv/versions/12.18.0/bin"
-export PATH="$PATH:${HOME}/go/bin"
-export PATH="${HOME}/.cargo/bin:$PATH"
-export PATH="${HOME}/bin:$PATH"
+
+_path_if "${HOME}/go/bin"
+_path_if "${HOME}/.cargo/bin"
+_path_if "${HOME}/bin/flatpak"
+_path_if "${HOME}/bin"
 
 if [[ "$HOSTNAME" =~ "cosmo" ]]; then
   export OLDHOME=/mnt/myth/bak/cosmo/cosmo/home/current/home/iphands
