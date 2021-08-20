@@ -1,20 +1,20 @@
 # .bashrc
 export BASH_SILENCE_DEPRECATION_WARNING=1
 
-# Source global definitions
-# if [ -f /etc/bashrc ]; then
-#     . /etc/bashrc
-# fi
+if [ -f /etc/profile ]; then
+  . /etc/profile
+fi
+
+if [ -f /etc/bashrc ]; then
+    . /etc/bashrc
+fi
 
 # Uncomment the following line if you don't like systemctl's auto-paging feature:
 # export SYSTEMD_PAGER=
 
-# User specific aliases and functions
-
 HISTSIZE=100000
-export HISTSIZE
-
 HISTFILESIZE=$HISTSIZE
+export HISTSIZE
 export HISTFILESIZE
 
 if [[ "`uname`" == "Linux" ]]; then
@@ -32,27 +32,22 @@ alias sshnocheck='ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=n
 alias scpnocheck='scp -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
 alias groot='cd "`git rev-parse --show-toplevel`"'
 
-get_pwd() {
-  d=$(echo "$PWD" | sed -e "s|$HOME|~|")
-  if [ ${#d} -gt 25 ]
-  then
-    echo $(echo "$d" | sed -e "s|\([^/]\)[^/]*/|\1/|g")
-  else
-    echo "$d"
+__my_git_ps1() {
+  if [[ -d ./.git ]]; then
+    printf " %s" `git branch --show-current`
+    [[ $(git status --porcelain) ]] && echo '!'
   fi
 }
 
-[[ $(type -t __git_ps1) == function ]] || __git_ps1() { echo -n ; }
-
-export PS1='\[\033[1;37m\][\[\033[1;32m\]\u\[\033[0m\]@\[\e[0m\]\[\e[1;33m\]\h\[\e[0m\] \[\033[1;34m\]`dirchomp`\[\033[0;35m\]$(__git_ps1 " %s")\[\033[1;37m\]]\[\033[0m\] '
+export PS1='\[\033[1;37m\][\[\033[1;32m\]\u\[\033[0m\]@\[\e[0m\]\[\e[1;33m\]\h\[\e[0m\] \[\033[1;34m\]`dirchomp`\[\033[0;35m\]$(__my_git_ps1 " %s")\[\033[1;37m\]]\[\033[0m\] '
 if [[ "$USER" == "root" ]]; then
-  export PS1='\[\033[1;37m\][\[\033[1;31m\]\u\[\033[0m\]@\[\e[0m\]\[\e[1;33m\]\h\[\e[0m\] \[\033[1;34m\]`dirchomp`\[\033[0;35m\]$(__git_ps1 " %s")\[\033[1;37m\]]\[\033[0m\] '
+  export PS1='\[\033[1;37m\][\[\033[1;31m\]\u\[\033[0m\]@\[\e[0m\]\[\e[1;33m\]\h\[\e[0m\] \[\033[1;34m\]`dirchomp`\[\033[0;35m\]$(__my_git_ps1 " %s")\[\033[1;37m\]]\[\033[0m\] '
 fi
-
 # export PATH="$PATH:$HOME/bin/:/usr/local/cuda-8.0/bin"
 # export PATH="$PATH:${HOME}/.nodenv/versions/12.18.0/bin"
 export PATH="$PATH:${HOME}/go/bin"
 export PATH="${HOME}/.cargo/bin:$PATH"
+export PATH="${HOME}/bin:$PATH"
 
 if [[ "$HOSTNAME" =~ "cosmo" ]]; then
   export OLDHOME=/mnt/myth/bak/cosmo/cosmo/home/current/home/iphands
