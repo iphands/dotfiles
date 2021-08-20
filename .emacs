@@ -168,8 +168,7 @@
   (company-mode)
   (local-set-key (kbd "C-x a")
 		 (lambda () (interactive)
-		   (mark-whole-buffer)
-		   (indent-region (region-beginning) (region-end))
+		   (indent-region 0 (1-(point-max)))
 		   (delete-trailing-whitespace))))
 (add-hook 'rjsx-mode-hook 'my-jsx-mode-hook)
 

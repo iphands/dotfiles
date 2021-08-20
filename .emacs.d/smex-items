@@ -1,13 +1,13 @@
 
 ;; ----- smex-history -----
 (
+ load-file
  package-list-packages
  lsp
  lsp-modeline-diagnostics-mode
  company-complete
  company-mode
  rjsx-mode
- flow-minor-mode
 )
 
 ;; ----- smex-data -----
@@ -97,4 +97,5 @@
  (rjsx-mode . 4)
  (flow-minor-mode . 2)
  (lsp-modeline-diagnostics-mode . 2)
+ (load-file . 1)
 )
