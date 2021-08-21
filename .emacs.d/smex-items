@@ -1,7 +1,7 @@
 
 ;; ----- smex-history -----
 (
- load-file
+ comment-region
  package-list-packages
  lsp
  lsp-modeline-diagnostics-mode
@@ -33,7 +33,7 @@
  (go-imports-insert-import . 1)
  (gofmt-before-save . 38)
  (set-mark-command . 2)
- (comment-region . 25)
+ (comment-region . 26)
  (gofmt . 1)
  (flyspell-mode . 7)
  (column-number-mode . 1)

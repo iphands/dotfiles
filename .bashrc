@@ -45,15 +45,21 @@ _path_if() {
   fi
 }
 
-export PS1='\[\033[1;37m\][\[\033[1;32m\]\u\[\033[0m\]@\[\e[0m\]\[\e[1;33m\]\h\[\e[0m\] \[\033[1;34m\]`dirchomp`\[\033[0;35m\]$(_my_git_ps1 " %s")\[\033[1;37m\]]\[\033[0m\] '
-if [[ "$USER" == "root" ]]; then
-  export PS1='\[\033[1;37m\][\[\033[1;31m\]\u\[\033[0m\]@\[\e[0m\]\[\e[1;33m\]\h\[\e[0m\] \[\033[1;34m\]`dirchomp`\[\033[0;35m\]$(_my_git_ps1 " %s")\[\033[1;37m\]]\[\033[0m\] '
-fi
-
 _path_if "${HOME}/go/bin"
 _path_if "${HOME}/.cargo/bin"
 _path_if "${HOME}/bin/flatpak"
 _path_if "${HOME}/bin"
+
+if ! command -v dirchomp >/dev/null; then
+  dirchomp() {
+    echo -n "$PWD"
+  }
+fi
+
+export PS1='\[\033[1;37m\][\[\033[1;32m\]\u\[\033[0m\]@\[\e[0m\]\[\e[1;33m\]\h\[\e[0m\] \[\033[1;34m\]`dirchomp`\[\033[0;35m\]$(_my_git_ps1 " %s")\[\033[1;37m\]]\[\033[0m\] '
+if [[ "$USER" == "root" ]]; then
+  export PS1='\[\033[1;37m\][\[\033[1;31m\]\u\[\033[0m\]@\[\e[0m\]\[\e[1;33m\]\h\[\e[0m\] \[\033[1;34m\]`dirchomp`\[\033[0;35m\]$(_my_git_ps1 " %s")\[\033[1;37m\]]\[\033[0m\] '
+fi
 
 if [[ "$HOSTNAME" =~ "cosmo" ]]; then
   export OLDHOME=/mnt/myth/bak/cosmo/cosmo/home/current/home/iphands
