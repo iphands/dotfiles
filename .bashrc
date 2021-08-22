@@ -33,7 +33,8 @@ alias scpnocheck='scp -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=n
 alias groot='cd "`git rev-parse --show-toplevel`"'
 
 _my_git_ps1() {
-  if [[ -d ./.git ]]; then
+  git status >/dev/null 2>&1
+  if [[ "$?" == "0" ]]; then
     printf " %s" `git branch --show-current`
     [[ $(git status --porcelain) ]] && echo '!'
   fi
