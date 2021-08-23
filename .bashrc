@@ -35,12 +35,10 @@ alias groot='cd "`git rev-parse --show-toplevel`"'
 GIT=`which git`
 
 _is_git() {
-  if [[ -d "./.git" ]]; then
-    return 0
-  fi
+  [[ -d "./.git" ]] && return 0
 
   # pretty fast test... an order of magnitude faster than a regular git status
-  $GIT status -u no --porcelain=v1 --no-ahead-behind --no-renames --ignore-submodules=all >/dev/null
+  $GIT status -u no --porcelain=v1 --no-ahead-behind --no-renames --ignore-submodules=all >/dev/null 2>&1
 }
 
 _my_git_ps1() {
