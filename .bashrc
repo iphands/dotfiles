@@ -32,12 +32,22 @@ alias sshnocheck='ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=n
 alias scpnocheck='scp -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
 alias groot='cd "`git rev-parse --show-toplevel`"'
 
-_my_git_ps1() {
-  git status >/dev/null 2>&1
-  if [[ "$?" == "0" ]]; then
-    printf " %s" `git branch --show-current`
-    [[ $(git status --porcelain) ]] && echo '!'
+GIT=`which git`
+
+_is_git() {
+  if [[ -d "./.git" ]]; then
+    return 0
   fi
+
+  # pretty fast test... an order of magnitude faster than a regular git status
+  $GIT status -u no --porcelain=v1 --no-ahead-behind --no-renames --ignore-submodules=all >/dev/null
+}
+
+_my_git_ps1() {
+  _is_git && {
+    printf " %s" "$($GIT branch --show-current)"
+    [[ $($GIT status --porcelain) ]] && echo '!'
+  }
 }
 
 _path_if() {
