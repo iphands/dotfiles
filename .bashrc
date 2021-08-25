@@ -84,3 +84,16 @@ export GPG_TTY=$(tty)
 if [[ -f "${HOME}/.taniumrc" ]]; then
   source "${HOME}/.taniumrc"
 fi
+
+___jumper() {
+  if [[ "$PWD" =~ "${HOME}/jump" ]]; then
+    if [[ "$PWD" != "${HOME}/jump" ]]; then
+      local dest
+      dest=$(readlink "$PWD")
+      echo "jumping to $dest"
+      cd "$dest" || return
+    fi
+  fi
+}
+
+PROMPT_COMMAND=___jumper
