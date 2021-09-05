@@ -187,7 +187,7 @@
 
 (setq linum-format "%4d \u2502 ")
 
-;; colors
+;; color
 (set-face-foreground 'minibuffer-prompt "light sky blue")
 ;; (color-theme-initialize)
 (load-theme 'wombat t)

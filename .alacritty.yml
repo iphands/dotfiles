@@ -1,3 +1,10 @@
+colors:
+ primary:
+   background: '#242424'
+   foreground: '#f6f3e8'
+ normal:
+   black:   '#666666'
+
 key_bindings:
   - { key: Space, mods: Control, chars: "\x00" }
   - { key: Left,  mods: Control, chars: "\x1bb" }
