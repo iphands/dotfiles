@@ -96,4 +96,6 @@ ___jumper() {
   fi
 }
 
-PROMPT_COMMAND=___jumper
+if ! [[ "${PROMPT_COMMAND:-}" =~ ___jumper ]]; then
+  PROMPT_COMMAND="___jumper${PROMPT_COMMAND:+;$PROMPT_COMMAND}"
+fi
