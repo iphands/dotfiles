@@ -62,7 +62,7 @@
  '(js2-basic-offset 4)
  '(js2-bounce-indent-p t)
  '(package-selected-packages
-   '(flow-minor-mode rjsx-mode systemd bazel tide go-imenu lsp-ui yasnippet typescript-mode protobuf-mode lsp-mode rustic racer eldoc go-eldoc helm-ls-git helm helm-git helm-go-package smex company company-box company-c-headers company-cmake company-ctags company-go company-shell yafolding flymake-shellcheck cmake-mode go-mode groovy-mode flymake-json flymake-jshint web-mode json-mode js2-highlight-vars js2-mode xref-js2 toml-mode cargo flycheck-rust rust-mode magit magit-filenotify magit-find-file yaml-mode python-environment puppetfile-mode puppet-mode phi-rectangle nginx-mode neotree multiple-cursors move-text minimap markdown-mode+ lua-mode lineno json-rpc highline epc drupal-mode dockerfile-mode coffee-mode)))
+   '(eslint-fix prettier flow-minor-mode rjsx-mode systemd bazel tide go-imenu lsp-ui yasnippet typescript-mode protobuf-mode lsp-mode rustic racer eldoc go-eldoc helm-ls-git helm helm-git helm-go-package smex company company-box company-c-headers company-cmake company-ctags company-go company-shell yafolding flymake-shellcheck cmake-mode go-mode groovy-mode flymake-json flymake-jshint web-mode json-mode js2-highlight-vars js2-mode xref-js2 toml-mode cargo flycheck-rust rust-mode magit magit-filenotify magit-find-file yaml-mode python-environment puppetfile-mode puppet-mode phi-rectangle nginx-mode neotree multiple-cursors move-text minimap markdown-mode+ lua-mode lineno json-rpc highline epc drupal-mode dockerfile-mode coffee-mode)))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -103,6 +103,11 @@
 
 (global-set-key "\C-xp" 'toggle-tabs)
 (tabsoff)
+
+(global-set-key (kbd "C-x a")
+	       (lambda () (interactive)
+		 (indent-region 0 (1-(point-max)))
+		 (delete-trailing-whitespace)))
 
 ;; bind compile
 ;; (global-set-key (kbd "<f5>") 'compile)
@@ -165,12 +170,26 @@
 (defun my-jsx-mode-hook()
   "Setup my jsx mode stuff"
   ;; (toggle-debug-on-error)
+  ;; (prettier-mode)
   (company-mode)
   (local-set-key (kbd "C-x a")
 		 (lambda () (interactive)
 		   (indent-region 0 (1-(point-max)))
+		   (eslint-fix)
 		   (delete-trailing-whitespace))))
 (add-hook 'rjsx-mode-hook 'my-jsx-mode-hook)
+
+(defun my-typescript-mode-hook()
+  "Setup my typescript mode stuff"
+  ;; (toggle-debug-on-error)
+  ;; (prettier-mode)
+  (tide-mode)
+  (local-set-key (kbd "C-x a")
+		 (lambda () (interactive)
+		   (indent-region 0 (1-(point-max)))
+		   (eslint-fix)
+		   (delete-trailing-whitespace))))
+(add-hook 'typescript-mode-hook 'my-typescript-mode-hook)
 
 (if (version<= "26.0.50" emacs-version)
     (global-display-line-numbers-mode 1)
@@ -243,7 +262,7 @@
 
 ;; use web-mode for .jsx files
 (add-to-list 'auto-mode-alist '("\\.jsx$" . rjsx-mode))
-(add-to-list 'auto-mode-alist '("\\.tsx$" . rjsx-mode))
+(add-to-list 'auto-mode-alist '("\\.tsx$" . typescript-mode))
 (add-to-list 'auto-mode-alist '("\\.js$" .  rjsx-mode))
 
 ;; http://www.flycheck.org/manual/latest/index.html
