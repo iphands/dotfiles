@@ -79,6 +79,10 @@ which nodenv >/dev/null 2>&1 && eval "$(nodenv init -)"
 which direnv >/dev/null 2>&1 && eval "$(direnv hook bash)"
 [[ -f "${HOME}/.cargo/env" ]] && source "${HOME}/.cargo/env"
 
+export NVM_DIR="$HOME/.nvm"
+[ -s "/usr/local/opt/nvm/nvm.sh" ] && . "/usr/local/opt/nvm/nvm.sh"  # This loads nvm
+[ -s "/usr/local/opt/nvm/etc/bash_completion.d/nvm" ] && . "/usr/local/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
+
 export GPG_TTY=$(tty)
 
 if [[ -f "${HOME}/.taniumrc" ]]; then
@@ -86,8 +90,8 @@ if [[ -f "${HOME}/.taniumrc" ]]; then
 fi
 
 ___jumper() {
-  if [[ "$PWD" =~ "${HOME}/jump" ]]; then
-    if [[ "$PWD" != "${HOME}/jump" ]]; then
+  if [[ "$PWD" =~ "${HOME}/j/" ]]; then
+    if [[ "$PWD" != "${HOME}/j" ]]; then
       local dest
       dest=$(readlink "$PWD")
       echo "jumping to $dest"
