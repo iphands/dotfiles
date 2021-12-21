@@ -1,13 +1,8 @@
 # .bashrc
 export BASH_SILENCE_DEPRECATION_WARNING=1
 
-if [ -f /etc/profile ]; then
-  . /etc/profile
-fi
-
-if [ -f /etc/bashrc ]; then
-    . /etc/bashrc
-fi
+[[ -f /etc/profile ]] && source /etc/profile
+[[ -f /etc/bashrc ]] && source /etc/bashrc
 
 # Uncomment the following line if you don't like systemctl's auto-paging feature:
 # export SYSTEMD_PAGER=
@@ -75,19 +70,17 @@ if [[ "$HOSTNAME" =~ "cosmo" ]]; then
   export OLDROOT=/mnt/myth/bak/cosmo/cosmo/rootfs/current/rootfs
 fi
 
-which nodenv >/dev/null 2>&1 && eval "$(nodenv init -)"
+# which nodenv >/dev/null 2>&1 && eval "$(nodenv init -)"
 which direnv >/dev/null 2>&1 && eval "$(direnv hook bash)"
 [[ -f "${HOME}/.cargo/env" ]] && source "${HOME}/.cargo/env"
 
-export NVM_DIR="$HOME/.nvm"
-[ -s "/usr/local/opt/nvm/nvm.sh" ] && . "/usr/local/opt/nvm/nvm.sh"  # This loads nvm
-[ -s "/usr/local/opt/nvm/etc/bash_completion.d/nvm" ] && . "/usr/local/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
+# export NVM_DIR="$HOME/.nvm"
+# [ -s "/usr/local/opt/nvm/nvm.sh" ] && . "/usr/local/opt/nvm/nvm.sh"  # This loads nvm
+# [ -s "/usr/local/opt/nvm/etc/bash_completion.d/nvm" ] && . "/usr/local/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
 
 export GPG_TTY=$(tty)
 
-if [[ -f "${HOME}/.taniumrc" ]]; then
-  source "${HOME}/.taniumrc"
-fi
+[[ -f "${HOME}/.taniumrc" ]] && source "${HOME}/.taniumrc"
 
 ___jumper() {
   if [[ "$PWD" =~ "${HOME}/j/" ]]; then
@@ -103,3 +96,5 @@ ___jumper() {
 if ! [[ "${PROMPT_COMMAND:-}" =~ ___jumper ]]; then
   PROMPT_COMMAND="___jumper${PROMPT_COMMAND:+;$PROMPT_COMMAND}"
 fi
+
+[[ -f "/usr/local/opt/asdf/libexec/asdf.sh" ]] && source /usr/local/opt/asdf/libexec/asdf.sh
