@@ -1,2 +1,0 @@
-;;; Generated package description from company-ctags.el  -*- no-byte-compile: t -*-
-(define-package "company-ctags" "20210723.1322" "Fastest company-mode completion backend for ctags" '((emacs "25.1") (company "0.9.0")) :commit "ff813c58e930d01fb55ee2f57fe810896a12c51b" :authors '(("Chen Bin" . "chenbin.sh@gmail.com")) :maintainer '("Chen Bin" . "chenbin.sh@gmail.com") :keywords '("convenience") :url "https://github.com/redguardtoo/company-ctags")
