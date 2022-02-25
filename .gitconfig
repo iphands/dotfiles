@@ -1,12 +1,17 @@
 [user]
-    name = Ian Page Hands
-    email = iphands@gmail.com
+	name = Ian Page Hands
+	email = iphands@gmail.com
+
+[url "git@git.corp.tanium.com:"]
+	insteadOf = https://git.corp.tanium.com
 
 [includeIf "gitdir:/Users/iphands/prog/tanium/"]
-    path = /Users/iphands/.gitconfig-tanium
+	path = /Users/iphands/.gitconfig-tanium
 
 [filter "lfs"]
 	smudge = git-lfs smudge -- %f
 	process = git-lfs filter-process
 	required = true
 	clean = git-lfs clean -- %f
+[core]
+	excludesfile = /Users/iphands/.gitignore

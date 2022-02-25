@@ -39,7 +39,8 @@ _is_git() {
 _my_git_ps1() {
   _is_git && {
     printf " %s" "$($GIT branch --show-current)"
-    [[ $($GIT status --porcelain) ]] && echo '!'
+    $GIT diff --no-ext-diff --quiet || echo -n '*'
+    $GIT diff --no-ext-diff --cached --quiet || echo -n '+'
   }
 }
 
