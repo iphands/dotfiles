@@ -173,7 +173,7 @@
 (defun my-jsx-mode-hook()
   "Setup my jsx mode stuff"
   ;; (toggle-debug-on-error)
-  ;; (prettier-mode)
+  (prettier-mode)
   (company-mode)
   (local-set-key (kbd "C-x a")
 		 (lambda () (interactive)
@@ -185,8 +185,8 @@
 (defun my-typescript-mode-hook()
   "Setup my typescript mode stuff"
   ;; (toggle-debug-on-error)
-  ;; (prettier-mode)
-  (tide-mode)
+  (prettier-mode)
+  ;; (tide-mode)
   (local-set-key (kbd "C-x a")
 		 (lambda () (interactive)
 		   (indent-region 0 (1-(point-max)))
