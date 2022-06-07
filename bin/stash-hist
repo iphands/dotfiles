@@ -1,0 +1,10 @@
+#!/bin/bash
+set -e
+STAMP=$(date +%Y%m%d%H%M%S)
+TMPFILE="$HOME/h/.tmp.${STAMP}"
+mkdir -p ~/h
+
+cp ~/h/hist "$TMPFILE"
+history >> "$TMPFILE"
+sort -u "$TMPFILE" > ~/h/hist
+rm "$TMPFILE"
