@@ -1,0 +1,27 @@
+#!/bin/bash
+set -e
+
+get_e_args() {
+  for var in $1; do
+    echo -n "-e $var "
+  done
+}
+
+renicer() {
+  for var in $(ps aux | fgrep -i $(get_e_args "$2")  | awk '{print $2}'); do
+    renice "$1" "$var" || true
+    sleep 0.100
+  done
+}
+
+list="virtualbox slack launchd bdupd tanium bitdef touchbar discord
+softwareupdate trustd xprotect mrt.app hyperkit outlook zoom syspolicy
+bdldaemon reveal vbox gamecontroller logd launchservices airplay airport
+mds fseventsd opendirectory controlcenter locationd microsoft cfprefs locationd
+tccd mobileassetd dock.app connectwise"
+renicer 19 "$list"
+
+list="tmux emacs windowserver alacritty"
+renicer -5 "$list"
+
+# while true; do bash /Users/iphands/bin/renice.sh ; sleep 90 ; done

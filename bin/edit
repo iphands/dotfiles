@@ -1,0 +1,48 @@
+#!/bin/bash
+IFS=$'\n'
+
+_usage() {
+  echo "Usage: $0 containers|verify|insights|sentinel"
+  exit 1
+}
+
+_containers() {
+  emacs -nw \
+    `find    ~/prog/tanium/go/prototype/containers -type f -name '*go'` \
+    `find -E ~/prog/tanium/ufe/packages/workbench-containers -type f -regex '.*(js|jsx|sh|tsx)' | fgrep -v node_modules`
+  # `find -E ~/prog/tanium/containers/content/src/workbench/src -type f -regex '.*(js|jsx)'`
+  exit 0
+}
+
+_verify() {
+  emacs -nw \
+    `find -E ~/prog/tanium/ufe/packages/workbench-verify -type f -regex '.*(js|jsx|sh|tsx)' | fgrep -v node_modules` \
+    `find -E ~/prog/tanium/verify/src/service -type f -regex '.*(js|jsx|sh)' | fgrep -v node_modules`
+  exit 0
+}
+
+_insights() {
+  emacs -nw \
+    `find -E ~/prog/tanium/ufe/packages/workbench-insights -type f -regex '.*(js|jsx|sh|tsx|ts)' | fgrep -v -e node_modules -e .build` \
+    `find    ~/prog/tanium/go/prototype/insights -type f -name '*go'`
+  exit 0
+}
+
+_sentinel() {
+  emacs -nw \
+    `find ~/prog/tanium/gto-sentinel-testing -type f -name '*.go'` \
+    `find ~/prog/tanium/gto-sentinel-testing -type f -name '*.sh'` \
+    `find ~/prog/tanium/azure-sentinel/Solutions/Tanium -type f -regex '.*(yaml|json)'` \
+    ~/prog/tanium/gto-sentinel-testing/Makefile
+
+  exit 0
+}
+
+[[ $1 == "containers" ]] && _containers
+[[ $1 == "verify" ]]     && _verify
+[[ $1 == "insights" ]]   && _insights
+[[ $1 == "sentinel" ]]   && _sentinel
+[[ $1 == "sent" ]]   && _sentinel
+
+_usage
+exit 1
