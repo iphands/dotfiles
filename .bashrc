@@ -28,6 +28,12 @@ alias scpnocheck='scp -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=n
 alias groot='cd "`git rev-parse --show-toplevel`"'
 
 GIT=`which git`
+HG=`which hg`
+
+is_hg() {
+  [[ -d "./.hg" ]] && return 0
+  $HG status >/dev/null 2>&1
+}
 
 _is_git() {
   [[ -d "./.git" ]] && return 0
@@ -41,6 +47,13 @@ _my_git_ps1() {
     printf " %s" "$($GIT branch --show-current)"
     $GIT diff --no-ext-diff --quiet || echo -n '*'
     $GIT diff --no-ext-diff --cached --quiet || echo -n '+'
+  }
+
+  HG_STATUS=`hg status 2>/dev/null`
+  [[ $? -eq 0 ]] && {
+    echo -n " hg"
+    echo "$HG_STATUS" | grep -m1 ^M >/dev/null 2>&1 && echo -n "*"
+    echo "$HG_STATUS" | grep -m1 ^? >/dev/null 2>&1 && echo -n "+"
   }
 }
 
