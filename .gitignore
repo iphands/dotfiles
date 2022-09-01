@@ -7,6 +7,8 @@
 *.elc
 .\#*
 
+/.gitconfig-meta
+
 /.DS_Store
 /.emacs.d/ac-comphist.dat
 /.emacs.d/ido.last

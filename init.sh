@@ -11,7 +11,7 @@ for var in ".Xdefaults"\
   ".emacs.d" \
   ".gitconfig" \
   ".gitconfig-personal" \
-  ".gitconfig-tanium" \
+  ".gitconfig-meta" \
   ".gitignore" \
   ".tmux.conf" \
   ".tmux.conf.local"
