@@ -52,7 +52,7 @@ _my_git_ps1() {
   HG_STATUS=`hg status 2>/dev/null`
   [[ $? -eq 0 ]] && {
     echo -n " hg"
-    echo "$HG_STATUS" | grep -m1 ^M >/dev/null 2>&1 && echo -n "*"
+    echo "$HG_STATUS" | grep -m1 '^[MA!R]' >/dev/null 2>&1 && echo "*"
     echo "$HG_STATUS" | grep -m1 ^? >/dev/null 2>&1 && echo -n "+"
   }
 }
