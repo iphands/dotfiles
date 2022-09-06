@@ -43,18 +43,22 @@ _is_git() {
 }
 
 _my_git_ps1() {
-  _is_git && {
-    printf " %s" "$($GIT branch --show-current)"
-    $GIT diff --no-ext-diff --quiet || echo -n '*'
-    $GIT diff --no-ext-diff --cached --quiet || echo -n '+'
-  }
+  if command -v hg >/dev/null; then
+    _is_git && {
+      printf " %s" "$($GIT branch --show-current)"
+      $GIT diff --no-ext-diff --quiet || echo -n '*'
+      $GIT diff --no-ext-diff --cached --quiet || echo -n '+'
+    }
+  fi
 
-  HG_STATUS=`hg status 2>/dev/null`
-  [[ $? -eq 0 ]] && {
-    echo -n " hg"
-    echo "$HG_STATUS" | grep -m1 '^[MA!R]' >/dev/null 2>&1 && echo "*"
-    echo "$HG_STATUS" | grep -m1 ^? >/dev/null 2>&1 && echo -n "+"
-  }
+  if command -v hg >/dev/null; then
+    HG_STATUS=`$HG status 2>/dev/null`
+    [[ $? -eq 0 ]] && {
+      echo -n " hg"
+      echo "$HG_STATUS" | grep -m1 '^[MA!R]' >/dev/null 2>&1 && echo -n "*"
+      echo "$HG_STATUS" | grep -m1 ^? >/dev/null 2>&1 && echo -n "+"
+    }
+  fi
 }
 
 _path_if() {
