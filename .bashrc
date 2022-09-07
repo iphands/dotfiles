@@ -25,14 +25,14 @@ alias grep='LC_ALL="C" grep --color'
 alias fgrep='LC_ALL="C" fgrep --color'
 alias sshnocheck='ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
 alias scpnocheck='scp -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
-alias groot='cd "`git rev-parse --show-toplevel`"'
+# alias groot='cd "`git rev-parse --show-toplevel`"'
 
 GIT=`which git`
 HG=`which hg`
 
-is_hg() {
+_is_hg() {
   [[ -d "./.hg" ]] && return 0
-  $HG status >/dev/null 2>&1
+  HG_STATUS=`$HG status 2>/dev/null`
 }
 
 _is_git() {
@@ -42,23 +42,28 @@ _is_git() {
   $GIT status -u no --porcelain=v1 --no-ahead-behind --no-renames --ignore-submodules=all >/dev/null 2>&1
 }
 
-_my_git_ps1() {
-  if command -v hg >/dev/null; then
-    _is_git && {
-      printf " %s" "$($GIT branch --show-current)"
-      $GIT diff --no-ext-diff --quiet || echo -n '*'
-      $GIT diff --no-ext-diff --cached --quiet || echo -n '+'
-    }
-  fi
+groot() {
+  _is_git && cd "`git rev-parse --show-toplevel`" && return
+  _is_hg  && cd "`hg root`" && return
+}
 
-  if command -v hg >/dev/null; then
-    HG_STATUS=`$HG status 2>/dev/null`
-    [[ $? -eq 0 ]] && {
-      echo -n " hg"
-      echo "$HG_STATUS" | grep -m1 '^[MA!R]' >/dev/null 2>&1 && echo -n "*"
-      echo "$HG_STATUS" | grep -m1 ^? >/dev/null 2>&1 && echo -n "+"
-    }
-  fi
+_my_git_ps1() {
+  _is_git && {
+    printf " %s" "$($GIT branch --show-current)"
+    $GIT diff --no-ext-diff --quiet || echo -n '*'
+    $GIT diff --no-ext-diff --cached --quiet || echo -n '+'
+    return
+  }
+
+  _is_hg && {
+    echo -n " hg"
+    # we already have this set from the _is_hg because bash
+    # dont call again
+    # HG_STATUS=`$HG status 2>/dev/null`
+    echo "$HG_STATUS" | grep -m1 '^[MA!R]' >/dev/null 2>&1 && echo -n "*"
+    echo "$HG_STATUS" | grep -m1 ^? >/dev/null 2>&1 && echo -n "+"
+    return
+  }
 }
 
 _path_if() {

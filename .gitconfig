@@ -5,6 +5,12 @@
 [includeIf "gitdir:~/metaprog/"]
 	path = ~/.gitconfig-meta
 
+[includeIf "gitdir:~/fbsource/"]
+	path = ~/.gitconfig-meta
+
+[includeIf "gitdir:~/www/"]
+	path = ~/.gitconfig-meta
+
 [filter "lfs"]
 	smudge = git-lfs smudge -- %f
 	process = git-lfs filter-process
