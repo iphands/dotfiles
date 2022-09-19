@@ -3,6 +3,9 @@
 
 ;;; Code:
 
+;; Disable vc.
+(setq vc-handled-backends nil)
+
 (menu-bar-mode -1)
 
 (setq max-lisp-eval-depth 1024)
