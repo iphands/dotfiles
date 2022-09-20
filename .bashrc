@@ -47,6 +47,10 @@ groot() {
   _is_hg  && cd "`hg root`" && return
 }
 
+open_modified() {
+  _is_hg && emacs `hg diff -r .^ | fgrep '+++ b/' | awk '{print $2}' | sed 's|b/||'`
+}
+
 _my_git_ps1() {
   _is_git && {
     printf " %s" "$($GIT branch --show-current)"
