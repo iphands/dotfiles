@@ -121,7 +121,7 @@
 
 ;;(load "drupal-mode")
 ;;(add-to-list 'auto-mode-alist '("\\.\\(module\\|test\\|install\\|theme\\)$" . drupal-mode))
-;;(add-to-list 'auto-mode-alist '("\\.\\(php\\|inc\\)$" . php-mode))
+(add-to-list 'auto-mode-alist '("\\.\\(php\\|inc\\)$" . hack-mode))
 ;;(add-to-list 'auto-mode-alist '("\\.info" . conf-windows-mode))
 
 ;(require 'flymake-jslint)
@@ -163,6 +163,13 @@
   (local-set-key (kbd "C-x a") 'gofmt-before-save))
 
 (add-hook 'go-mode-hook 'my-go-mode-hook)
+
+(defun my-hack-mode-hook()
+  "Setup my hack mode stuff"
+  ;; (toggle-debug-on-error)
+  (company-mode)
+  (local-set-key (kbd "C-x a") 'hack-format-buffer))
+(add-hook 'hack-mode-hook 'my-hack-mode-hook)
 
 (defun my-rust-mode-hook()
   "Setup my rust mode stuff"
