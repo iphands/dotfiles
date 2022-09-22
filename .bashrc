@@ -32,7 +32,7 @@ HG=`which hg`
 
 _is_hg() {
   [[ -d "./.hg" ]] && return 0
-  HG_STATUS=`$HG status 2>/dev/null`
+  HG_STATUS=`timeout 1 $HG status 2>/dev/null`
 }
 
 _is_git() {
