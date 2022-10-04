@@ -141,10 +141,12 @@
 ;; from https://gist.github.com/samertm/8bccfeb30c0902194de5
 (setq company-idle-delay 0)
 (setq gofmt-command "goimports")
-(setq gofmt-args '("-local" "git.corp.tanium.com"))
+;; (setq gofmt-args '("-local" "git.corp.tanium.com"))
+
+(if (string-match-p (regexp-quote "od.fbinfra") (getenv "HOSTNAME"))
+    (setenv "NODE_PATH" "/var/www/scripts/third-party/node_modules"))
 
 ;; (add-hook 'before-save-hook 'gofmt-before-save)
-
 ;; UPDATE: gofmt-before-save is more convenient then having a command
 ;; for running gofmt manually. In practice, you want to
 ;; gofmt/goimports every time you save anyways.
