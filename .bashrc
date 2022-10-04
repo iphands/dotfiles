@@ -51,19 +51,6 @@ open_modified() {
   _is_hg && emacs `hg diff -r .^ | fgrep '+++ b/' | awk '{print $2}' | sed 's|b/||'`
 }
 
-od_ssh() {
-  file="/tmp/od.host.id"
-  if [[ -f $file ]]
-  then
-    host="`cat $file`.od.fbinfra.net"
-    echo "Connecting to: $host"
-    ssh iphands@"$host"
-  else
-    echo "Could not find od host id file: $file"
-    return
-  fi
-}
-
 _my_git_ps1() {
   _is_git && {
     printf " %s" "$($GIT branch --show-current)"
