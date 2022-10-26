@@ -48,6 +48,7 @@ groot() {
 }
 
 open_modified() {
+  groot
   _is_hg && emacs `hg diff -r .^ | fgrep '+++ b/' | awk '{print $2}' | sed 's|b/||'`
 }
 
