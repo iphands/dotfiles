@@ -281,7 +281,7 @@
 (add-to-list 'auto-mode-alist '("\\.js$" .  rjsx-mode))
 
 ;; use bazel-mode for TARGETS
-(add-to-list 'auto-mode-alist '("^TARGETS$" .  bazel-starlark-mode))
+(add-to-list 'auto-mode-alist '("TARGETS$" .  bazel-starlark-mode))
 
 ;; http://www.flycheck.org/manual/latest/index.html
 (require 'flycheck)
