@@ -25,6 +25,7 @@ alias grep='LC_ALL="C" grep --color'
 alias fgrep='LC_ALL="C" fgrep --color'
 alias sshnocheck='ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
 alias scpnocheck='scp -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
+alias unfuck_scrolling='tput rmcup'
 # alias groot='cd "`git rev-parse --show-toplevel`"'
 
 GIT=`which git`
