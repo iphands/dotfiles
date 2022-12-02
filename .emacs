@@ -14,8 +14,6 @@
 
 (setq nxml-child-indent 4 nxml-attribute-indent 4)
 
-(add-hook 'c++-mode-hook (lambda () (setq flycheck-gcc-language-standard "c++11")))
-
 ;; rebuild all of the things!
 (defun rebuild-emacsd ()
  "Rebuild all things in .emacs.d"
@@ -193,6 +191,14 @@
 		   (eslint-fix)
 		   (delete-trailing-whitespace))))
 (add-hook 'rjsx-mode-hook 'my-jsx-mode-hook)
+
+(add-hook 'c++-mode-hook (lambda () (setq flycheck-gcc-language-standard "c++20")))
+(defun my-cpp-mode-hook()
+  "Setup my cpp mode stuff"
+  ;; (toggle-debug-on-error)
+  (local-set-key (kbd "C-x a") 'clang-format-buffer))
+(add-hook 'c++-mode-hook 'my-cpp-mode-hook)
+
 
 (defun my-typescript-mode-hook()
   "Setup my typescript mode stuff"
