@@ -29,7 +29,7 @@ alias unfuck_scrolling='tput rmcup'
 # alias groot='cd "`git rev-parse --show-toplevel`"'
 
 GIT=`which git`
-HG=`which hg`
+HG=`which hg 2>/dev/null`
 
 _is_hg() {
   [[ -d "./.hg" ]] && return 0
