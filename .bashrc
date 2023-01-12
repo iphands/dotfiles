@@ -26,6 +26,9 @@ alias fgrep='LC_ALL="C" fgrep --color'
 alias sshnocheck='ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
 alias scpnocheck='scp -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
 alias unfuck_scrolling='tput rmcup'
+
+# Work around odd fluxbox chrome click on menus issue
+alias browser='google-chrome-stable --disable-features=SendMouseLeaveEvents'
 # alias groot='cd "`git rev-parse --show-toplevel`"'
 
 GIT=`which git`
