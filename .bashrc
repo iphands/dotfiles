@@ -129,5 +129,7 @@ if ! [[ "${PROMPT_COMMAND:-}" =~ ___jumper ]]; then
   PROMPT_COMMAND="___jumper${PROMPT_COMMAND:+;$PROMPT_COMMAND}"
 fi
 
-[[ -f "/usr/local/opt/asdf/libexec/asdf.sh" ]] && source /usr/local/opt/asdf/libexec/asdf.sh
+. "$HOME/.asdf/asdf.sh"
+. "$HOME/.asdf/completions/asdf.bash"
+
 [[ -z $DISPLAY ]] && export DISPLAY=:0

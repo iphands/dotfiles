@@ -63,7 +63,7 @@
  '(js2-basic-offset 4)
  '(js2-bounce-indent-p t)
  '(package-selected-packages
-   '(php-mode flycheck clang-format eglot powershell py-yapf edts git-modes csv-mode eslint-fix prettier flow-minor-mode rjsx-mode systemd bazel tide go-imenu lsp-ui yasnippet typescript-mode protobuf-mode lsp-mode rustic racer eldoc go-eldoc helm-ls-git helm helm-git helm-go-package smex company company-box company-c-headers company-cmake company-ctags company-go company-shell yafolding flymake-shellcheck cmake-mode go-mode groovy-mode flymake-json flymake-jshint web-mode json-mode js2-highlight-vars js2-mode xref-js2 toml-mode cargo flycheck-rust rust-mode magit magit-filenotify magit-find-file yaml-mode python-environment puppetfile-mode puppet-mode phi-rectangle nginx-mode neotree multiple-cursors move-text markdown-mode+ lua-mode lineno json-rpc highline epc dockerfile-mode coffee-mode)))
+   '(sass-mode clang-format eglot powershell py-yapf edts git-modes csv-mode eslint-fix prettier flow-minor-mode rjsx-mode systemd bazel tide go-imenu lsp-ui yasnippet typescript-mode protobuf-mode lsp-mode rustic racer eldoc go-eldoc helm-ls-git helm helm-git helm-go-package smex company company-box company-c-headers company-cmake company-ctags company-go company-shell yafolding flymake-shellcheck cmake-mode go-mode groovy-mode flymake-json flymake-jshint web-mode json-mode js2-highlight-vars js2-mode xref-js2 toml-mode cargo flycheck-rust rust-mode magit magit-filenotify magit-find-file yaml-mode python-environment puppetfile-mode puppet-mode phi-rectangle nginx-mode neotree multiple-cursors move-text markdown-mode+ lua-mode lineno json-rpc highline epc dockerfile-mode coffee-mode)))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
