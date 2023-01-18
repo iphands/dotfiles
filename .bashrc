@@ -122,7 +122,9 @@ if ! [[ "${PROMPT_COMMAND:-}" =~ ___jumper ]]; then
   PROMPT_COMMAND="___jumper${PROMPT_COMMAND:+;$PROMPT_COMMAND}"
 fi
 
-. "$HOME/.asdf/asdf.sh"
-. "$HOME/.asdf/completions/asdf.bash"
+[[ -f "${HOME}/.asdf" ]] && {
+  . "${HOME}/.asdf/asdf.sh"
+  . "${HOME}/.asdf/completions/asdf.bash"
+}
 
 [[ -z $DISPLAY ]] && export DISPLAY=:0
