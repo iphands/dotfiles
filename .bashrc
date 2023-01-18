@@ -7,7 +7,7 @@ export BASH_SILENCE_DEPRECATION_WARNING=1
 # Uncomment the following line if you don't like systemctl's auto-paging feature:
 # export SYSTEMD_PAGER=
 
-HISTSIZE=100000
+HISTSIZE=1000000
 HISTFILESIZE=$HISTSIZE
 export HISTSIZE
 export HISTFILESIZE
@@ -102,17 +102,10 @@ if [[ "$HOSTNAME" =~ "cosmo" ]]; then
   export OLDROOT=/mnt/myth/bak/cosmo/cosmo/rootfs/current/rootfs
 fi
 
-# which nodenv >/dev/null 2>&1 && eval "$(nodenv init -)"
 which direnv >/dev/null 2>&1 && eval "$(direnv hook bash)"
 [[ -f "${HOME}/.cargo/env" ]] && source "${HOME}/.cargo/env"
 
-# export NVM_DIR="$HOME/.nvm"
-# [ -s "/usr/local/opt/nvm/nvm.sh" ] && . "/usr/local/opt/nvm/nvm.sh"  # This loads nvm
-# [ -s "/usr/local/opt/nvm/etc/bash_completion.d/nvm" ] && . "/usr/local/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
-
 export GPG_TTY=$(tty)
-
-[[ -f "${HOME}/.taniumrc" ]] && source "${HOME}/.taniumrc"
 
 ___jumper() {
   if [[ "$PWD" =~ "${HOME}/j/" ]]; then
