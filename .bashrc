@@ -53,7 +53,7 @@ groot() {
 
 open_modified() {
   groot
-  _is_hg && emacs -nw `hg diff -r .^ | fgrep '+++ b/' | awk '{print $2}' | sed 's|b/||'`
+  _is_hg && emacs -nw `hg diff -r .^ --stat | grep -F '|' | awk '{print $1}'`
 }
 
 _my_git_ps1() {
