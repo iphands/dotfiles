@@ -64,7 +64,14 @@ _my_git_ps1() {
   }
 
   _is_hg && {
-    echo -n " hg"
+    line=`hg fsl 2>/dev/null | fgrep @ -m1`
+    if [[ $line =~ remote/master ]]
+    then
+      echo " master"
+    else
+      echo "$line" | grep -Eo ' D[0-9]{4,}'
+    fi
+
     # we already have this set from the _is_hg because bash
     # dont call again
     # HG_STATUS=`$HG status 2>/dev/null`
