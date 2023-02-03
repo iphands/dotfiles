@@ -63,7 +63,7 @@
  '(js2-basic-offset 4)
  '(js2-bounce-indent-p t)
  '(package-selected-packages
-   '(lsp-pyre lsp-python-ms elpy sass-mode clang-format eglot powershell py-yapf edts git-modes csv-mode eslint-fix prettier flow-minor-mode rjsx-mode systemd bazel tide go-imenu lsp-ui yasnippet typescript-mode protobuf-mode lsp-mode rustic racer eldoc go-eldoc helm-ls-git helm helm-git helm-go-package smex company company-box company-c-headers company-cmake company-ctags company-go company-shell yafolding flymake-shellcheck cmake-mode go-mode groovy-mode flymake-json flymake-jshint web-mode json-mode js2-highlight-vars js2-mode xref-js2 toml-mode cargo flycheck-rust rust-mode magit magit-filenotify magit-find-file yaml-mode python-environment puppetfile-mode puppet-mode phi-rectangle nginx-mode neotree multiple-cursors move-text markdown-mode+ lua-mode lineno json-rpc highline epc dockerfile-mode coffee-mode)))
+   '(flycheck-pyre lsp-pyre lsp-python-ms elpy sass-mode clang-format eglot powershell py-yapf edts git-modes csv-mode eslint-fix prettier flow-minor-mode rjsx-mode systemd bazel tide go-imenu lsp-ui yasnippet typescript-mode protobuf-mode lsp-mode rustic racer eldoc go-eldoc helm-ls-git helm helm-git helm-go-package smex company company-box company-c-headers company-cmake company-ctags company-go company-shell yafolding flymake-shellcheck cmake-mode go-mode groovy-mode flymake-json flymake-jshint web-mode json-mode js2-highlight-vars js2-mode xref-js2 toml-mode cargo flycheck-rust rust-mode magit magit-filenotify magit-find-file yaml-mode python-environment puppetfile-mode puppet-mode phi-rectangle nginx-mode neotree multiple-cursors move-text markdown-mode+ lua-mode lineno json-rpc highline epc dockerfile-mode coffee-mode)))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -331,18 +331,26 @@
   (setq web-mode-code-indent-offset 2))
 (add-hook 'web-mode-hook  'my-web-mode-hook)
 
-
 (add-to-list 'auto-mode-alist '("Jenkinsfile" . groovy-mode))
 (add-to-list 'auto-mode-alist '("\\.jenkinsfile\\'" . groovy-mode))
 
-(defun my-setup-sh-mode ()
+(defun my-sh-mode-hook ()
   "My preferences for sh-mode"
   (setq sh-basic-offset 2)
   (setq sh-indent-after-continuation 'always)
   (setq sh-indent-for-case-alt '+)
   (setq sh-indent-for-case-label 0))
+(add-hook 'sh-mode-hook 'my-sh-mode-hook)
 
-(add-hook 'sh-mode-hook #'my-setup-sh-mode)
+(defun my-python-mode-hook ()
+  "My preferences for python-mode"
+  (company-mode)
+  (elpy-enable)
+  ;; (local-set-key (kbd "C-TAB") 'elpy-company-backend)
+  ('flycheck-python-flake8-executable "python3")
+  ('flycheck-python-pycompile-executable "python3")
+  ('flycheck-python-pylint-executable "python3"))
+(add-hook 'python-mode-hook 'my-python-mode-hook)
 
 ;; SMEX smex
 (global-set-key (kbd "M-x") 'smex)
@@ -363,5 +371,8 @@
 ;; BACKUP FILES
 (setq make-backup-files nil)
 (setq auto-save-default nil)
+
+(put 'upcase-region 'disabled nil)
+(put 'downcase-region 'disabled nil)
 
 ;;; .emacs ends here
