@@ -16,9 +16,9 @@
 
 ;; rebuild all of the things!
 (defun rebuild-emacsd ()
- "Rebuild all things in .emacs.d"
- (interactive)
- (byte-recompile-directory (expand-file-name "~/.emacs.d") 0))
+  "Rebuild all things in .emacs.d"
+  (interactive)
+  (byte-recompile-directory (expand-file-name "~/.emacs.d") 0))
 
 ;; (setq backup-directory-alist `(("." . "~/.saves")))
 ;; (setq backup-by-copying t)
@@ -56,6 +56,7 @@
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
    '("e24180589c0267df991cf54bf1a795c07d00b24169206106624bb844292807b9" "c4e6fe8f5728a5d5fd0e92538f68c3b4e8b218bcfb5e07d8afff8731cc5f3df0" "42ac06835f95bc0a734c21c61aeca4286ddd881793364b4e9bc2e7bb8b6cf848" default))
+ '(elpy-syntax-check-command "pyflakes")
  '(help-at-pt-display-when-idle '(flymake-overlay) nil (help-at-pt))
  '(help-at-pt-timer-delay 1.5)
  '(inhibit-startup-screen t)
@@ -63,7 +64,7 @@
  '(js2-basic-offset 4)
  '(js2-bounce-indent-p t)
  '(package-selected-packages
-   '(flycheck-pyre lsp-pyre lsp-python-ms elpy sass-mode clang-format eglot powershell py-yapf edts git-modes csv-mode eslint-fix prettier flow-minor-mode rjsx-mode systemd bazel tide go-imenu lsp-ui yasnippet typescript-mode protobuf-mode lsp-mode rustic racer eldoc go-eldoc helm-ls-git helm helm-git helm-go-package smex company company-box company-c-headers company-cmake company-ctags company-go company-shell yafolding flymake-shellcheck cmake-mode go-mode groovy-mode flymake-json flymake-jshint web-mode json-mode js2-highlight-vars js2-mode xref-js2 toml-mode cargo flycheck-rust rust-mode magit magit-filenotify magit-find-file yaml-mode python-environment puppetfile-mode puppet-mode phi-rectangle nginx-mode neotree multiple-cursors move-text markdown-mode+ lua-mode lineno json-rpc highline epc dockerfile-mode coffee-mode)))
+   '(flymake-python-pyflakes flycheck-pyflakes flycheck-pyre lsp-pyre lsp-python-ms elpy sass-mode clang-format eglot powershell py-yapf edts git-modes csv-mode eslint-fix prettier flow-minor-mode rjsx-mode systemd bazel tide go-imenu lsp-ui yasnippet typescript-mode protobuf-mode lsp-mode rustic racer eldoc go-eldoc helm-ls-git helm helm-git helm-go-package smex company company-box company-c-headers company-cmake company-ctags company-go company-shell yafolding flymake-shellcheck cmake-mode go-mode groovy-mode flymake-json flymake-jshint web-mode json-mode js2-highlight-vars js2-mode xref-js2 toml-mode cargo flycheck-rust rust-mode magit magit-filenotify magit-find-file yaml-mode python-environment puppetfile-mode puppet-mode phi-rectangle nginx-mode neotree multiple-cursors move-text markdown-mode+ lua-mode lineno json-rpc highline epc dockerfile-mode coffee-mode)))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -106,9 +107,9 @@
 (tabsoff)
 
 (global-set-key (kbd "C-x a")
-	       (lambda () (interactive)
-		 (indent-region 0 (1-(point-max)))
-		 (delete-trailing-whitespace)))
+		(lambda () (interactive)
+		  (indent-region 0 (1-(point-max)))
+		  (delete-trailing-whitespace)))
 
 ;; bind compile
 ;; (global-set-key (kbd "<f5>") 'compile)
@@ -122,9 +123,9 @@
 (add-to-list 'auto-mode-alist '("\\.\\(php\\|inc\\)$" . hack-mode))
 ;;(add-to-list 'auto-mode-alist '("\\.info" . conf-windows-mode))
 
-;(require 'flymake-jslint)
-;(add-hook 'js2-mode-hook
-;		    (lambda () (flymake-mode t)))
+					;(require 'flymake-jslint)
+					;(add-hook 'js2-mode-hook
+					;		    (lambda () (flymake-mode t)))
 ;; (setq line-number-mode t)
 (setq column-number-mode t)
 ;; (setq column-highlight-mode t)
@@ -259,7 +260,7 @@
 ;; ~/.emacs.d/elpa/yasnippet-bundle-0.6.1
 ;; (delq 'ac-source-yasnippet ac-sources)
 
-(setq flymake-gui-warnings-enabled nil)
+;; (setq flymake-gui-warnings-enabled nil)
 
 
 ;; (add-to-list 'load-path "/lib/node_modules/tern/emacs/")
@@ -300,8 +301,8 @@
 
 ;; disable jshint since we prefer eslint checking
 (setq-default flycheck-disabled-checkers
-  (append flycheck-disabled-checkers
-    '(javascript-jshint)))
+	      (append flycheck-disabled-checkers
+		      '(javascript-jshint)))
 
 ;; use eslint with web-mode for jsx files
 (flycheck-add-mode 'javascript-eslint 'web-mode)
@@ -311,15 +312,15 @@
 
 ;; disable json-jsonlist checking for json files
 (setq-default flycheck-disabled-checkers
-  (append flycheck-disabled-checkers
-    '(json-jsonlist)))
+	      (append flycheck-disabled-checkers
+		      '(json-jsonlist)))
 
 ;; for better jsx syntax-highlighting in web-mode
 ;; - courtesy of Patrick @halbtuerke
 (defadvice web-mode-highlight-part (around tweak-jsx activate)
   (if (equal web-mode-content-type "jsx")
-    (let ((web-mode-enable-part-face nil))
-      ad-do-it)
+      (let ((web-mode-enable-part-face nil))
+	ad-do-it)
     ad-do-it))
 
 ;; adjust indents for web-mode to 2 spaces
@@ -344,12 +345,9 @@
 
 (defun my-python-mode-hook ()
   "My preferences for python-mode"
-  (company-mode)
   (elpy-enable)
   ;; (local-set-key (kbd "C-TAB") 'elpy-company-backend)
-  ('flycheck-python-flake8-executable "python3")
-  ('flycheck-python-pycompile-executable "python3")
-  ('flycheck-python-pylint-executable "python3"))
+  )
 (add-hook 'python-mode-hook 'my-python-mode-hook)
 
 ;; SMEX smex
