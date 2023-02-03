@@ -64,12 +64,14 @@ _my_git_ps1() {
   }
 
   _is_hg && {
-    line=`hg fsl 2>/dev/null | grep -F @ -m1`
-    if [[ $line =~ remote/master ]]
+    line=$(hg log -l1 -T"{sl_diff}|{remotenames}" --pager never --color never --quiet --insecure)
+    diff=$(echo "$line" | cut -d'|' -f1)
+    branch=$(echo "$line" | cut -d'|' -f1)
+    if [[ "$diff" != "" ]]
     then
-      echo -n " master"
+      echo -n " $diff"
     else
-      echo -n "$(echo "$line" | grep -m1 -Eo ' D[0-9]{4,}')"
+      echo -n " $branch"
     fi
 
     # we already have this set from the _is_hg because bash
