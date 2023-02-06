@@ -66,7 +66,7 @@ _my_git_ps1() {
   _is_hg && {
     line=$(hg log -l1 -T"{sl_diff}|{remotenames}" --pager never --color never --quiet --insecure)
     diff=$(echo "$line" | cut -d'|' -f1)
-    branch=$(echo "$line" | cut -d'|' -f1)
+    branch=$(echo "$line" | cut -d'|' -f2)
     if [[ "$diff" != "" ]]
     then
       echo -n " $diff"
