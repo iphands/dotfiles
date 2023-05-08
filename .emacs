@@ -142,8 +142,9 @@
 (setq gofmt-command "goimports")
 ;; (setq gofmt-args '("-local" "git.corp.tanium.com"))
 
-;; (if (string-match-p (regexp-quote "od.fbinfra") (getenv "HOSTNAME"))
-;;    (setenv "NODE_PATH" "/var/www/scripts/third-party/node_modules"))
+
+(if (string-match "\\(od.fbinfra\\|facebook.com\\)" (getenv "HOSTNAME"))
+    (setenv "NODE_PATH" "/var/www/scripts/third-party/node_modules"))
 
 ;; (add-hook 'before-save-hook 'gofmt-before-save)
 ;; UPDATE: gofmt-before-save is more convenient then having a command
