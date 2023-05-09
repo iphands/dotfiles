@@ -16,8 +16,11 @@ for var in ".Xdefaults"\
   ".tmux.conf" \
   ".tmux.conf.local"
 do
-  cp -HR ~/${var} "$current"
-  ln -sf "$PWD/${var}" ~/
+  if [[ -f "$PWD/${var}" ]]
+  then
+    cp -HR ~/${var} "$current"
+    ln -sf "$PWD/${var}" ~/
+  fi
 done
 
 if [ ! -f /etc/profile.d/git-prompt.sh ]
