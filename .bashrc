@@ -1,8 +1,9 @@
 # .bashrc
-export BASH_SILENCE_DEPRECATION_WARNING=1
+# export BASH_SILENCE_DEPRECATION_WARNING=1
 
 [[ -f /etc/profile ]] && source /etc/profile
 [[ -f /etc/bashrc ]] && source /etc/bashrc
+[[ -f /usr/facebook/ops/rc/master.bashrc ]] && source /usr/facebook/ops/rc/master.bashrc
 
 # Uncomment the following line if you don't like systemctl's auto-paging feature:
 # export SYSTEMD_PAGER=
