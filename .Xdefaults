@@ -202,12 +202,11 @@ xosview*diskUsedColor:	    seagreen
 xosview*diskIdleColor:	    #111111
 xosview*diskWriteColor:     SlateBlue1
 xosview*diskReadColor:      SkyBlue
-xosview*diskBandwidth:      100000000 ! 100MB/s
+xosview*diskBandwidth:      6000000000 ! 6GB/s
 xosview*diskPriority:	    10
 xosview*diskDecay:	    	True
 xosview*diskUsedFormat:     autoscale
 xosview*diskGraph:	    	True
-
 
 ! xosview*RAID:                 False
 ! xosview*RAIDdevicecount:      1
