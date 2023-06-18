@@ -8,13 +8,11 @@
 # Uncomment the following line if you don't like systemctl's auto-paging feature:
 # export SYSTEMD_PAGER=
 
-EDITOR='emacs -nw'
-export EDITOR
 
+GSETTINGS_BACKEND=keyfile
+EDITOR='emacs -nw'
 HISTSIZE=1000000
 HISTFILESIZE=$HISTSIZE
-export HISTSIZE
-export HISTFILESIZE
 
 if [[ "`uname`" == "Linux" ]]; then
   alias ls='ls --color'
@@ -133,6 +131,10 @@ ___jumper() {
 if ! [[ "${PROMPT_COMMAND:-}" =~ ___jumper ]]; then
   PROMPT_COMMAND="___jumper${PROMPT_COMMAND:+;$PROMPT_COMMAND}"
 fi
+
+[[ -f "${HOME}/.bashrc_local" ]] && {
+  . "${HOME}/.bashrc_local"
+}
 
 [[ -f "${HOME}/.asdf" ]] && {
   . "${HOME}/.asdf/asdf.sh"

@@ -143,8 +143,8 @@
 ;; (setq gofmt-args '("-local" "git.corp.tanium.com"))
 
 
-(if (string-match "\\(od.fbinfra\\|facebook.com\\)" (getenv "HOSTNAME"))
-    (setenv "NODE_PATH" "/var/www/scripts/third-party/node_modules"))
+;; (if (string-match "\\(od.fbinfra\\|facebook.com\\)" (getenv "HOSTNAME"))
+;;     (setenv "NODE_PATH" "/var/www/scripts/third-party/node_modules"))
 
 ;; (add-hook 'before-save-hook 'gofmt-before-save)
 ;; UPDATE: gofmt-before-save is more convenient then having a command
@@ -295,31 +295,28 @@
 (add-to-list 'auto-mode-alist '("TARGETS$" .  bazel-starlark-mode))
 
 ;; http://www.flycheck.org/manual/latest/index.html
-(require 'flycheck)
-(add-to-list 'flycheck-disabled-checkers 'python-flake8)
-(add-to-list 'flycheck-disabled-checkers 'python-pylint)
+(when (require 'flycheck nil 'noerror)
+  (add-to-list 'flycheck-disabled-checkers 'python-flake8)
+  (add-to-list 'flycheck-disabled-checkers 'python-pylint)
+  (require 'flycheck-pyflakes)
+  (add-hook 'python-mode-hook 'flycheck-mode)
+  (add-hook 'after-init-hook #'global-flycheck-mode)
 
-(require 'flycheck-pyflakes)
-(add-hook 'python-mode-hook 'flycheck-mode)
+  (setq-default flycheck-disabled-checkers
+		(append flycheck-disabled-checkers
+			'(javascript-jshint)))
 
-;; turn on flychecking globally
-(add-hook 'after-init-hook #'global-flycheck-mode)
+  ;; use eslint with web-mode for jsx files
+  (flycheck-add-mode 'javascript-eslint 'web-mode)
 
-;; disable jshint since we prefer eslint checking
-(setq-default flycheck-disabled-checkers
-	      (append flycheck-disabled-checkers
-		      '(javascript-jshint)))
+  ;; customize flycheck temp file prefix
+  (setq-default flycheck-temp-prefix ".flycheck")
 
-;; use eslint with web-mode for jsx files
-(flycheck-add-mode 'javascript-eslint 'web-mode)
-
-;; customize flycheck temp file prefix
-(setq-default flycheck-temp-prefix ".flycheck")
-
-;; disable json-jsonlist checking for json files
-(setq-default flycheck-disabled-checkers
-	      (append flycheck-disabled-checkers
-		      '(json-jsonlist)))
+  ;; disable json-jsonlist checking for json files
+  (setq-default flycheck-disabled-checkers
+		(append flycheck-disabled-checkers
+			'(json-jsonlist)))
+  )
 
 ;; for better jsx syntax-highlighting in web-mode
 ;; - courtesy of Patrick @halbtuerke
