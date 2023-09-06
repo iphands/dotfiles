@@ -9,6 +9,9 @@
 # export SYSTEMD_PAGER=
 
 
+export TERM=screen-256color
+export EDITOR='emacs -nw'
+
 GSETTINGS_BACKEND=keyfile
 EDITOR='emacs -nw'
 HISTSIZE=1000000
@@ -28,6 +31,7 @@ alias fgrep='LC_ALL="C" fgrep --color'
 alias sshnocheck='ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
 alias scpnocheck='scp -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
 alias unfuck_scrolling='tput rmcup'
+alias emacs='emacs -nw'
 
 # Work around odd fluxbox chrome click on menus issue
 alias browser='google-chrome-stable --disable-features=SendMouseLeaveEvents'

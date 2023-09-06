@@ -14,6 +14,8 @@
 
 (setq nxml-child-indent 4 nxml-attribute-indent 4)
 
+(let ((frame-background-mode 'dark)) (frame-set-background-mode nil))
+
 ;; rebuild all of the things!
 (defun rebuild-emacsd ()
   "Rebuild all things in .emacs.d"
@@ -194,10 +196,13 @@
 		   (delete-trailing-whitespace))))
 (add-hook 'rjsx-mode-hook 'my-jsx-mode-hook)
 
-(add-hook 'c++-mode-hook (lambda () (setq flycheck-gcc-language-standard "c++20")))
+;; (add-hook 'c++-mode-hook (lambda () (setq flycheck-gcc-language-standard "c++20")))
 (defun my-cpp-mode-hook()
   "Setup my cpp mode stuff"
   ;; (toggle-debug-on-error)
+  ;; (setq flycheck-gcc-language-standard "c++20")
+  (flycheck-mode 0)
+  (setq clang-format-style-option "llvm")
   (local-set-key (kbd "C-x a") 'clang-format-buffer))
 (add-hook 'c++-mode-hook 'my-cpp-mode-hook)
 
@@ -290,6 +295,10 @@
 (add-to-list 'auto-mode-alist '("\\.jsx$" . rjsx-mode))
 (add-to-list 'auto-mode-alist '("\\.tsx$" . typescript-mode))
 (add-to-list 'auto-mode-alist '("\\.js$" .  rjsx-mode))
+
+(add-to-list 'auto-mode-alist '("\\.tw$"    . python-mode))
+(add-to-list 'auto-mode-alist '("\\.cconf$" . python-mode))
+(add-to-list 'auto-mode-alist '("\\.cinc$"  . python-mode))
 
 ;; use bazel-mode for TARGETS
 (add-to-list 'auto-mode-alist '("TARGETS$" .  bazel-starlark-mode))
