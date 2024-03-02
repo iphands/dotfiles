@@ -1,0 +1,14 @@
+#!/bin/bash
+STATE=`pactl get-source-mute 0`
+
+for var in `pactl list | fgrep 'Source #' | cut -d'#' -f2`
+do
+  pactl set-source-mute $var on
+done
+
+if [[ "$STATE" == "Mute: yes" ]]
+then
+  pactl set-source-mute 0 off
+else
+  pactl set-source-mute 0 on
+fi

@@ -1,0 +1,4 @@
+#!/bin/bash
+i-cpufreq ondemand
+nvidia-settings -a [gpu:0]/GPUPowerMizerMode=2
+nvidia-settings -a [gpu:1]/GPUPowerMizerMode=2

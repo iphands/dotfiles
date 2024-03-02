@@ -1,0 +1,11 @@
+#!/bin/bash
+set -e
+eval $(xdotool getmouselocation --shell)
+
+for var in `xdotool search --onlyvisible 'chrome|xosview|Alacritty'`
+do
+  echo "$X $Y"
+  xdotool windowstate --remove MAXIMIZED_VERT --remove MAXIMIZED_HORZ $var
+  xdotool windowmove $var $X $Y
+  let "X+=50"
+done

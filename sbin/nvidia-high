@@ -1,0 +1,6 @@
+#!/bin/bash
+i-cpufreq performance
+nvidia-smi -pm 1
+nvidia-smi -i 0 -pl 250
+nvidia-settings -a [gpu:0]/GPUPowerMizerMode=1
+nvidia-settings -a [gpu:1]/GPUPowerMizerMode=1

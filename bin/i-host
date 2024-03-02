@@ -1,0 +1,12 @@
+#!/bin/bash
+set -e
+
+_fail_none() {
+  echo "No host provided"
+  exit 1
+}
+
+H="$1"
+[[ $H == "" ]] && _fail_none
+
+grep -F "$H" ~/hosts | awk '{print $2}'

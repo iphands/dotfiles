@@ -1,0 +1,100 @@
+#!/bin/bash
+set -eo pipefail
+
+MODES="above|work|same|right|home|single"
+
+_check() {
+  if [[ $1 == "" ]]
+  then
+    echo "assertion failed: empty option found"
+    exit 1
+  fi
+}
+
+_fail_no_mode() {
+  echo "Error: must supply a mode as arg1 <$MODES>"
+  exit 1
+}
+
+_fail_bad_mode() {
+  echo "Error: invalid mode $1 (expected <$MODES>)"
+  exit 1
+}
+
+_do_auto() {
+  out="`xrandr --query --props`"
+  single_test_sum="`xrandr | grep -F ' connected ' | md5sum | awk '{print $1}'`"
+  echo "$out" | fgrep -q 00ffffffffffff0010acfb404c443141 && _main "work" "from_auto" && exit 0
+  [[ "$single_test_sum" == "1cabd7be17c7fd2c54466895839932bc" ]] && _main "single" "from_auto" && exit 0
+}
+
+_do_work() {
+  display_count=`xrandr | fgrep -e eDP -e DP3-3 -e DP3-1 | wc -l`
+  if [[ "$display_count" == "3" ]]
+  then
+    echo "Found all three monitors, doing desk setup"
+    # xrandr --output DP3-3 --mode 2560x1600 --crtc 1 --verbose
+    # xrandr --output DP3-1 --mode 2560x1600 --crtc 2 --verbose
+    # xrandr --output DP3-3 --above eDP1 --auto --verbose
+    # xarndr --output DP3-1 --right-of DP3-3 --auto --verbose
+    # xrandr --output DP3-3 --above eDP1 --output DP3-1 --right-of DP3-3 --auto --verbose
+    xrandr \
+      --output eDP1 --off \
+      --output DP3-1 --off \
+      --output DP3-3 --off \
+      --output eDP1 --mode 1920x1080 \
+      --output DP3-3 --above eDP1 --mode 2560x1600 \
+      --output DP3-1 --right-of DP3-3 --mode 2560x1600
+
+    return 0
+  fi
+  return 1
+}
+
+_main() {
+  MODE=$1
+  [[ "$MODE" == "" ]] && _fail_no_mode
+  [[ "$2" == "from_auto" ]] && echo "Auto detected mode \"$MODE\""
+
+  MAIN=eDP1
+  set +e
+  OTHER=`xrandr | fgrep ' connected' | awk '{print $1}' | fgrep -v $MAIN | head -n1`
+  [[ "$OTHER" != "" ]] && xrandr --output $OTHER --auto
+  set -e
+
+  killall randy 2>/dev/null || true
+
+  case $MODE in
+  "above" | "work")
+    _do_work || {
+      _check $OTHER
+      xrandr --output $OTHER --above $MAIN
+    }
+    ;;
+  "same" | "same-as")
+    _check $OTHER
+    xrandr --output $OTHER --same-as $MAIN
+    ;;
+  "home")
+    _check $OTHER
+    xrandr --output $OTHER --right-of $MAIN
+    xrandr --output $OTHER --pos 1920x-1080
+    ;;
+  "single")
+    xrandr --auto
+    xrandr --output $MAIN --auto
+    ;;
+
+  *) _fail_bad_mode $MODE
+  esac
+
+  # /home/iphands/prog/randy/target/release/randy ~/prog/randy/config/my_laptop_docked.yml &
+  randy
+  sleep 0.150
+  fluxbox-remote restart
+  sleep 0.150
+  fbsetbg -c ~/Documents/tux.png
+}
+
+[[ "$1" == "" ]] && _do_auto $1
+_main $1
