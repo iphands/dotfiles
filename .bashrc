@@ -99,6 +99,7 @@ _path_if "${HOME}/go/bin"
 _path_if "${HOME}/.cargo/bin"
 _path_if "${HOME}/bin/flatpak"
 _path_if "${HOME}/bin"
+_path_if "${HOME}/sbin"
 
 if ! command -v dirchomp >/dev/null; then
   dirchomp() {
