@@ -47,8 +47,9 @@ then
     echo "-- installing into ~/sbin $var"
     ln -sf $PWD ~/sbin/$var
   done
+  popd >/dev/null
 fi
-popd >/dev/null
+
 
 if [ ! -f /etc/profile.d/git-prompt.sh ]
 then
