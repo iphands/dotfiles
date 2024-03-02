@@ -40,7 +40,7 @@ then
   echo
   echo "## Sbin scripts"
   mkdir -p ~/sbin
-  pushd bin >/dev/null
+  pushd ~/bin >/dev/null
   for var in *
   do
     echo "-- installing into ~/sbin $var"
