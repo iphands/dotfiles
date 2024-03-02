@@ -1,0 +1,74 @@
+#!/bin/bash
+set -e
+
+cd /usr/src/linux
+
+CPUS=28
+
+# BASE=/usr/lib/llvm/17/bin
+BASE=/opt/aocc/bin
+
+export LLVM=1
+export LLVM_IAS=1
+export CC=${BASE}/clang
+export CXX=${BASE}/clang++
+export LD=${BASE}/ld.lld
+export NM=${BASE}/llvm-nm
+export AR=${BASE}/llvm-ar
+export RANLIB=${BASE}/llvm-ranlib
+
+export PATH="$BASE:$PATH"
+
+function grub() {
+  grub-mkconfig -o /boot/grub/grub.cfg
+  cp /boot/grub/grub.cfg /boot/efi/EFI/fentoo/grub.cfg
+}
+
+function oldconfig() {
+  # strace -fvo make.stracecd /usr/src/linux make -j${CPUS} oldconfig
+  make -j${CPUS} oldconfig
+  cp .config /usr/src/dotconfig/config
+  chown -R iphands:iphands /usr/src/dotconfig
+}
+
+function menu() {
+  make -j${CPUS} menuconfig
+  cp .config /usr/src/dotconfig/config
+  chown -R iphands:iphands /usr/src/dotconfig
+}
+
+function build() {
+  source /etc/portage/make.conf
+  export KCFLAGS="$CFLAGS"
+  make -j${CPUS} && make -j${CPUS} modules_install
+}
+
+function copy() {
+  make install
+}
+
+function do_help() {
+  echo "The order is:
+- oldconfig
+- build
+- copy
+- grub
+"
+}
+
+function build_mods() {
+  # emerge -v @module-rebuild
+  # emerge =x11-drivers/nvidia-drivers-535.129.03
+  version=`eix nvidia-drivers | fgrep Available | egrep -o 535\.[0-9]+\.[0-9]+ | tail -n1`
+  emerge "=x11-drivers/nvidia-drivers-${version}"
+}
+
+case $1 in
+  "oldconfig") oldconfig ; echo ; do_help;;
+  "menu")      menu  ; echo ; do_help ;;
+  "grub")      time grub  ; echo ; do_help ;;
+  "build")     time build ; echo ; do_help ;;
+  "copy")      time copy  ; echo ; do_help ;;
+  "all")       oldconfig && time build && copy && grub && build_mods;;
+  "help")      do_help ;;
+esac
