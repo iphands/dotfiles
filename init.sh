@@ -34,6 +34,7 @@ do
   echo "-- installing into ~/bin $var"
   ln -sf $PWD ~/bin/$var
 done
+popd >/dev/null
 
 if [ "$EUID" -eq 0 ]
 then
@@ -47,6 +48,7 @@ then
     ln -sf $PWD ~/sbin/$var
   done
 fi
+popd >/dev/null
 
 if [ ! -f /etc/profile.d/git-prompt.sh ]
 then
