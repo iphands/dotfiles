@@ -1,0 +1,2 @@
+#!/bin/bash
+ffmpeg -re -i ~/video.mpg -vf scale=640:480 -f v4l2 /dev/video2

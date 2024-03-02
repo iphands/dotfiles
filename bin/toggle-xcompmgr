@@ -1,0 +1,14 @@
+#!/bin/bash
+log=/dev/null
+
+if pgrep xcompmgr &>/dev/null
+then
+    echo stopping >>$log
+    pkill xcompmgr &
+
+else
+    echo starting >>$log
+    xcompmgr -a &
+fi
+
+exit 0

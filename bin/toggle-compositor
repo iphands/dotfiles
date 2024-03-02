@@ -1,0 +1,20 @@
+#!/bin/bash
+log=~/log
+if pgrep compton &>/dev/null
+then
+    pkill compton &
+    # echo stopping >>$log
+else
+    compton \
+        --glx-no-stencil \
+        --vsync opengl \
+        --dbe \
+        --glx-use-copysubbuffermesa \
+        --glx-no-rebind-pixmap \
+        --glx-use-gpushader4
+    # --xrender-sync \
+    # --xrender-sync-fence &
+    # echo starting >>$log
+fi
+
+exit 0

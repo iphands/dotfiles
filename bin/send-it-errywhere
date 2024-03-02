@@ -1,0 +1,21 @@
+#!/bin/bash
+set -e
+
+git checkout master
+git pull
+hash=`git rev-parse HEAD`
+
+for env in ci qa stage prod
+do
+    for release in stable beta
+    do
+        branch="${env}-${release}"
+        git checkout -b $branch || git checkout $branch
+        git reset --hard $hash
+        git push --set-upstream origin $branch
+        git push -f
+        git checkout master
+    done
+done
+
+

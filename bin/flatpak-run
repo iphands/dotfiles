@@ -1,0 +1,20 @@
+#!/bin/bash
+
+args=${@:1}
+
+function doit() {
+    export PULSE_SERVER=unix:/run/user/1000/pulse/native
+    flatpak --socket=pulseaudio run $1 $args
+}
+
+case `basename $0` in
+    slack)     doit com.slack.Slack ;;
+    vlc)       doit org.videolan.VLC ;;
+    cheese)    doit org.gnome.Cheese ;;
+    pcsx2)     doit net.pcsx2.PCSX2 ;;
+    peek)      doit com.uploadedlobster.peek ;;
+    inkscape)  doit org.inkscape.Inkscape ;;
+    audacity)  doit org.audacityteam.Audacity ;;
+    retroarch) doit org.libretro.RetroArch ;;
+    discord)   doit com.discordapp.Discord ;;
+esac

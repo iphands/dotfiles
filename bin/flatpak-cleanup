@@ -1,0 +1,11 @@
+#!/bin/bash
+# VER=`nvidia-smi | fgrep SMI | awk '{print $3}'`
+VER=`nvidia-smi | fgrep SMI | awk '{print $3}' | sed 's/\./-/g'`
+for var in `flatpak list | fgrep nvidia | fgrep -v $VER | awk '{print $2}' | sort`
+do
+  flatpak -y uninstall $var &
+done
+wait
+echo "Done"
+
+flatpak uninstall --unused
