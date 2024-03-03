@@ -1,0 +1,15 @@
+#!/bin/bash
+set -e
+
+MIN_SUSPEND_TIME=10
+
+_do_sleep() {
+  SUSPEND_TIME=`date +%s`
+  systemctl suspend
+  WAKE_TIME=`date +%s`
+  DIFF_SECS=`expr $WAKE_TIME - $SUSPEND_TIME` || true
+  echo "Suspended for $DIFF_SECS seconds"
+  [[ $SUSPEND_TIME < $MIN_SUSPEND_TIME ]] && _do_sleep
+}
+
+_do_sleep

@@ -1,0 +1,24 @@
+#!/bin/bash
+set -e
+
+file="/tmp/od.host.id"
+
+od_ssh() {
+  if [[ -f $file ]]
+  then
+    host="`cat $file`.od.fbinfra.net"
+    echo "Connecting to: $host"
+    ssh -CY iphands@"$host"
+  else
+    echo "Could not find od host id file: $file"
+    return
+  fi
+}
+
+write_file() {
+  num="$1"
+  echo "$num" >"$file"
+}
+
+[[ "$1" =~ ^[0-9]{3,} ]] && write_file "$1"
+od_ssh

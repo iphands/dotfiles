@@ -1,0 +1,43 @@
+#!/bin/bash
+set -e
+
+file="/tmp/od.host.id"
+if [[ ! -f $file ]]
+then
+  echo "Could not find od host id file: $file"
+  exit 1
+fi
+
+host="`cat $file`.od.fbinfra.net"
+echo "Connecting to: $host"
+
+pushd ~/share/prog/dotfiles
+git pull --depth 1
+git gc --prune=all
+popd
+
+pushd ~/share
+tar cvf prog.tar prog
+zstd -fk9 prog.tar
+popd
+
+rsync -avPS ~/share/prog.tar.zst "${USER}@${host}:/tmp/"
+ssh "${USER}@${host}" /bin/bash -c "pwd &&
+zstd -df /tmp/prog.tar.zst &&
+tar xvf /tmp/prog.tar &&
+cd ~/prog/dotfiles &&
+pwd && ls -lh &&
+bash ./init.sh &&
+bash ./init.sh &&
+mkdir -p ~/bin &&
+zstd -df ~/prog/dirchomp.zst -o ~/bin/dirchomp &&
+mkdir -p ~/j && cd ~/j &&
+ln -fs ~/fbsource/fbcode/dataswarm-pipelines                        ./pipeline &&
+ln -fs ~/fbsource/fbcode/dataswarm-pipelines/tasks/adsatlas/esad    ./pipeline-esad &&
+ln -fs ~/www/flib/intern/scripts                                    ./intern-scripts &&
+ln -fs ~/www/flib/intern/scripts/lift/config-drift                  ./config-drift &&
+ln -fs ~/www/flib/intern/scripts/lift/esad                          ./esad-scripts &&
+ln -fs ~/www/flib/intern/ads/study/incrementality_infra             ./esad-infra &&
+ln -fs ~/www/html/intern/js/collab/smartoffice/gizmo/apps/dashboard ./gizmo-dash &&
+ln -fs ~/www/html/intern/js/fbdoc/nodes                             ./markdown"
+echo

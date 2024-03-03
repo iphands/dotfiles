@@ -1,0 +1,5 @@
+#!/bin/bash
+set -e
+cd /home/iphands/prog/randy
+killall randy || true
+./target/release/randy ./config/my_laptop.yml
