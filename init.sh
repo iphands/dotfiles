@@ -11,7 +11,6 @@ for var in ".Xdefaults"\
   ".emacs" \
   ".emacs.d" \
   ".gitconfig" \
-  ".gitconfig-personal" \
   ".gitconfig-meta" \
   ".gitignore" \
   ".tmux.conf" \
