@@ -25,29 +25,25 @@ do
   fi
 done
 
-echo
-echo "## Bin scripts"
-mkdir -p ~/bin
-pushd bin >/dev/null
-for var in *
-do
-  echo "-- installing into ~/bin $var"
-  ln -sf $PWD ~/bin/$var
-done
-popd >/dev/null
+install() {
+  p=$1
+  echo
+  echo "## $p scripts"
+  mkdir -p ~/$p
+  pushd ./$p >/dev/null
+  for var in *
+  do
+    echo "-- installing ~/$p/$var"
+    ln -sf $PWD/$var ~/$p/
+  done
+  popd >/dev/null
+}
+
+install bin
 
 if [ "$EUID" -eq 0 ]
 then
-  echo
-  echo "## Sbin scripts"
-  mkdir -p ~/sbin
-  pushd sbin >/dev/null
-  for var in *
-  do
-    echo "-- installing into ~/sbin $var"
-    ln -sf $PWD ~/sbin/$var
-  done
-  popd >/dev/null
+  install sbin
 fi
 
 
