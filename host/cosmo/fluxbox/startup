@@ -1,0 +1,25 @@
+#!/bin/sh
+#
+# fluxbox startup-script:
+#
+# Lines starting with a '#' are ignored.
+
+PATH=${HOME}/bin/flatpak/:${HOME}/bin/:${PATH}
+OLDHOME=/mnt/myth/bak/cosmo/cosmo/home/current/home/iphands
+OLDROOT=/mnt/myth/bak/cosmo/cosmo/rootfs/current/rootfs
+
+# Change your keymap:
+xmodmap "/home/iphands/.Xmodmap"
+google-chrome-unstable &
+# conky -c ~/.conky/conkyrc &
+xosview &
+xrandr --output HDMI-0 --mode 3840x2160 --rate 59.94
+xrandr -s 3840x2160 -r 55
+pulseaudio --start && /home/iphands/bin/rust_tray -d "Description: HD Webcam C615" &
+
+# And last but not least we start fluxbox.
+# Because it is the last app you have to run it with ''exec'' before it.
+
+# exec fluxbox
+# or if you want to keep a log:
+exec fluxbox -log "/home/iphands/.fluxbox/log"

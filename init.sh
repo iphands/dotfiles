@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 current="$HOME/.dotfiles_backup/`date +%Y%m%d%H%M%S`"
 mkdir -p "$current"
@@ -23,9 +24,12 @@ install_host() {
   if [[ "$HOSTNAME" =~ "PC2K41CN" ]]
   then
     host=handslap
+  elif [[ "$HOSTNAME" =~ "cosmo" ]]
+  then
+    host=cosmo
   fi
 
-  pushd host/$host/$git_target >/dev/null
+  pushd host/$host/$git_target >/dev/null || return
   mkdir -p ~/$target
   for var in *
   do
