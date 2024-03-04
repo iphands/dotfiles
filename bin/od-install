@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
-echo '-- REMOTE'
+echo '-- REMOTE od-install'
 pwd
 zstd -df /tmp/prog.tar.zst
 tar xvf /tmp/prog.tar
