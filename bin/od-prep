@@ -12,7 +12,7 @@ host="`cat $file`.od.fbinfra.net"
 echo "Connecting to: $host"
 
 pushd ~/share/prog/dotfiles
-git pull --depth 1
+git pull --depth 1 --rebase
 git gc --prune=all
 popd
 
@@ -20,6 +20,11 @@ pushd ~/share
 tar cvf prog.tar prog
 zstd -fk9 prog.tar
 popd
+
+if [[ $1 == "--dry" ]]
+then
+  exit 0
+fi
 
 rsync -avPS ~/share/prog.tar.zst "${USER}@${host}:/tmp/"
 ssh "${USER}@${host}" /bin/bash -c "pwd &&
