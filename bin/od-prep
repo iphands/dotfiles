@@ -11,12 +11,18 @@ fi
 host="`cat $file`.od.fbinfra.net"
 echo "Connecting to: $host"
 
-pushd ~/share/prog/dotfiles
-git pull --depth 1 --rebase
+mkdir -p ~/.od-prep/share-real
+rm -rf ~/.od-prep/share || true
+rsync -avPS ~/.od-prep/share-real/ ~/.od-prep/share/
+
+pushd ~/.od-prep/share/prog/dotfiles
+git pull --depth 1 || git pull --depth 1 --rebase
 git gc --prune=all
+rm -rf ../dotfiles/.git
+rm -rf ../dotfiles/.emacs.d/eln-cache
 popd
 
-pushd ~/share
+pushd ~/.od-prep/share
 tar cvf prog.tar prog
 zstd -fk9 prog.tar
 popd
@@ -26,14 +32,17 @@ then
   exit 0
 fi
 
-rsync -avPS ~/share/prog.tar.zst "${USER}@${host}:/tmp/"
-ssh "${USER}@${host}" /bin/bash -c "pwd &&
+rsync -avPS ~/.od-prep/share/prog.tar.zst "${USER}@${host}:/tmp/"
+ssh "${USER}@${host}" /bin/bash -c "echo '-- REMOTE' &&
+echo '-- REMOTE' &&
+pwd &&
 zstd -df /tmp/prog.tar.zst &&
 tar xvf /tmp/prog.tar &&
 cd ~/prog/dotfiles &&
 pwd && ls -lh &&
+echo '-- installing dotfiles' &&
 bash ./init.sh &&
-bash ./init.sh &&
+echo '-- installing dirchomp' &&
 mkdir -p ~/bin &&
 zstd -df ~/prog/dirchomp.zst -o ~/bin/dirchomp &&
 mkdir -p ~/j && cd ~/j &&

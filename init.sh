@@ -28,10 +28,10 @@ install_host() {
   then
     host=cosmo
   else
-    return
+    return 0
   fi
 
-  pushd host/$host/$git_target >/dev/null || return
+  pushd host/$host/$git_target >/dev/null
   mkdir -p ~/$target
   for var in *
   do
