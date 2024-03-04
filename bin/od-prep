@@ -11,13 +11,16 @@ fi
 host="`cat $file`.od.fbinfra.net"
 echo "Connecting to: $host"
 
+
+pushd ~/.od-prep/share-real/prog/dotfiles
+git pull --depth 1 || git pull --depth 1 --rebase
+popd
+
 mkdir -p ~/.od-prep/share-real
 rm -rf ~/.od-prep/share || true
 rsync -avPS ~/.od-prep/share-real/ ~/.od-prep/share/
 
 pushd ~/.od-prep/share/prog/dotfiles
-git pull --depth 1 || git pull --depth 1 --rebase
-git gc --prune=all
 rm -rf ../dotfiles/.git
 rm -rf ../dotfiles/.emacs.d/eln-cache
 popd
