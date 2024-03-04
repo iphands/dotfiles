@@ -36,7 +36,7 @@ then
 fi
 
 rsync -avPS ~/.od-prep/share/prog.tar.zst "${USER}@${host}:/tmp/"
-ssh "${USER}@${host}" /bin/bash -c "echo '-- REMOTE' &&
+ssh -C "${USER}@${host}" /bin/bash -c "echo '-- REMOTE' &&
 echo '-- REMOTE' &&
 pwd &&
 zstd -df /tmp/prog.tar.zst &&
