@@ -27,6 +27,8 @@ install_host() {
   elif [[ "$HOSTNAME" =~ "cosmo" ]]
   then
     host=cosmo
+  else
+    return
   fi
 
   pushd host/$host/$git_target >/dev/null || return
@@ -55,7 +57,10 @@ do
   if [[ -f "$PWD/${var}" ]]
   then
     echo "-- installing $var"
-    cp -HR ~/${var} "$current"
+    if [[ -f ~/${var} ]]
+    then
+      cp -HR ~/${var} "$current"
+    fi
     ln -sf "$PWD/${var}" ~/
   fi
 done
