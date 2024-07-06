@@ -43,7 +43,7 @@ install_host() {
 
 echo "## Dotfiles"
 for var in ".Xdefaults"\
-  ".alacritty.yml" \
+  ".alacritty.toml" \
   ".bash_profile" \
   ".bashrc" \
   ".emacs" \
