@@ -143,4 +143,6 @@ XF86Launch9 :Exec pactl set-source-mute   alsa_input.usb-046d_HD_Webcam_C615_03B
 148 :Exec ~/bin/toggle_compositor
 192 :Exec ~/bin/screenshot
 
+Mod4 r :Exec dmenu_run
+
 # 160 :Exec amixer sset Master,0 toggl

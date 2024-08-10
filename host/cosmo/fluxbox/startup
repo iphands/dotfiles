@@ -14,7 +14,7 @@ google-chrome-unstable &
 # conky -c ~/.conky/conkyrc &
 xosview &
 xrandr --output HDMI-0 --mode 3840x2160 --rate 59.94
-xrandr -s 3840x2160 -r 55
+# xrandr -s 3840x2160 -r 55
 pulseaudio --start && /home/iphands/bin/rust_tray -d "Description: HD Webcam C615" &
 
 # And last but not least we start fluxbox.
