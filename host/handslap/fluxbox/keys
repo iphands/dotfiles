@@ -111,6 +111,8 @@ Control Mod4 F4 :TakeToWorkspace 4
 233 :Exec brightnessctl s +5%
 232 :Exec brightnessctl s 10%-
 
+Mod4 r :Exec dmenu_run
+
 235 :Exec ~/bin/i-screenshot
 96  :Exec /usr/bin/i3lock -efc 220033
 95  :Exec ~/bin/sleep-loop
