@@ -17,6 +17,7 @@ xosview &
 nm-applet &
 blueman-applet &
 /home/iphands/prog/rust_tray/target/release/rust_tray --auto &
+xinput disable `xinput list | grep ELAN901C | grep -Eo 'id=[0-9]+' | cut -d= -f2`
 
 # And last but not least we start fluxbox.
 # Because it is the last app you have to run it with ''exec'' before it.
