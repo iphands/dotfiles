@@ -1521,8 +1521,9 @@ object will be passed git rebase i.e. git rebase -i <hash>."
                                         (window-height . fit-window-to-buffer)
                                         (preserve-size . (nil . t)))
           nil
-          (setq status (apply #'process-file "git" nil t t "apply" patchs)))
-      (helm-ls-git-revert-buffers-in-project)
+          (setq status (apply #'process-file "git" nil t t "apply" patchs))
+          (helm-ls-git-revert-buffers-in-project)
+          (special-mode))
       (when (zerop status) (quit-window nil (get-buffer-window buf))))))
 
 (defvar helm-ls-git-stashes-source
@@ -1605,7 +1606,7 @@ object will be passed git rebase i.e. git rebase -i <hash>."
                             "Copy file(s) `C-u to follow'" 'helm-find-files-copy
                             "Rename file(s) `C-u to follow'" 'helm-find-files-rename)))
     ;; Unregistered files
-    (cond ((string-match "^[?]\\{2\\}" disp)
+    (cond ((string-match "^[?!]\\{2\\}" disp)
            (append actions
                    (helm-make-actions "Add file(s)"
                                       (lambda (candidate)
@@ -1616,11 +1617,11 @@ object will be passed git rebase i.e. git rebase -i <hash>."
                                       "Delete file(s)"
                                       'helm-ff-delete-files
                                       (lambda ()
-                                        (and (string-match "\\`[?]\\{2\\}.*\\.patch\\|diff" disp)
+                                        (and (string-match "\\`[?!]\\{2\\}.*\\.patch\\|diff" disp)
                                              "Apply patch"))
                                       'helm-ls-git-apply-patch
                                       (lambda ()
-                                        (and (string-match "\\`[?]\\{2\\}.*\\.patch" disp)
+                                        (and (string-match "\\`[?!]\\{2\\}.*\\.patch" disp)
                                              "Git AM patches"))
                                       'helm-ls-git-am-files
                                       "Copy bnames to .gitignore"
@@ -1722,15 +1723,19 @@ object will be passed git rebase i.e. git rebase -i <hash>."
           (t actions))))
 
 (defun helm-ls-git-am-files (_candidate)
-  (let ((files (helm-marked-candidates)))
-    (cl-assert (cl-loop for f in files
-                        for ext = (file-name-extension f)
-                        always (and ext (string= ext "patch"))))
-    (with-current-buffer-window "*git am*" '(display-buffer-below-selected
-                                             (window-height . fit-window-to-buffer)
-                                             (preserve-size . (nil . t)))
-        nil
-      (apply #'process-file "git" nil t nil "am" files))))
+  (with-helm-default-directory (helm-default-directory)
+    (let ((files (helm-marked-candidates))
+          (buf "*git am*"))
+      (cl-assert (cl-loop for f in files
+                          for ext = (file-name-extension f)
+                          always (and ext (string= ext "patch"))))
+      (with-current-buffer-window buf '(display-buffer-below-selected
+                                               (window-height . fit-window-to-buffer)
+                                               (preserve-size . (nil . t)))
+          nil
+        (apply #'process-file "git" nil t nil "am" files)
+        (special-mode)
+        (helm-ls-git-revert-buffers-in-project)))))
 
 (defun helm-ls-git-am-abort (_candidate)
   (with-helm-default-directory (helm-default-directory)
@@ -1777,6 +1782,9 @@ object will be passed git rebase i.e. git rebase -i <hash>."
 
 ;;; Stage and commit
 ;;
+(defvar helm-ls-git--server-edit-aborted nil
+  "Flag set when user abort a commit.")
+
 (defun helm-ls-git-stage-files (_candidate)
   "Stage marked files."
   (let* ((files (helm-marked-candidates))
@@ -1805,16 +1813,29 @@ object will be passed git rebase i.e. git rebase -i <hash>."
 
 (defun helm-ls-git-commit-sentinel (process event)
   (let ((default-directory (with-current-buffer (process-buffer process)
-                             default-directory)))
-    (when (string= event "finished\n")
-      (let ((commit (helm-ls-git-oneline-log (helm-ls-git--branch))))
-        (when (string-match "\\`\\([^ ]+\\)+ +\\(.*\\)" commit)
-          (add-face-text-property 0 (match-end 1)
-                                  'font-lock-type-face nil commit)
-          (add-face-text-property (1+ (match-end 1))
-                                  (match-end 2)
-                                  'font-lock-function-name-face nil commit))
-        (message "Commit done, now at `%s'" commit)))))
+                             default-directory))
+        (status (process-exit-status process)))
+    (if (string= event "finished\n")
+        (let ((commit (helm-ls-git-oneline-log (helm-ls-git--branch))))
+          (when (string-match "\\`\\([^ ]+\\)+ +\\(.*\\)" commit)
+            (add-face-text-property 0 (match-end 1)
+                                    'font-lock-type-face nil commit)
+            (add-face-text-property (1+ (match-end 1))
+                                    (match-end 2)
+                                    'font-lock-function-name-face nil commit))
+          (message "Commit done, now at `%s'" commit))
+      ;; Something went wrong but it is not an abort from user (which
+      ;; exit with code 1 as well).
+      (when (and (not helm-ls-git--server-edit-aborted)
+                 (eql status 1))
+        (pop-to-buffer (process-buffer process)
+                       '(display-buffer-at-bottom
+                         (window-height . fit-window-to-buffer)
+	                 (preserve-size . (nil . t))))
+        (process-file "git" nil nil nil "reset" "HEAD")
+        (goto-char (point-min))
+        (special-mode)))
+      (setq helm-ls-git--server-edit-aborted nil)))
 
 (defun helm-ls-git-run-stage-marked-and-commit ()
   (interactive)
@@ -1924,6 +1945,7 @@ context i.e. use it in helm actions."
                               (server-quote-arg "Aborted by the user"))))
               server-clients)
         (set-buffer-modified-p nil) ; Don't ask to save buffer.
+        (setq helm-ls-git--server-edit-aborted t)
         ;; Unstage all on commit but not on rebase.
         (when (string= "COMMIT_EDITMSG" (buffer-name))
           (process-file "git" nil nil nil "reset" "HEAD"))

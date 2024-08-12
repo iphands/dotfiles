@@ -51,6 +51,13 @@
   (bound-and-true-p package-install-upgrade-built-in)
   "Allow upgrading builtin packages when non nil."
   :type 'boolean)
+
+(defcustom helm-packages-isolate-fn (if (fboundp 'package-isolate)
+                                        #'package-isolate
+                                      #'helm-packages-isolate-1)
+  "The function to isolate package.
+`package-isolate' is available only in emacs-30+."
+  :type 'function)
 
 ;;; Actions
 ;;
@@ -156,7 +163,7 @@ as dependencies."
             (async-package-do-action 'install mkd error-file)
           (helm-packages-install--sync mkd))))))
 
-(defun helm-packages-isolate-1 (packages)
+(defun helm-packages-isolate-1 (packages &optional _ignore)
     "Start an Emacs with only PACKAGES loaded.
 Arg PACKAGES is a list of strings."
     (let* ((name (concat "package-isolate-" (mapconcat #'identity packages "_")))
@@ -172,21 +179,20 @@ Arg PACKAGES is a list of strings."
                               (setq package-load-list
                                     ',(append (mapcar (lambda (p) (list (intern p) t))
                                                       packages)
-                                              (mapcar (lambda (p) (list p t)) deps)))
+                                              (mapcar (lambda (p) (list p t)) deps))
+                                    package-user-dir ,package-user-dir
+                                    package-directory-list ',package-directory-list)
                               (package-initialize)))))))
 
 (defun helm-packages-isolate (_candidate)
   "Start a new Emacs with only marked packages loaded."
   (let* ((mkd (helm-marked-candidates))
-         (pkg-names (mapcar #'symbol-name mkd))
-         (isolate (if (fboundp 'package-isolate)
-                      #'package-isolate
-                    #'helm-packages-isolate-1)))
+         (pkg-names (mapcar #'symbol-name mkd)))
     (with-helm-display-marked-candidates
       helm-marked-buffer-name
       pkg-names
       (when (y-or-n-p "Start a new Emacs with only package(s)? ")
-        (funcall isolate pkg-names)))))
+        (funcall helm-packages-isolate-fn pkg-names helm-current-prefix-arg)))))
 
 (defun helm-packages-quit-an-find-file (source)
   "`find-file-target' function for `helm-packages'."
