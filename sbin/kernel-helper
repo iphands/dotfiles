@@ -3,21 +3,33 @@ set -e
 
 cd /usr/src/linux
 
-CPUS=28
+function do_env() {
+  export CPUS=28
 
-# BASE=/usr/lib/llvm/17/bin
-BASE=/opt/aocc/bin
+  # BASE=/usr/lib/llvm/17/bin
+  export BASE=/opt/aocc/bin
 
-export LLVM=1
-export LLVM_IAS=1
-export CC=${BASE}/clang
-export CXX=${BASE}/clang++
-export LD=${BASE}/ld.lld
-export NM=${BASE}/llvm-nm
-export AR=${BASE}/llvm-ar
-export RANLIB=${BASE}/llvm-ranlib
+  export LLVM=1
+  export LLVM_IAS=1
+  export CC=${BASE}/clang
+  export CXX=${BASE}/clang++
+  export LD=${BASE}/ld.lld
+  export NM=${BASE}/llvm-nm
+  export AR=${BASE}/llvm-ar
+  export RANLIB=${BASE}/llvm-ranlib
+  export PATH="$BASE:$PATH"
 
-export PATH="$BASE:$PATH"
+  export COMMON_FLAGS="-march=native -O3 -pipe -falign-functions=32 -fvisibility=default -fomit-frame-pointer"
+  export CFLAGS="${COMMON_FLAGS}"
+  export CXXFLAGS="${COMMON_FLAGS}"
+  export FCFLAGS="${COMMON_FLAGS}"
+  export FFLAGS="${COMMON_FLAGS}"
+  export CPU_FLAGS_X86="aes avx avx2 f16c fma3 mmx mmxext pclmul popcnt rdrand sha sse sse2 sse3 sse4_1 sse4_2 sse4a ssse3 vpclmulqdq"
+  export LDFLAGS="${LDFLAGS} -Wl,-O2 -Wl,--as-needed"
+  export KCFLAGS="$CFLAGS"
+}
+
+do_env
 
 function grub() {
   grub-mkconfig -o /boot/grub/grub.cfg
@@ -25,26 +37,27 @@ function grub() {
 }
 
 function oldconfig() {
-  # strace -fvo make.stracecd /usr/src/linux make -j${CPUS} oldconfig
   make -j${CPUS} oldconfig
   cp .config /usr/src/dotconfig/config
   chown -R iphands:iphands /usr/src/dotconfig
 }
 
 function menu() {
+  do_env
   make -j${CPUS} menuconfig
   cp .config /usr/src/dotconfig/config
   chown -R iphands:iphands /usr/src/dotconfig
 }
 
 function build() {
-  source /etc/portage/make.conf
-  export KCFLAGS="$CFLAGS"
+  do_env
   make -j${CPUS} && make -j${CPUS} modules_install
 }
 
 function copy() {
+  do_env
   make install
+  fix_rename
 }
 
 function do_help() {
@@ -57,18 +70,44 @@ function do_help() {
 }
 
 function build_mods() {
-  # emerge -v @module-rebuild
+  do_env
+  emerge -v @module-rebuild
   # emerge =x11-drivers/nvidia-drivers-535.129.03
-  version=`eix nvidia-drivers | fgrep Available | egrep -o 535\.[0-9]+\.[0-9]+ | tail -n1`
-  emerge "=x11-drivers/nvidia-drivers-${version}"
+  # version=`eix nvidia-drivers | fgrep Available | egrep -o 535\.[0-9]+\.[0-9]+ | tail -n1`
+  # emerge "=x11-drivers/nvidia-drivers-${version}"
+}
+
+function fix_rename() {
+  set -e
+
+  source /usr/src/linux/.config
+
+  cd /boot
+
+  [[ "${CONFIG_LOCALVERSION}" != "" ]] || {
+    echo "ERROR: cant find CONFIG_LOCALVERSION"
+    exit 1
+  }
+
+  VER=`readlink /usr/src/linux`
+  SUFFIX="${VER}${CONFIG_LOCALVERSION}"
+
+  [[ "$1" == "--dry" ]] && {
+    echo mv ./System.map "System.map-${SUFFIX}"
+    echo mv ./vmlinuz "vmlinuz-${SUFFIX}"
+    exit
+  }
+
+  mv -v ./System.map "System.map-${SUFFIX}"
+  mv -v ./vmlinuz "vmlinuz-${SUFFIX}"
 }
 
 case $1 in
-  "oldconfig") oldconfig ; echo ; do_help;;
-  "menu")      menu  ; echo ; do_help ;;
-  "grub")      time grub  ; echo ; do_help ;;
-  "build")     time build ; echo ; do_help ;;
-  "copy")      time copy  ; echo ; do_help ;;
-  "all")       oldconfig && time build && copy && grub && build_mods;;
-  "help")      do_help ;;
+"oldconfig") oldconfig ; echo ; do_help;;
+"menu")      menu  ; echo ; do_help ;;
+"grub")      time grub  ; echo ; do_help ;;
+"build")     time build ; echo ; do_help ;;
+"copy")      time copy  ; echo ; do_help ;;
+"all")       oldconfig && time build && copy && grub && build_mods;;
+"help")      do_help ;;
 esac
