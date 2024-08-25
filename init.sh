@@ -54,15 +54,12 @@ for var in ".Xdefaults"\
   ".tmux.conf" \
   ".tmux.conf.local"
 do
-  if [[ -f "$PWD/${var}" ]]
+  echo "-- installing $var"
+  if [[ -f ~/${var} ]]
   then
-    echo "-- installing $var"
-    if [[ -f ~/${var} ]]
-    then
-      cp -HR ~/${var} "$current"
-    fi
-    ln -sf "$PWD/${var}" ~/
+    cp -HR ~/${var} "$current"
   fi
+  ln -sf "$PWD/${var}" ~/
 done
 
 install_scripts bin
