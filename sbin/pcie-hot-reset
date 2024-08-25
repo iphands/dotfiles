@@ -22,6 +22,8 @@ if [ ! -e "/sys/bus/pci/devices/$port" ]; then
     exit 1
 fi
 
+for var in `lsmod | fgrep mlx | awk '{print $1}'`; do modprobe -r $var; done
+
 echo "Removing $dev..."
 
 echo 1 > "/sys/bus/pci/devices/$dev/remove"
@@ -37,7 +39,6 @@ sleep 0.01
 setpci -s $port BRIDGE_CONTROL=$bc
 sleep 0.5
 
-for var in `lsmod | fgrep mlx | awk '{print $1}'`; do modprobe -r $var; done
 sleep 1
 modprobe mlx4_ib
 modprobe mlx4_en
