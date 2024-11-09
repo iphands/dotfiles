@@ -1,14 +1,16 @@
 #!/bin/bash
-STATE=`pactl get-source-mute 0`
-
-for var in `pactl list | fgrep 'Source #' | cut -d'#' -f2`
-do
-  pactl set-source-mute $var on
-done
+FIRST=`pactl list short sources | awk '{print $1}' | head -n1`
+STATE=`pactl get-source-mute $FIRST`
 
 if [[ "$STATE" == "Mute: yes" ]]
 then
-  pactl set-source-mute 0 off
+  for var in `pactl list short sources | awk '{print $1}'`
+  do
+    pactl set-source-mute $var off
+  done
 else
-  pactl set-source-mute 0 on
+  for var in `pactl list short sources | awk '{print $1}'`
+  do
+    pactl set-source-mute $var on
+  done
 fi

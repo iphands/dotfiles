@@ -66,7 +66,7 @@
  '(js2-basic-offset 4)
  '(js2-bounce-indent-p t)
  '(package-selected-packages
-   '(kotlin-mode flycheck-pyflakes flycheck-pyre lsp-pyre lsp-python-ms sass-mode clang-format eglot powershell git-modes csv-mode eslint-fix prettier flow-minor-mode rjsx-mode systemd bazel tide go-imenu lsp-ui yasnippet typescript-mode protobuf-mode lsp-mode rustic racer eldoc go-eldoc helm-ls-git helm helm-git helm-go-package smex company company-box company-c-headers company-cmake company-ctags company-go company-shell yafolding flymake-shellcheck cmake-mode go-mode groovy-mode flymake-json flymake-jshint web-mode json-mode js2-highlight-vars js2-mode xref-js2 toml-mode cargo flycheck-rust rust-mode magit magit-filenotify magit-find-file yaml-mode puppetfile-mode puppet-mode phi-rectangle nginx-mode neotree multiple-cursors move-text markdown-mode+ lua-mode lineno json-rpc highline epc dockerfile-mode coffee-mode)))
+   '(fzf vterm kotlin-mode flycheck-pyflakes flycheck-pyre lsp-pyre lsp-python-ms sass-mode clang-format eglot powershell git-modes csv-mode eslint-fix prettier flow-minor-mode rjsx-mode systemd bazel tide go-imenu lsp-ui yasnippet typescript-mode protobuf-mode lsp-mode rustic racer eldoc go-eldoc helm-ls-git helm helm-git helm-go-package smex company company-box company-c-headers company-cmake company-ctags company-go company-shell yafolding flymake-shellcheck cmake-mode go-mode groovy-mode flymake-json flymake-jshint web-mode json-mode js2-highlight-vars js2-mode xref-js2 toml-mode cargo flycheck-rust rust-mode magit magit-filenotify magit-find-file yaml-mode puppetfile-mode puppet-mode phi-rectangle nginx-mode neotree multiple-cursors move-text markdown-mode+ lua-mode lineno json-rpc highline epc dockerfile-mode coffee-mode)))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -105,7 +105,8 @@
       (tabsoff)
     (tabson)))
 
-(global-set-key "\C-xp" 'toggle-tabs)
+;; STAHP
+;; (global-set-key "\C-xp" 'toggle-tabs)
 (tabsoff)
 
 (global-set-key (kbd "C-x a")
@@ -183,6 +184,13 @@
   (rustic-mode)
   (local-set-key (kbd "C-x a") 'rust-format-buffer))
 (add-hook 'rust-mode-hook 'my-rust-mode-hook)
+
+
+(defun my-kotlin-mode-hook()
+  "Setup my kotlin mode stuff"
+  (setq-default indent-tabs-mode nil)
+  (setq-default kotlin-tab-width 2))
+(add-hook 'kotlin-mode-hook 'my-kotlin-mode-hook)
 
 (defun my-jsx-mode-hook()
   "Setup my jsx mode stuff"

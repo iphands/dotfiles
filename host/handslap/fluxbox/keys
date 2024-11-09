@@ -101,11 +101,15 @@ Control Mod4 F4 :TakeToWorkspace 4
 
 164 :Exec xlock
 
-123 :Exec pactl -- set-sink-volume 0 +5%
-122 :Exec pactl -- set-sink-volume 0 -10%
-121 :Exec amixer set Master toggle
+123 :Exec vol up
+122 :Exec vol down
+121 :Exec vol mute
 198 :Exec ~/bin/i-toggle-mute
-196 :Exec ~/bin/i-toggle-mute
+
+
+# 121 :Exec amixer set Master toggle
+
+# 196 :Exec ~/bin/i-toggle-mute
 
 
 233 :Exec brightnessctl s +5%
