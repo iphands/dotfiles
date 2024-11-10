@@ -1,5 +1,0 @@
-/home/iphands/.emacs.d/elpa/vterm-20240825.133/build/CMakeFiles/vterm-module.dir
-/home/iphands/.emacs.d/elpa/vterm-20240825.133/build/CMakeFiles/libvterm.dir
-/home/iphands/.emacs.d/elpa/vterm-20240825.133/build/CMakeFiles/run.dir
-/home/iphands/.emacs.d/elpa/vterm-20240825.133/build/CMakeFiles/edit_cache.dir
-/home/iphands/.emacs.d/elpa/vterm-20240825.133/build/CMakeFiles/rebuild_cache.dir
