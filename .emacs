@@ -110,7 +110,7 @@
 (tabsoff)
 (tabsoff)
 
-(global-set-key (kbd "C-x C-l") (lambda () (interactive) (save-buffers-kill-emacs t)))
+(global-set-key (kbd "C-x w q") (lambda () (interactive) (save-buffers-kill-emacs t)))
 
 (global-set-key (kbd "C-x a")
 		(lambda () (interactive)
