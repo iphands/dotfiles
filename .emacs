@@ -108,6 +108,9 @@
 ;; STAHP
 ;; (global-set-key "\C-xp" 'toggle-tabs)
 (tabsoff)
+(tabsoff)
+
+(global-set-key (kbd "C-x C-l") (lambda () (interactive) (save-buffers-kill-emacs t)))
 
 (global-set-key (kbd "C-x a")
 		(lambda () (interactive)
