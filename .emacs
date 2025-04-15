@@ -233,11 +233,13 @@
 
 ;; enable minor modes I like
 (ido-mode 1)
+(global-hl-line-mode)
 ;; (global-linum-mode 1)
 
-(eval-after-load "highline-mode"
-  (if (fboundp 'global-highline-mode)
-      (global-highline-mode 1)))
+;; (eval-after-load "highline-mode"
+;;   (if (fboundp 'global-highline-mode)
+;;       (global-highline-mode 1)))
+
 ;; (auto-complete-mode 1)
 (show-paren-mode 1)
 ;; (column-highlight-mode 1)
