@@ -2,16 +2,16 @@
 {
   "layer": "top", // Waybar at top layer
   "position": "bottom", // Waybar position (top|bottom|left|right)
-  "height": 20, // Waybar height (to be removed for auto height)
+  "height": 32, // Waybar height (to be removed for auto height)
   // "width": 1280, // Waybar width
-  "spacing": 2, // Gaps between modules (4px)
+  "spacing": 4, // Gaps between modules (4px)
   // Choose the order of the modules
   "modules-left": [
-    "sway/workspaces",
-    "sway/mode",
-    "sway/scratchpad",
-    "wlr/taskbar",
-    "custom/media"
+    // "sway/workspaces",
+    // "sway/mode",
+    // "sway/scratchpad",
+    // "custom/media",
+    "wlr/taskbar"
   ],
   "wlr/taskbar": {
     "format": "{icon} {app_id}",
@@ -20,23 +20,21 @@
       "google-chrome": "Chrome",
     }
   },
-  "modules-center": [
-    "sway/window"
-  ],
+  // "modules-center": [ "sway/window" ],
   "modules-right": [
-    "mpd",
+    // "mpd",
     "idle_inhibitor",
     "pulseaudio",
-    "network",
-    "power-profiles-daemon",
+    // "network",
+    // "power-profiles-daemon",
     "cpu",
     "memory",
-    "temperature",
-    "backlight",
+    // "temperature",
+    // "backlight",
     // "keyboard-state",
-    "sway/language",
-    "battery",
-    "battery#bat2",
+    // "sway/language",
+    // "battery",
+    // "battery#bat2",
     "clock",
     "tray"
     // "custom/power"
@@ -200,18 +198,18 @@
     },
     "on-click": "pavucontrol"
   },
-  "custom/media": {
-    "format": "{icon} {text}",
-    "return-type": "json",
-    "max-length": 40,
-    "format-icons": {
-      "spotify": "",
-      "default": "🎜"
-    },
-    "escape": true,
-    "exec": "$HOME/.config/waybar/mediaplayer.py 2> /dev/null" // Script in resources folder
-    // "exec": "$HOME/.config/waybar/mediaplayer.py --player spotify 2> /dev/null" // Filter player based on name
-  },
+  // "custom/media": {
+  //   "format": "{icon} {text}",
+  //   "return-type": "json",
+  //   "max-length": 40,
+  //   "format-icons": {
+  //     "spotify": "",
+  //     "default": "🎜"
+  //   },
+  //   "escape": true,
+  //   "exec": "$HOME/.config/waybar/mediaplayer.py 2> /dev/null" // Script in resources folder
+  //   // "exec": "$HOME/.config/waybar/mediaplayer.py --player spotify 2> /dev/null" // Filter player based on name
+  // },
   "custom/power": {
     "format" : "⏻ ",
     "tooltip": false,

@@ -29,7 +29,6 @@
 
 # XCURSOR_THEME=breeze_cursors
 # XCURSOR_THEME=capitaine-cursors
-# XCURSOR_SIZE=24
 
 ##
 ## Disable hardware cursors. Most users would not want to do this, but if you
@@ -75,3 +74,4 @@
 
 # LABWC_FALLBACK_OUTPUT=NOOP-fallback
 
+XCURSOR_SIZE=24

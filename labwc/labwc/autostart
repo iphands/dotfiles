@@ -1,12 +1,17 @@
 # Example autostart file
 
+echo DEBUG
+echo $DISPLAY
+echo $WAYLAND_DISPLAY
+
 xmodmap "/home/iphands/.Xmodmap" &
 swaybg --image ~/Documents/tux.png --mode center &
 xosview &
-nm-applet &
-blueman-applet &
-/home/iphands/prog/rust_tray/target/release/rust_tray --auto &
-xinput disable $(xinput list | grep ELAN901C | grep -Eo 'id=[0-9]+' | cut -d= -f2) &
+randy &
+# nm-applet &
+# blueman-applet &
+# /home/iphands/prog/rust_tray/target/release/rust_tray --auto &
+# xinput disable $(xinput list | grep ELAN901C | grep -Eo 'id=[0-9]+' | cut -d= -f2) &
 waybar >/dev/null 2>&1 &
 
 # Configure output directives such as mode, position, scale and transform.
