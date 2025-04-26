@@ -4,6 +4,10 @@ set -e
 current="$HOME/.dotfiles_backup/`date +%Y%m%d%H%M%S`"
 mkdir -p "$current"
 
+host=unknown
+[[ "$HOSTNAME" =~ "PC2K41CN" ]] && host=handslap
+[[ "$HOSTNAME" =~ "cosmo" ]] && host=cosmo
+
 install_scripts() {
   p=$1
   echo
@@ -21,15 +25,7 @@ install_scripts() {
 install_host() {
   git_target=$1
   target=$2
-  if [[ "$HOSTNAME" =~ "PC2K41CN" ]]
-  then
-    host=handslap
-  elif [[ "$HOSTNAME" =~ "cosmo" ]]
-  then
-    host=cosmo
-  else
-    return 0
-  fi
+  [[ "$host" == "unknown" ]] && return 0
 
   pushd host/$host/$git_target >/dev/null
   mkdir -p ~/$target
@@ -72,6 +68,8 @@ fi
 echo
 echo "## Host specific"
 install_host fluxbox .fluxbox
+install_host labwc  .config/labwc
+install_host waybar .config/waybar
 
 # if [ ! -f /etc/profile.d/git-prompt.sh ]
 # then
