@@ -119,5 +119,5 @@ Mod4 r :Exec dmenu_run
 
 235 :Exec ~/bin/i-screenshot
 96  :Exec /usr/bin/i3lock -efc 220033
-95  :Exec ~/bin/sleep-loop
+# 95  :Exec ~/bin/sleep-loop
 # 95  :Exec /usr/bin/systemctl suspend
