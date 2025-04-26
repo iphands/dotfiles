@@ -68,8 +68,8 @@ fi
 echo
 echo "## Host specific"
 install_host fluxbox .fluxbox
-install_host labwc  .config/labwc
-install_host waybar .config/waybar
+install_host labwc   .config/labwc
+install_host waybar  .config/waybar
 
 # if [ ! -f /etc/profile.d/git-prompt.sh ]
 # then
