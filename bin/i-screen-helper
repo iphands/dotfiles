@@ -1,6 +1,9 @@
 #!/bin/bash
 set -eo pipefail
 
+MAIN=eDP-1
+MON_WORK_ONE=DP-3-3
+MON_WORK_TWO=DP-3-1
 MODES="above|work|same|right|home|single"
 
 _check() {
@@ -29,7 +32,7 @@ _do_auto() {
 }
 
 _do_work() {
-  display_count=`xrandr | grep -e eDP -e DP3-3 -e DP3-1 | wc -l`
+  display_count=`xrandr | grep -e $MAIN -e $MON_WORK_ONE -e $MON_WORK_TWO | wc -l`
   if [[ "$display_count" != "3" ]]
   then
     return 1
@@ -38,17 +41,17 @@ _do_work() {
 
   echo "## Turning off external monitors"
   xrandr \
-    --output DP3-1 --off \
-    --output DP3-3 --off
+    --output $MON_WORK_ONE --off \
+    --output $MON_WORK_TWO --off
 
   echo "## Forcing laptop as primary"
-  xrandr --output eDP1 --mode 1920x1080 --primary
+  xrandr --output $MAIN --mode 1920x1080 --primary
 
   echo "## Setting up upper monitor"
-  xrandr --output DP3-3 --above eDP1 --mode 2560x1600
+  xrandr --output $MON_WORK_ONE --above $MAIN --mode 2560x1600
 
   echo "## Setting up right side monitor"
-  xrandr --output DP3-1 --right-of DP3-3 --mode 2560x1600
+  xrandr --output $MON_WORK_TWO --right-of $MON_WORK_ONE --mode 2560x1600
   return 0
 }
 
@@ -57,7 +60,6 @@ _main() {
   [[ "$MODE" == "" ]] && _fail_no_mode
   [[ "$2" == "from_auto" ]] && echo "Auto detected mode \"$MODE\""
 
-  MAIN=eDP1
   set +e
   OTHER=`xrandr | grep ' connected' | awk '{print $1}' | grep -v $MAIN | head -n1`
   [[ "$OTHER" != "" ]] && xrandr --output $OTHER --auto
@@ -71,6 +73,11 @@ _main() {
       _check $OTHER
       xrandr --output $OTHER --above $MAIN
     }
+    pgrep xosview || {
+      xosview &
+      sleep 0.100
+    }
+    wmctrl -r xosview@iphands-fedora-PC2K41CN -e 0,4713,930,400,630
     ;;
   "same" | "same-as")
     _check $OTHER
