@@ -24,15 +24,19 @@
     <keyboard>
 	<default />
 	<keybind key="W-r"><action name="Execute" command="dmenu_run" /></keybind>
+
 	<keybind key="A-Left"><action name="None" /></keybind>
 	<keybind key="A-Right"><action name="None" /></keybind>
+
 	<keybind key="A-F10"><action name="ToggleMaximize" /></keybind>
 	<keybind key="A-F11"><action name="Execute" command="~/bin/sleep-loop" /></keybind>
 	<keybind key="A-F12"><action name="Execute" command="swaylock -f -c 220033" /></keybind>
+
 	<keybind key="C-F1"><action name="GoToDesktop" to="1" /></keybind>
 	<keybind key="C-F2"><action name="GoToDesktop" to="2" /></keybind>
 	<keybind key="C-F3"><action name="GoToDesktop" to="3" /></keybind>
 	<keybind key="C-F4"><action name="GoToDesktop" to="4" /></keybind>
+
 	<keybind key="W-F1"><action name="SendToDesktop" to="1" /></keybind>
 	<keybind key="W-F2"><action name="SendToDesktop" to="2" /></keybind>
 	<keybind key="W-F3"><action name="SendToDesktop" to="3" /></keybind>
