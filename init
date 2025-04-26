@@ -32,9 +32,20 @@ install_host() {
   for var in *
   do
     echo "-- installing ~/$target/$var"
-    ln -sf $PWD/$var ~/$target/$var
+    ln -nfs $PWD/$var ~/$target/$var
   done
   popd >/dev/null
+}
+
+install_systemd() {
+  pushd systemd-user
+  target=".config/systemd/user"
+  for var in *
+  do
+    echo "-- installing ~/$target/$var"
+    ln -nfs $PWD/$var ~/$target/$var
+  done
+  popd
 }
 
 echo "## Dotfiles"
@@ -70,6 +81,10 @@ echo "## Host specific"
 install_host fluxbox .fluxbox
 install_host labwc   .config/labwc
 install_host waybar  .config/waybar
+
+echo
+echo "## Install sytemd"
+install_systemd
 
 # if [ ! -f /etc/profile.d/git-prompt.sh ]
 # then
