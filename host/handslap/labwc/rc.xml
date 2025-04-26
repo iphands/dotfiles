@@ -22,11 +22,12 @@
     </windowRules>
     <keyboard>
 	<default />
-	<keybind key="W-r"><action name="Execute" command="dmenu_run" /></keybind>
+	<keybind key="W-r"><action name="Execute" command="/home/iphands/bin/dmenu_env_fix" /></keybind>
 
 	<keybind key="A-Left"><action name="None" /></keybind>
 	<keybind key="A-Right"><action name="None" /></keybind>
 
+	<keybind key="A-F7"><action name="Execute" command="~/bin/i-screenshot" /></keybind>
 	<keybind key="A-F10"><action name="ToggleMaximize" /></keybind>
 	<keybind key="A-F11"><action name="Execute" command="~/bin/sleep-loop" /></keybind>
 	<keybind key="A-F12"><action name="Execute" command="swaylock -f -c 220033" /></keybind>
