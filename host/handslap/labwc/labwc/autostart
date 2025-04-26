@@ -1,0 +1,45 @@
+# Example autostart file
+
+echo DEBUG
+echo $DISPLAY
+echo $WAYLAND_DISPLAY
+
+xmodmap "/home/iphands/.Xmodmap" &
+swaybg --image ~/Documents/tux.png --mode center &
+xosview &
+randy &
+# nm-applet &
+# blueman-applet &
+# /home/iphands/prog/rust_tray/target/release/rust_tray --auto &
+# xinput disable $(xinput list | grep ELAN901C | grep -Eo 'id=[0-9]+' | cut -d= -f2) &
+waybar >/dev/null 2>&1 &
+
+# Configure output directives such as mode, position, scale and transform.
+# Use wlr-randr to get your output names
+# Example ~/.config/kanshi/config below:
+#   profile {
+#     output HDMI-A-1 position 1366,0
+#     output eDP-1 position 0,0
+#   }
+# kanshi >/dev/null 2>&1 &
+
+# Launch a panel such as yambar or waybar.
+
+
+# Enable notifications. Typically GNOME/KDE application notifications go
+# through the org.freedesktop.Notifications D-Bus API and require a client such
+# as mako to function correctly. Thunderbird is an example of this.
+# mako >/dev/null 2>&1 &
+
+# Lock screen after 5 minutes; turn off display after another 5 minutes.
+#
+# Note that in the context of idle system power management, it is *NOT* a good
+# idea to turn off displays by 'disabling outputs' for example by
+# `wlr-randr --output <whatever> --off` because this re-arranges views
+# (since a837fef). Instead use a wlr-output-power-management client such as
+# https://git.sr.ht/~leon_plickat/wlopm
+swayidle -w \
+	timeout 300 'swaylock -f -c 000000' \
+	timeout 600 'wlopm --off \*' \
+	resume 'wlopm --on \*' \
+	before-sleep 'swaylock -f -c 000000' >/dev/null 2>&1 &

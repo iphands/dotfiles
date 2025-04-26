@@ -1,0 +1,48 @@
+#AB #775CAC
+#AF #FFFFFF
+#NB #383838
+#NF #DADADA
+
+border.width: 1
+padding.width: 4
+padding.height: 2
+window.client.padding.width: 0
+window.client.padding.height: 0
+window.handle.width: 4
+
+window.*.grip.bg: parentrelative
+window.*.title.bg: flat solid
+window.*.label.bg: parentrelative
+window.*.button.*.bg: parentrelative
+window.*.handle.bg: flat solid
+window.*.text.justify: center
+
+window.*.handle.bg.color: {NB}
+*.border.color: {NB NB #000000}
+
+window.active.title.bg.color: {AB}
+window.active.label.text.color: {AF}
+window.active.button.*.unpressed.image.color: {AF}
+window.active.button.*.disabled.image.color: {AF AB AB}
+window.active.button.*.hover.image.color: {AF AB}
+window.active.button.*.pressed.image.color: {AB #000000}
+
+window.inactive.title.bg.color: {NB}
+window.inactive.label.text.color: {NB NF}
+window.inactive.button.*.unpressed.image.color: {NB NF}
+window.inactive.button.*.disabled.image.color: {NB NB NF}
+window.inactive.button.*.hover.image.color: {NF}
+window.inactive.button.*.pressed.image.color: {NB #000000}
+
+menu.title.bg: flat solid
+menu.separator.color: {NB #000000}
+menu.title.bg.color: {AB}
+menu.title.text.color: {AF}
+menu.items.bg: flat solid
+menu.items.bg.color: {NB}
+menu.items.text.color: {NF}
+menu.items.disabled.text.color: {NF NB NB}
+menu.items.active.bg: flat solid
+menu.items.active.bg.color: {AB}
+menu.items.active.text.color: {AF}
+menu.items.active.disabled.text.color: {AF AB AB}
