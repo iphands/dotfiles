@@ -7,7 +7,7 @@
     </theme>
     <margin top="5" bottom="5" left="5" right="5" output="" />
     <desktops number="4">
-	<popupTime>100</popupTime>
+	<popupTime>200</popupTime>
     </desktops>
     <resize>
 	<popupShow>Always</popupShow>
@@ -17,8 +17,7 @@
 	<windowRule title="Randy" serverDecoration="no" skipTaskbar="yes" skipWindowSwitcher="yes" ignoreFocusRequest="yes" fixedPosition="yes">
 	    <action name="ToggleAlwaysOnBottom" />
 	    <action name="toggleOmnipresent" />
-	    <!-- <action name="MoveToEdge" direction="right" snapWindows="no" />-->
-	    <!-- <action name="MoveTo" x="3410" y="0" /> -->
+	    <action name="MoveToEdge" direction="right" snapWindows="no" />
 	</windowRule>
     </windowRules>
     <keyboard>

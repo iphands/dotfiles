@@ -17,8 +17,7 @@
 	<windowRule title="Randy" serverDecoration="no" skipTaskbar="yes" skipWindowSwitcher="yes" ignoreFocusRequest="yes" fixedPosition="yes">
 	    <action name="ToggleAlwaysOnBottom" />
 	    <action name="toggleOmnipresent" />
-	    <!-- <action name="MoveToEdge" direction="right" snapWindows="no" />-->
-	    <!-- <action name="MoveTo" x="3410" y="0" /> -->
+	    <action name="MoveTo" x="3410" y="0" />
 	</windowRule>
     </windowRules>
     <keyboard>
