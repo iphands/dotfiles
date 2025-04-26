@@ -1,0 +1,11 @@
+[Unit]
+Description=nm-applet
+PartOf=graphical-session.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/nm-applet
+ExecStartPost=/usr/bin/sleep 1
+
+[Install]
+WantedBy=graphical-session.target

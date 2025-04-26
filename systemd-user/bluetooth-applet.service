@@ -1,0 +1,11 @@
+[Unit]
+Description=bluetooth-applet
+PartOf=graphical-session.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/blueman-applet
+ExecStartPost=/usr/bin/sleep 1
+
+[Install]
+WantedBy=graphical-session.target
