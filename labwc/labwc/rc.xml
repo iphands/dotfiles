@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<labwc_config>
+    <theme>
+	<name></name>
+	<cornerRadius>8</cornerRadius>
+	<font name="sans" size="10" />
+    </theme>
+    <windowRules>
+	<windowRule title="Randy" serverDecoration="no" skipTaskbar="yes" skipWindowSwitcher="yes" ignoreFocusRequest="yes" fixedPosition="yes">
+	    <action name="ToggleAlwaysOnBottom" />
+	    <action name="toggleOmnipresent" />
+	    <action name="MoveToEdge" direction="right" snapWindows="no" />
+	</windowRule>
+    </windowRules>
+    <keyboard>
+	<default />
+	<keybind key="W-r"><action name="Execute" command="dmenu_run" /></keybind>
+	<keybind key="A-Left"><action name="None" /></keybind>
+	<keybind key="A-Right"><action name="None" /></keybind>
+	<keybind key="A-F10"><action name="ToggleMaximize" /></keybind>
+	<keybind key="A-F11"><action name="Execute" command="~/bin/sleep-loop" /></keybind>
+	<keybind key="A-F12"><action name="Execute" command="swaylock -f -c 220033" /></keybind>
+    </keyboard>
+    <mouse>
+	<default />
+    </mouse>
+</labwc_config>
