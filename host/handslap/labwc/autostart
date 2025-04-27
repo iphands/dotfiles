@@ -2,7 +2,6 @@ systemctl restart --user swaylock &
 systemctl restart --user nm-applet &
 systemctl restart --user bluetooth-applet &
 
-
 swaybg --image ~/Documents/tux.png --mode center &
 xosview &
 randy &

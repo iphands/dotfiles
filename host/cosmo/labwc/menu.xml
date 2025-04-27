@@ -50,7 +50,7 @@
     </menu>
 
     <menu id="root-menu">
-	<item label="Chrome"><action name="Execute" icon="google-chrome" command="chrome" /></item>
+	<item label="Chrome"><action name="Execute" icon="google-chrome" command="browser" /></item>
 	<item label="Alacritty"><action name="Execute" icon="alacritty" command="alacritty" /></item>
 	<item label="Lutris"><action name="Execute" command="flatpak run net.lutris.Lutris" /></item>
 	<item label="Steam"><action name="Execute" icon="steam" command="steam" /></item>

@@ -14,9 +14,12 @@
     "wlr/taskbar"
   ],
   "wlr/taskbar": {
+    "all-outputs": false,
     "format": "{icon} {app_id}",
     "on-click": "minimize-raise",
+    "on-middle-click": "close",
     "rewrite": {
+      "thunar": "Thunar",
       "google-chrome": "Chrome",
     }
   },
