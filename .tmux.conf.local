@@ -321,11 +321,17 @@ tmux_conf_theme_clock_style="24"
 # on macOS, this requires installing reattach-to-user-namespace, see README.md
 # on Linux, this requires xsel or xclip
 tmux_conf_copy_to_os_clipboard=true
+set -g copy-command 'wl-copy'
+
+### NOTE for remote devserver
+
+
+# set -s set-clipboard on
+# set -g allow-passthrough
 # set -g set-clipboard off
 # set -g copy-command 'xsel -i --clipboard'
-
-set -s copy-command "wl-copy -p"
-set -s set-clipboard on
+# set -s copy-command "wl-copy -p"
+# set -s set-clipboard on
 #bind-key p run "xclip -out -selection secondary | tmux load-buffer - ; tmux paste-buffer" # X11
 # bind-key p run "wl-paste -n | tmux load-buffer - ; tmux paste-buffer"
 

@@ -7,6 +7,8 @@
 *.elc
 .\#*
 
+/.emacs.d/eln-cache/
+
 /.gitconfig-meta
 
 /.DS_Store
