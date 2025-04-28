@@ -15,7 +15,7 @@ window.*.button.*.bg: parentrelative
 window.*.handle.bg: flat solid
 window.*.text.justify: center
 window.*.handle.bg.color: #383838
-*.border.color: #252525
+*.border.color: #775cac
 window.active.title.bg.color: #775cac
 window.active.label.text.color: #ffffff
 window.active.button.*.unpressed.image.color: #ffffff
