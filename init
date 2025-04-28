@@ -9,6 +9,9 @@ host=unknown
 [[ "$HOSTNAME" =~ "cosmo" ]] && host=cosmo
 [[ "$HOSTNAME" =~ "station" ]] && host=station
 
+echo
+echo "## Found host: $host"
+
 install_scripts() {
   p=$1
   echo
