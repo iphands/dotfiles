@@ -2,4 +2,4 @@
 stamp=`date +%s`
 file="$HOME/Downloads/${stamp}.jpg"
 touch $file
-grim -t jpeg -q 25 -g "$(slurp)" - > $file
+grim -t jpeg -q 75 -g "$(slurp)" - > $file
