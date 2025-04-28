@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<labwc_config>
+    <theme>
+	<name>Lean</name>
+	<cornerRadius>4</cornerRadius>
+	<font name="sans" size="12" />
+    </theme>
+    <margin top="5" bottom="5" left="5" right="5" output="" />
+    <desktops number="4">
+	<popupTime>200</popupTime>
+    </desktops>
+    <resize>
+	<popupShow>Always</popupShow>
+	<drawContents>no</drawContents>
+    </resize>
+    <windowRules>
+	<windowRule title="Randy" serverDecoration="no" skipTaskbar="yes" skipWindowSwitcher="yes" ignoreFocusRequest="yes" fixedPosition="yes">
+	    <action name="ToggleAlwaysOnBottom" />
+	    <action name="toggleOmnipresent" />
+	    <action name="MoveTo" x="3410" y="0" />
+	</windowRule>
+    </windowRules>
+    <keyboard>
+	<default />
+	<keybind key="W-r"><action name="Execute" command="~/bin/dmenu_env_fix" /></keybind>
+
+	<keybind key="A-Left"><action name="None" /></keybind>
+	<keybind key="A-Right"><action name="None" /></keybind>
+
+	<keybind key="A-F7"><action name="Execute" command="~/bin/i-screenshot" /></keybind>
+	<keybind key="X86Launch5"><action name="Execute" command="~/bin/i-screenshot" /></keybind>
+	<keybind key="A-F10"><action name="ToggleMaximize" /></keybind>
+	<keybind key="A-F11"><action name="Execute" command="~/bin/sleep-loop" /></keybind>
+	<keybind key="A-F12"><action name="Execute" command="swaylock -f -c 220033" /></keybind>
+
+	<keybind key="C-F1"><action name="GoToDesktop" to="1" /></keybind>
+	<keybind key="C-F2"><action name="GoToDesktop" to="2" /></keybind>
+	<keybind key="C-F3"><action name="GoToDesktop" to="3" /></keybind>
+	<keybind key="C-F4"><action name="GoToDesktop" to="4" /></keybind>
+
+	<keybind key="W-F1"><action name="SendToDesktop" to="1" /></keybind>
+	<keybind key="W-F2"><action name="SendToDesktop" to="2" /></keybind>
+	<keybind key="W-F3"><action name="SendToDesktop" to="3" /></keybind>
+	<keybind key="W-F4"><action name="SendToDesktop" to="4" /></keybind>
+    </keyboard>
+    <mouse>
+	<default />
+    </mouse>
+</labwc_config>

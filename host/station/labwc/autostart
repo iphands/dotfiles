@@ -1,0 +1,8 @@
+xrdb -load ~/.Xresources
+xmodmap "/home/iphands/.Xmodmap"
+
+swaybg --image ~/Documents/tux.png --mode center &
+xosview &
+randy &
+waybar >/dev/null 2>&1 &
+
