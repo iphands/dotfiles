@@ -40,6 +40,7 @@ install_host() {
 install_systemd() {
   pushd systemd-user
   target=".config/systemd/user"
+  mkdir -p $target
   for var in *
   do
     echo "-- installing ~/$target/$var"

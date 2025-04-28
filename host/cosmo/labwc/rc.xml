@@ -28,6 +28,7 @@
 	<keybind key="A-Right"><action name="None" /></keybind>
 
 	<keybind key="A-F7"><action name="Execute" command="~/bin/i-screenshot" /></keybind>
+	<keybind key="X86Launch5"><action name="Execute" command="~/bin/i-screenshot" /></keybind>
 	<keybind key="A-F10"><action name="ToggleMaximize" /></keybind>
 	<keybind key="A-F11"><action name="Execute" command="~/bin/sleep-loop" /></keybind>
 	<keybind key="A-F12"><action name="Execute" command="swaylock -f -c 220033" /></keybind>
