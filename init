@@ -7,6 +7,7 @@ mkdir -p "$current"
 host=unknown
 [[ "$HOSTNAME" =~ "PC2K41CN" ]] && host=handslap
 [[ "$HOSTNAME" =~ "cosmo" ]] && host=cosmo
+[[ "$HOSTNAME" =~ "station" ]] && host=station
 
 install_scripts() {
   p=$1
