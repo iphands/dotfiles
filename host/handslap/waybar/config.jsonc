@@ -15,12 +15,13 @@
   ],
   "wlr/taskbar": {
     "all-outputs": false,
-    "format": "{icon} {app_id}",
+    "format": "{icon} {name}",
     "on-click": "minimize-raise",
     "on-middle-click": "close",
     "rewrite": {
-      "thunar": "Thunar",
-      "google-chrome": "Chrome",
+      ".*crx_.*": " WP Chat",
+      ".*thunar": "Thunar",
+      ".*Google Chrome.*": " Chrome",
     }
   },
   // "modules-center": [ "sway/window" ],
@@ -28,8 +29,8 @@
     // "mpd",
     "idle_inhibitor",
     "pulseaudio",
-    // "network",
-    // "power-profiles-daemon",
+    "network",
+    "power-profiles-daemon",
     "cpu",
     "memory",
     "temperature",

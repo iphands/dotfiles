@@ -6,7 +6,7 @@ PartOf=graphical-session.target
 [Service]
 Type=simple
 ExecStart=/usr/bin/swayidle -w \
-timeout 120 '/usr/bin/swaylock -f -c 220033' \
+timeout 300  '/usr/bin/swaylock -f -c 220033' \
 before-sleep '/usr/bin/swaylock -f -c 220033'
 ExecStartPost=/usr/bin/sleep 1
 

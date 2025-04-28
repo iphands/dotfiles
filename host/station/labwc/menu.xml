@@ -62,8 +62,5 @@
 	<item label="Exit">
 	    <action name="Exit" />
 	</item>
-	<!-- <item label="Poweroff"> -->
-	<!--     <action name="Execute" command="systemctl -i poweroff" /> -->
-	<!-- </item> -->
     </menu>
 </openbox_menu>

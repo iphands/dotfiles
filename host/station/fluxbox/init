@@ -37,7 +37,7 @@ session.screen0.tab.placement:	TopLeft
 session.screen0.tab.width:	64
 session.screen0.focusModel:	ClickFocus
 session.screen0.menuMode:	Delay
-session.screen0.workspaces:	12
+session.screen0.workspaces:	4
 session.screen0.demandsAttentionTimeout:	500
 session.screen0.menuDelayClose:	200
 session.screen0.fullMaximization:	false
