@@ -2,7 +2,7 @@
 <labwc_config>
     <theme>
 	<name>Lean</name>
-	<cornerRadius>4</cornerRadius>
+	<cornerRadius>0</cornerRadius>
 	<font name="sans" size="12" />
     </theme>
     <margin top="5" bottom="5" left="5" right="5" output="" />
