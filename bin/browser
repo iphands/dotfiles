@@ -1,6 +1,6 @@
 #!/bin/bash
 ID=$(loginctl list-sessions | grep 'iphands seat' | tail -n1 | awk '{print $1}')
-TYPE=$(loginctl show-session 55 -p Type)
+TYPE=$(loginctl show-session "$ID" -p Type)
 [[ "$TYPE" =~ "wayland" ]] && {
   google-chrome-stable --disable-features=SendMouseLeaveEvents --enable-features=UseOzonePlatform --ozone-platform=wayland
   exit 0
