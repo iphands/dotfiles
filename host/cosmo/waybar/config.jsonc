@@ -14,7 +14,7 @@
     "wlr/taskbar"
   ],
   "wlr/taskbar": {
-    "all-outputs": false,
+    "all-outputs": true,
     "format": "{icon} {name}",
     "on-click": "minimize-raise",
     "on-middle-click": "close",
