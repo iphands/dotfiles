@@ -4,6 +4,8 @@
 #         without any warranty.
 #         Copyright 2012— Gregory Pakosz (@gpakosz).
 
+bind \\ set-option mouse \; display-message 'Toggled mouse: #{?mouse,on,off}'
+bind r source-file ~/.tmux.conf \; display-message 'Config reloaded...'
 
 # -- navigation ----------------------------------------------------------------
 
@@ -324,7 +326,6 @@ tmux_conf_copy_to_os_clipboard=true
 set -g copy-command 'wl-copy'
 
 ### NOTE for remote devserver
-
 
 # set -s set-clipboard on
 # set -g allow-passthrough
