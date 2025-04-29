@@ -1,0 +1,12 @@
+#!/bin/bash
+set -e
+
+ssh root@station.lan su - merozas "bash -c 'XDG_RUNTIME_DIR=/run/user/1001 wayvnc debug 0.0.0.0'" &
+sleep 0.250
+vncviewer station.lan -CompressLevel 0 -CustomCompressLevel 1 -QualityLevel 0 -AutoSelect 1
+
+for job in `jobs -p`
+do
+  wait $job
+done
+ssh root@station.lan runuser -u merozas -- 'killall wayvnc'

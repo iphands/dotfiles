@@ -1,0 +1,12 @@
+#!/bin/bash
+set -e
+
+ssh merozas@cosmo.lan 'x0vncserver -SecurityTypes None -display :1' &
+sleep 0.250
+vncviewer localhost -CompressLevel 0 -CustomCompressLevel 1 -QualityLevel 0 -AutoSelect 1
+
+for job in `jobs -p`
+do
+  wait $job
+done
+ssh root@station.lan runuser -u merozas -- 'killall x0vncserver'
