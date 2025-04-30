@@ -3,14 +3,20 @@ set -eo pipefail
 
 MAIN=eDP-1
 MON_HOME=HDMI-A-1
-MON_WORK_ONE=DP-3-3
-MON_WORK_TWO=DP-3-1
+MON_WORK_ONE=DP-7
+MON_WORK_TWO=DP-5
 MODES="above|work|same|right|home|single"
+
+wlr-randr --output $MAIN --pos 0,0
+wlr-randr --output $MON_WORK_ONE --above $MAIN
+wlr-randr --output $MON_WORK_TWO --right-of $MON_WORK_ONE
+
+exit
 
 wlr-randr --output $MAIN --pos 0,0
 wlr-randr --output $MON_HOME --right-of $MAIN --pos 1920,-1300
 
-exit 1
+exit
 
 _check() {
   if [[ $1 == "" ]]
