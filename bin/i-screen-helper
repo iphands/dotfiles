@@ -1,15 +1,21 @@
 #!/bin/bash
 set -eo pipefail
+CACHE=/tmp/wrl-randr.facts.cache
+wlr-randr > $CACHE
+
+MODES="above|work|same|right|home|single"
 
 MAIN=eDP-1
 MON_HOME=HDMI-A-1
-MON_WORK_ONE=DP-7
-MON_WORK_TWO=DP-5
-MODES="above|work|same|right|home|single"
+MON_WORK_ONE_ID=73GTT81Q441L
+MON_WORK_TWO_ID=73GTT69MA1DL
+MON_WORK_ONE=$(grep $MON_WORK_ONE_ID $CACHE | cut -d' ' -f1)
+MON_WORK_TWO=$(grep $MON_WORK_TWO_ID $CACHE | cut -d' ' -f1)
 
 wlr-randr --output $MAIN --pos 0,0
 wlr-randr --output $MON_WORK_ONE --above $MAIN
 wlr-randr --output $MON_WORK_TWO --right-of $MON_WORK_ONE
+wlr-randr --output $MAIN --pos 0,0
 
 exit
 

@@ -50,7 +50,7 @@
     </menu>
 
     <menu id="root-menu">
-	<item label="Chrome"><action name="Execute" command="chrome" /></item>
+	<item label="Chrome"><action name="Execute" command="~/bin/browser" /></item>
 	<item label="Alacritty"><action name="Execute" command="alacritty" /></item>
 	<separator />
 	<item label="Reconfigure">
