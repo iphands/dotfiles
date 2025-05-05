@@ -1,7 +1,8 @@
 #!/bin/bash
 set -eo pipefail
 CACHE=/tmp/wrl-randr.facts.cache
-wlr-randr > $CACHE
+wlr-randr | grep '^[a-zA-Z]' > "$CACHE"
+DISP_COUNT=$(wc -l "$CACHE" | awk '{print $1}')
 
 MODES="above|work|same|right|home|single"
 
@@ -9,20 +10,7 @@ MAIN=eDP-1
 MON_HOME=HDMI-A-1
 MON_WORK_ONE_ID=73GTT81Q441L
 MON_WORK_TWO_ID=73GTT69MA1DL
-MON_WORK_ONE=$(grep $MON_WORK_ONE_ID $CACHE | cut -d' ' -f1)
-MON_WORK_TWO=$(grep $MON_WORK_TWO_ID $CACHE | cut -d' ' -f1)
-
-wlr-randr --output $MAIN --pos 0,0
-wlr-randr --output $MON_WORK_ONE --above $MAIN
-wlr-randr --output $MON_WORK_TWO --right-of $MON_WORK_ONE
-wlr-randr --output $MAIN --pos 0,0
-
-exit
-
-wlr-randr --output $MAIN --pos 0,0
-wlr-randr --output $MON_HOME --right-of $MAIN --pos 1920,-1300
-
-exit
+MON_HOME_ID=Sony
 
 _check() {
   if [[ $1 == "" ]]
@@ -43,33 +31,25 @@ _fail_bad_mode() {
 }
 
 _do_auto() {
-  out="`xrandr --query --props`"
-  single_test_sum="`xrandr | grep -F ' connected ' | md5sum | awk '{print $1}'`"
-  echo "$out" | grep -q 00ffffffffffff0010acfb404c443141 && _main "work" "from_auto" && exit 0
-  [[ "$single_test_sum" == "1cabd7be17c7fd2c54466895839932bc" ]] && _main "single" "from_auto" && exit 0
+  [[ "$DISP_COUNT" == "3" ]] && _main "work" "from_auto" && exit 0
+  [[ "$DISP_COUNT" == "2" ]] && _main "above" "from_auto" && exit 0
+  [[ "$DISP_COUNT" == "1" ]] && _main "single" "from_auto" && exit 0
 }
 
 _do_work() {
-  display_count=`xrandr | grep -e $MAIN -e $MON_WORK_ONE -e $MON_WORK_TWO | wc -l`
-  if [[ "$display_count" != "3" ]]
-  then
-    return 1
-  fi
-  echo "# Found all three monitors, doing desk setup"
+  [[ "$DISP_COUNT" != "3" ]] && return 1
+  echo "# Found three monitors, looking for monitors"
+  echo "- Looking for MON_WORK_ONE_ID: $(grep $MON_WORK_ONE_ID $CACHE)"
+  echo "- Looking for MON_WORK_TWO_ID: $(grep $MON_WORK_TWO_ID $CACHE)"
 
-  echo "## Turning off external monitors"
-  xrandr \
-    --output $MON_WORK_ONE --off \
-    --output $MON_WORK_TWO --off
+  MON_WORK_ONE=$(grep "$MON_WORK_ONE_ID" "$CACHE" | cut -d' ' -f1)
+  MON_WORK_TWO=$(grep "$MON_WORK_TWO_ID" "$CACHE" | cut -d' ' -f1)
 
-  echo "## Forcing laptop as primary"
-  xrandr --output $MAIN --mode 1920x1080 --primary
-
-  echo "## Setting up upper monitor"
-  xrandr --output $MON_WORK_ONE --above $MAIN --mode 2560x1600
-
-  echo "## Setting up right side monitor"
-  xrandr --output $MON_WORK_TWO --right-of $MON_WORK_ONE --mode 2560x1600
+  echo "## Found both doing work desk setup"
+  wlr-randr --output "$MAIN" --pos 0,0
+  wlr-randr --output "$MON_WORK_ONE" --above "$MAIN"
+  wlr-randr --output "$MON_WORK_TWO" --right-of "$MON_WORK_ONE"
+  wlr-randr --output "$MAIN" --pos 0,0
   return 0
 }
 
@@ -79,11 +59,8 @@ _main() {
   [[ "$2" == "from_auto" ]] && echo "Auto detected mode \"$MODE\""
 
   set +e
-  OTHER=`xrandr | grep ' connected' | awk '{print $1}' | grep -v $MAIN | head -n1`
-  [[ "$OTHER" != "" ]] && xrandr --output $OTHER --auto
+  OTHEr=$(grep '^[a-zA-Z]' "$CACHE" | grep -v eDP-1 | head -n1 | awk '{print $1}')
   set -e
-
-  killall randy 2>/dev/null || true
 
   case $MODE in
   "above" | "work")
@@ -91,35 +68,22 @@ _main() {
       _check $OTHER
       xrandr --output $OTHER --above $MAIN
     }
-    pgrep xosview || {
-      xosview &
-      sleep 0.100
-    }
-    wmctrl -r xosview@iphands-fedora-PC2K41CN -e 0,4713,930,400,630
     ;;
   "same" | "same-as")
     _check $OTHER
     xrandr --output $OTHER --same-as $MAIN
     ;;
   "home")
-    _check $OTHER
-    xrandr --output $OTHER --right-of $MAIN
-    xrandr --output $OTHER --pos 1920x-1080
+    OTHER=$(grep $MON_HOME_ID $CACHE | cut -d' ' -f1)
+    wlr-randr --output $MAIN --pos 0,0
+    wlr-randr --output $MON_HOME --right-of $MAIN --pos 1920,-1300
     ;;
   "single")
-    xrandr --auto
-    xrandr --output $MAIN --auto
+    wlr-randr --output $MAIN --pos 0,0
     ;;
 
   *) _fail_bad_mode $MODE
   esac
-
-  # /home/iphands/prog/randy/target/release/randy ~/prog/randy/config/my_laptop_docked.yml &
-  randy
-  sleep 0.150
-  fluxbox-remote restart
-  sleep 0.150
-  fbsetbg -c ~/Documents/tux.png
 }
 
 [[ "$1" == "" ]] && _do_auto $1
