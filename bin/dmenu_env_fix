@@ -1,3 +1,33 @@
 #!/bin/bash
 source /home/iphands/.bashrc
+
+command -v bemenu-run && {
+  BG='#161616'
+  FG='#268bd2'
+  FG='#ffffff'
+
+  BEMENU_ARGS=(
+    -n
+    -i
+    -p ''
+    # --fn "noto:NotoSansMono-ExtraBold Bold"
+    --fn "liberation-fonts/LiberationMono-Bold Bold"
+    --hp 10
+    --ab "$BG"
+    --fb "$BG"
+    --hb "$BG"
+    --hf "$FG"
+    --nb "$BG"
+    --tb "$BG"
+    --tf "$FG"
+    --ignorecase
+    --line-height 30
+    --single-instance
+  )
+
+  BEMENU_BACKEND=wayland
+  bemenu-run "${BEMENU_ARGS[@]}"
+  exit 0
+}
+
 dmenu_run
