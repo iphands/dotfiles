@@ -21,9 +21,9 @@
     "rewrite": {
       ".*crx_.*": " Chat",
       ".*Workchat.*": " Chat",
-      ".*thunar.*": "Thunar",
+      ".*thunar.*": " Thunar",
       ".*Chrome.*": " Chrome",
-      ".*Alacritty.*": "Term",
+      ".*Alacritty.*": " Term",
       "^(.{10}).+$": "$1…"
     }
   },
