@@ -4,6 +4,7 @@
 [[ -f /etc/profile ]] && source /etc/profile
 [[ -f /etc/bashrc ]] && source /etc/bashrc
 [[ -f /usr/facebook/ops/rc/master.bashrc ]] && source /usr/facebook/ops/rc/master.bashrc
+[[ -f "${HOME}/.bashrc_meta" ]] && source "${HOME}/.bashrc_meta"
 
 # Uncomment the following line if you don't like systemctl's auto-paging feature:
 # export SYSTEMD_PAGER=
