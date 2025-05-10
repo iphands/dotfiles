@@ -19,9 +19,13 @@
     "on-click": "minimize-raise",
     "on-middle-click": "close",
     "rewrite": {
-      ".*crx_.*": " WP Chat",
-      ".*thunar": "Thunar",
-      ".*Google Chrome.*": " Chrome",
+      ".*Alacritty.*": " Term",
+      ".*Chrome.*": " Chrome",
+      ".*Workchat.*": " Chat",
+      ".*Zoom.*": " Zoom",
+      ".*crx_.*": " Chat",
+      ".*thunar.*": " Thunar",
+      "^(.{10}).+$": "$1…"
     }
   },
   // "modules-center": [ "sway/window" ],

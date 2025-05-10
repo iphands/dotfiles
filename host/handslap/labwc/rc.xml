@@ -17,8 +17,6 @@
 	<fields>
 	    <field content="icon" width="10%" />
 	    <field content="custom" format="%b | %n -> %T" width="90%" />
-	    <!-- <field content="desktop_entry_name" width="30%" /> -->
-	    <!-- <field content="title" width="60%" /> -->
 	</fields>
     </windowSwitcher>
     <windowRules>

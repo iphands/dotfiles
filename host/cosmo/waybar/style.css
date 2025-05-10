@@ -339,7 +339,7 @@ label:focus {
 
 #taskbar button {
     color: white;
-    min-width: 5em;
+    min-width: 1em;
 }
 
 
