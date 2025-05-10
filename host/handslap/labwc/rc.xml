@@ -13,6 +13,14 @@
 	<popupShow>Always</popupShow>
 	<drawContents>no</drawContents>
     </resize>
+    <windowSwitcher show="yes" preview="yes" outlines="yes" allWorkspaces="no">
+	<fields>
+	    <field content="icon" width="10%" />
+	    <field content="custom" format="%b | %n -> %T" width="90%" />
+	    <!-- <field content="desktop_entry_name" width="30%" /> -->
+	    <!-- <field content="title" width="60%" /> -->
+	</fields>
+    </windowSwitcher>
     <windowRules>
 	<windowRule title="Randy" serverDecoration="no" skipTaskbar="yes" skipWindowSwitcher="yes" ignoreFocusRequest="no" fixedPosition="no">
 	    <action name="ToggleAlwaysOnBottom" />

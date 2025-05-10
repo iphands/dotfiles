@@ -19,11 +19,12 @@
     "on-click": "minimize-raise",
     "on-middle-click": "close",
     "rewrite": {
-      ".*crx_.*": " Chat",
-      ".*Workchat.*": " Chat",
-      ".*thunar.*": " Thunar",
-      ".*Chrome.*": " Chrome",
       ".*Alacritty.*": " Term",
+      ".*Chrome.*": " Chrome",
+      ".*Workchat.*": " Chat",
+      ".*Zoom.*": " Zoom",
+      ".*crx_.*": " Chat",
+      ".*thunar.*": " Thunar",
       "^(.{10}).+$": "$1…"
     }
   },

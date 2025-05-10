@@ -7,6 +7,11 @@ PartOf=graphical-session.target
 Type=simple
 ExecStart=/usr/bin/swayidle -w \
 timeout 300  '/usr/bin/swaylock -f -c 220033' \
+timeout 900  '/${HOME}/bin/sleep-loop try' \
+timeout 1800 '/${HOME}/bin/sleep-loop try' \
+timeout 2700 '/${HOME}/bin/sleep-loop try' \
+timeout 7200 '/${HOME}/bin/sleep-loop force' \
+timeout 7210 '/${HOME}/bin/sleep-loop force' \
 before-sleep '/usr/bin/swaylock -f -c 220033'
 ExecStartPost=/usr/bin/sleep 1
 

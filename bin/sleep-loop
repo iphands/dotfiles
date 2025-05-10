@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
-
+VERB="$1"
 MIN_SUSPEND_TIME=10
 
 _do_sleep() {
@@ -10,6 +10,13 @@ _do_sleep() {
   DIFF_SECS=`expr $WAKE_TIME - $SUSPEND_TIME` || true
   echo "Suspended for $DIFF_SECS seconds"
   [[ $SUSPEND_TIME < $MIN_SUSPEND_TIME ]] && _do_sleep
+}
+
+[[ "$VERB" == "try" ]] && {
+  [[ "$(cat /sys/class/power_supply/AC/online)" == "0" ]] && {
+    _do_sleep
+   }
+  exit 0
 }
 
 _do_sleep
