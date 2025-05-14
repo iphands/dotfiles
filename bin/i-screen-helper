@@ -75,8 +75,8 @@ _main() {
     ;;
   "home")
     OTHER=$(grep $MON_HOME_ID $CACHE | cut -d' ' -f1)
-    wlr-randr --output $MAIN --pos 0,0
     wlr-randr --output $MON_HOME --right-of $MAIN --pos 1920,-1300
+    wlr-randr --output $MAIN --pos 0,0
     ;;
   "single")
     wlr-randr --output $MAIN --pos 0,0
