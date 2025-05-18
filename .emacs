@@ -370,7 +370,7 @@
 
 (defun my-python-mode-hook ()
   "My preferences for python-mode"
-  (elpy-enable)
+  ;; (elpy-enable)
   ;; (local-set-key (kbd "C-TAB") 'elpy-company-backend)
   )
 (add-hook 'python-mode-hook 'my-python-mode-hook)
