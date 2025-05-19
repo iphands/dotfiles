@@ -46,7 +46,6 @@ _do_work() {
   MON_WORK_TWO=$(grep "$MON_WORK_TWO_ID" "$CACHE" | cut -d' ' -f1)
 
   echo "## Found both doing work desk setup"
-  wlr-randr --output "$MAIN" --pos 0,0
   wlr-randr --output "$MON_WORK_ONE" --above "$MAIN"
   wlr-randr --output "$MON_WORK_TWO" --right-of "$MON_WORK_ONE"
   wlr-randr --output "$MAIN" --pos 0,0
