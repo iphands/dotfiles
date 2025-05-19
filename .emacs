@@ -305,15 +305,18 @@
 ;; (ac-emacs-eclim-config)
 
 ;; use web-mode for .jsx files
+(add-to-list 'auto-mode-alist '("\\.js$" .  rjsx-mode))
 (add-to-list 'auto-mode-alist '("\\.jsx$" . rjsx-mode))
 (add-to-list 'auto-mode-alist '("\\.tsx$" . typescript-mode))
-(add-to-list 'auto-mode-alist '("\\.js$" .  rjsx-mode))
 
-(add-to-list 'auto-mode-alist '("\\.tw$"    . python-mode))
 (add-to-list 'auto-mode-alist '("\\.cconf$" . python-mode))
 (add-to-list 'auto-mode-alist '("\\.cinc$"  . python-mode))
+(add-to-list 'auto-mode-alist '("\\.tw$"    . python-mode))
 
 ;; use bazel-mode for TARGETS
+(add-to-list 'auto-mode-alist '(".bzl$" .  bazel-starlark-mode))
+(add-to-list 'auto-mode-alist '("BUCK$" .  bazel-starlark-mode))
+(add-to-list 'auto-mode-alist '("PACKAGE$" .  bazel-starlark-mode))
 (add-to-list 'auto-mode-alist '("TARGETS$" .  bazel-starlark-mode))
 
 ;; http://www.flycheck.org/manual/latest/index.html
