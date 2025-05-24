@@ -27,7 +27,7 @@ fedora() {
 }
 
 [[ $(uname -a | grep gentoo) ]] && gentoo $*
-[[ $(grep Fedora /etc/redhat-release) ]] && feodra
+[[ $(grep Fedora /etc/redhat-release) ]] && fedora
 
 
 echo
