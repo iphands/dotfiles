@@ -1,16 +1,35 @@
 #!/bin/bash
 set -e
 
-if [[ "$1" == "--full-rebuild" ]]
-then
-  time emerge --emptytree --verbose-conflicts --keep-going @world 2>&1 | tee /tmp/out.log
-  exit 0
-fi
+gentoo() {
+  if [[ "$1" == "--full-rebuild" ]]
+  then
+    time emerge --emptytree --verbose-conflicts --keep-going @world 2>&1 | tee /tmp/out.log
+    exit 0
+  fi
 
-if [[ "$1" == "--sync" ]]
-then
-  time emaint sync --allrepos
-  time eix-update
-fi
+  if [[ "$1" == "--sync" ]]
+  then
+    time emaint sync --allrepos
+    time eix-update
+  fi
 
-time emerge -NuDU --keep-going --with-bdeps=y @world -av
+  time emerge -NuDU --keep-going --with-bdeps=y @world -av
+}
+
+fedora() {
+  time {
+    dnf --nogpgcheck update -y google-chrome
+    sync
+    dnf update -y
+    sync
+  }
+}
+
+[[ $(uname -a | grep gentoo) ]] && gentoo $*
+[[ $(grep Fedora /etc/redhat-release) ]] && feodra
+
+
+echo
+echo "Undetected!"
+exit 1
