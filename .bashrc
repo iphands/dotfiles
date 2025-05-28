@@ -148,3 +148,7 @@ fi
 }
 
 [[ -z $DISPLAY ]] && export DISPLAY=:0
+
+# Setup SGW bin path
+PATH="${HOME}/fbsource/fbcode/signals/cloudbridge/bin:${PATH}"
+

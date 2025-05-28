@@ -63,10 +63,32 @@
  '(help-at-pt-timer-delay 1.5)
  '(inhibit-startup-screen t)
  '(js-indent-level 2)
- '(js2-basic-offset 4)
+ '(js2-basic-offset 2)
  '(js2-bounce-indent-p t)
  '(package-selected-packages
    '(fzf kotlin-mode flycheck-pyflakes flycheck-pyre lsp-pyre lsp-python-ms sass-mode clang-format eglot powershell git-modes csv-mode eslint-fix prettier flow-minor-mode rjsx-mode systemd bazel tide go-imenu lsp-ui yasnippet typescript-mode protobuf-mode lsp-mode rustic racer eldoc go-eldoc helm-ls-git helm helm-git helm-go-package smex company company-box company-c-headers company-cmake company-ctags company-go company-shell yafolding flymake-shellcheck cmake-mode go-mode groovy-mode flymake-json flymake-jshint web-mode json-mode js2-highlight-vars js2-mode xref-js2 toml-mode cargo flycheck-rust rust-mode magit magit-filenotify magit-find-file yaml-mode puppetfile-mode puppet-mode phi-rectangle nginx-mode neotree multiple-cursors move-text markdown-mode+ lua-mode lineno json-rpc highline epc dockerfile-mode coffee-mode)))
+
+;; fzf
+;; (setq fzf/directory-start "~/j/cloudbridge")
+(defun myfzf (&optional with-preview)
+  "Customized FZF launch"
+  ;; (interactive "P")
+  (setq d "~/j/cloudbridge")
+  (fzf--start d
+              (lambda (x)
+                (let ((f (expand-file-name x d)))
+                  (when (file-exists-p f)
+                    (find-file f)))))
+  )
+  ;; This one forces preview
+  ;; (let ((fzf/args (if false (concat fzf/args " " fzf/args-for-preview) fzf/args))
+  ;;       (fzf--target-validator (fzf--use-validator (function fzf--validate-filename))))
+  ;;   (fzf--start d
+  ;;               (lambda (x)
+  ;;                 (let ((f (expand-file-name x d)))
+  ;;                   (when (file-exists-p f)
+  ;;                     (find-file f)))))))
+(global-set-key (kbd "M-p") (lambda () (interactive) (myfzf)))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -198,7 +220,7 @@
 (defun my-jsx-mode-hook()
   "Setup my jsx mode stuff"
   ;; (toggle-debug-on-error)
-  (prettier-mode)
+  ;; (prettier-mode)
   (company-mode)
   (local-set-key (kbd "C-x a")
 		 (lambda () (interactive)
@@ -221,7 +243,7 @@
 (defun my-typescript-mode-hook()
   "Setup my typescript mode stuff"
   ;; (toggle-debug-on-error)
-  (prettier-mode)
+  ;; (prettier-mode)
   ;; (tide-mode)
   (local-set-key (kbd "C-x a")
 		 (lambda () (interactive)
@@ -229,6 +251,12 @@
 		   (eslint-fix)
 		   (delete-trailing-whitespace))))
 (add-hook 'typescript-mode-hook 'my-typescript-mode-hook)
+
+(setq-default tab-width 2)
+(setq-default json-indent-level 2)
+(setq-default js-indent-level 2)
+(setq typescript-indent-level 2)
+(setq typescript-auto-indent-flag t)
 
 (if (version<= "26.0.50" emacs-version)
     (global-display-line-numbers-mode 1)
@@ -374,7 +402,7 @@
 (defun my-python-mode-hook ()
   "My preferences for python-mode"
   ;; (elpy-enable)
-  ;; (local-set-key (kbd "C-TAB") 'elpy-company-backend)
+  ;; (local-set-key (kbd "C-TAB") 'elpy-company-backen)
   )
 (add-hook 'python-mode-hook 'my-python-mode-hook)
 
