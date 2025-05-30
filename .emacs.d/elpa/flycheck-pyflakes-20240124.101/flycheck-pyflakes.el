@@ -4,7 +4,8 @@
 ;;
 ;; Author: Wilfred Hughes <me@wilfred.me.uk>
 ;; Created: 29 April 2014
-;; Version: 0.1
+;; Package-Version: 20240124.101
+;; Package-Revision: 60db5908747f
 ;; Package-Requires: ((flycheck "0.18"))
 
 ;;; Commentary:
