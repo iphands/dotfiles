@@ -16,7 +16,7 @@ then
 	[[ $CURR -eq 0 ]] && exit 0
 	chirp temp
 	echo 'level full-speed' > /proc/acpi/ibm/fan
-	return
+	exit 0
 fi
 
 CPU_UTIL=$(top -b -n 1 | grep -m1 Cpu | awk '{print $2}')
