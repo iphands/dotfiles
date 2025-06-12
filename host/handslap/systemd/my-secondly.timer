@@ -3,7 +3,7 @@ Description=Run my-secondly.service every second
 
 [Timer]
 OnBootSec=0
-OnUnitActiveSec=1
+OnUnitActiveSec=5
 AccuracySec=1
 
 [Install]
