@@ -1,9 +1,12 @@
 #!/bin/bash
-CPU_UTIL=$(top -b -n 1 | grep -m1 Cpu | cut -d' ' -f3)
+set -e
+CPU_UTIL=$(top -b -n 1 | grep -m1 Cpu | cut -d' ' -f2)
 
 if [[ "`echo "$CPU_UTIL > 85" | bc -l`" == 1 ]]
 then
+	echo "FULL"
 	echo 'level full-speed' > /proc/acpi/ibm/fan
 else
+	echo "AUTO"
 	echo 'level auto' > /proc/acpi/ibm/fan
 fi
