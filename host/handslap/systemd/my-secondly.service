@@ -1,0 +1,5 @@
+[Unit]
+Description=My every second task
+
+[Service]
+ExecStart=/root/sbin/my-secondly
