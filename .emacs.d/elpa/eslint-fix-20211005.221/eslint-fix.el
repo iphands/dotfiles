@@ -5,9 +5,8 @@
 ;; See the LICENSE file.
 
 ;; Author: Neri Marschik <marschik_neri@cyberagent.co.jp>
-;; Version: 1.0
 ;; Package-Version: 20211005.221
-;; Package-Commit: 636bf8d8797bdd58f1b543c9d3f4910e3ce879ab
+;; Package-Revision: 636bf8d8797b
 ;; Package-Requires: ()
 ;; Keywords: tools, javascript, eslint, lint, formatting, style
 ;; URL: https://github.com/codesuki/eslint-fix

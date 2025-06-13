@@ -3,9 +3,8 @@
 ;; This source code is licensed under the BSD-style license found in
 ;; the LICENSE file in the root directory of this source tree.
 
-;; Version: 0.3
 ;; Package-Version: 20200905.1730
-;; Package-Commit: 804217a15a28f6918fba93c91d495ed7d50b0495
+;; Package-Revision: 804217a15a28
 ;; URL: https://github.com/an-sh/flow-minor-mode
 
 ;; Package-Requires: ((emacs "25.1"))

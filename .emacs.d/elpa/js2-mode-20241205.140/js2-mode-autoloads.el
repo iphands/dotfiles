@@ -75,6 +75,8 @@ evaluate the variable `js2-minor-mode'.
 The mode's hook is called both when the mode is enabled and when it is
 disabled.
 
+\\{js2-minor-mode-map}
+
 (fn &optional ARG)" t)
 (autoload 'js2-mode "js2-mode" "\
 Major mode for editing JavaScript code.

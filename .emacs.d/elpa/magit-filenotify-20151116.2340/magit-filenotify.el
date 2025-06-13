@@ -6,6 +6,7 @@
 ;; Created: 17 Jul 2013
 ;; Keywords: tools
 ;; Package-Version: 20151116.2340
+;; Package-Revision: c0865b3c41af
 ;; Package-Requires: ((magit "1.3.0") (emacs "24.4"))
 
 ;; This file is NOT part of GNU Emacs.

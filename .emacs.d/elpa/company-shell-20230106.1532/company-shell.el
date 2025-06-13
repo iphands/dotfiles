@@ -4,10 +4,9 @@
 
 ;; Author: Alexander Miller <alexanderm@web.de>
 ;; Package-Requires: ((emacs "24.4") (company "0.8.12") (dash "2.12.0") (cl-lib "0.5"))
-;; Package-Version: 20230106.1532
-;; Package-Commit: 5f959a63a6e66eb0cbdac3168cad523a62cc2ccd
 ;; Homepage: https://github.com/Alexander-Miller/company-shell
-;; Version: 1.3.1
+;; Package-Version: 20230106.1532
+;; Package-Revision: 5f959a63a6e6
 ;; Keywords: company, shell, auto-completion
 
 ;; This program is free software; you can redistribute it and/or modify

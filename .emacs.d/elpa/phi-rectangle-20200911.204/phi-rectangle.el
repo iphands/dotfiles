@@ -20,8 +20,7 @@
 ;; Author: zk_phi
 ;; URL: http://zk-phi.github.io/
 ;; Package-Version: 20200911.204
-;; Package-Commit: 43ee8aea9998b34a9fdb28d7da2e4f75e4154030
-;; Version: 1.1.4
+;; Package-Revision: 43ee8aea9998
 
 ;;; Commentary:
 

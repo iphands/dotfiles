@@ -6,7 +6,7 @@
     (s        "1.11.0")
     (flycheck "27")
     (cl-lib   "0.5"))
-  :url "https://github.com/ananthakumaran/tide"
+  :url "http://github.com/ananthakumaran/tide"
   :commit "6a35fe355f1442da34b976bf2decf008d6e4f991"
   :revdesc "6a35fe355f14"
   :keywords '("typescript")

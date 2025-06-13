@@ -4,7 +4,8 @@
 ;; License: MIT
 ;;
 ;; Author: Vyacheslav Linnik <vyacheslav.linnik@gmail.com>
-;; Version: 2018.10.14
+;; Package-Version: 20190215.1222
+;; Package-Revision: 0560122caae2
 ;; Package-Requires: ((emacs "24") (flycheck "29") (cl-lib "0.6"))
 ;; URL: https://github.com/linnik/flycheck-pyre
 

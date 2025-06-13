@@ -4,8 +4,6 @@
 
 ;; Author   : Marian Schubert <marian.schubert@gmail.com>
 ;; URL      : https://github.com/maio/helm-git
-;; Package-Version: 20120630.2103
-;; Package-Commit: cb96a52b5aecadd3c27aba7749d14e43ab128d55
 ;; Version  : 1.1
 ;; Keywords : helm, git
 
@@ -27,6 +25,9 @@
 ;; along with GNU Emacs; see the file COPYING.  If not, write to the
 ;; Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
 ;; Boston, MA 02110-1301, USA.
+
+;; Package-Version: 20120630.2103
+;; Package-Revision: 5b4a6eb7a97b
 
 ;;; Commentary:
 ;;

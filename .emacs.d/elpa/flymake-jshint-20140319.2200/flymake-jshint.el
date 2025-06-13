@@ -4,8 +4,8 @@
 
 ;; Author: Wilfred Hughes <me@wilfred.me.uk>
 ;; Created: 23 June 2011
-;; Version: 2.2
 ;; Package-Version: 20140319.2200
+;; Package-Revision: 79dd554c2278
 ;; Keywords: flymake, jshint, javascript
 ;; Package-Requires: ((flymake-easy "0.8"))
 

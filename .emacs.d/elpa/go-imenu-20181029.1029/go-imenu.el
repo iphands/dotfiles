@@ -4,10 +4,9 @@
 
 ;; Author: Brantou <brantou89@gmail.com>
 ;; URL: https://github.com/brantou/go-imenu.el
-;; Package-Version: 20181029.1029
-;; Package-Commit: 4f3f334ed0b6f6afaca6b9775636a52ad3843053
 ;; Keywords: tools
-;; Version: 0.1.0
+;; Package-Version: 20181029.1029
+;; Package-Revision: 00bb69c1c714
 ;; Package-Requires: ((emacs "24.3"))
 
 ;; This program is free software: you can redistribute it and/or modify

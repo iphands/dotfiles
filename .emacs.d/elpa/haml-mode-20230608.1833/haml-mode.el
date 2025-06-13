@@ -5,7 +5,8 @@
 ;; Author: Natalie Weizenbaum
 ;; URL: https://github.com/nex3/haml-mode
 ;; Package-Requires: ((emacs "24.1") (cl-lib "0.5"))
-;; Package-Version: 3.2.1
+;; Package-Version: 20230608.1833
+;; Package-Revision: fe83c65c1f00
 ;; Created: 2007-03-08
 ;; By: Natalie Weizenbaum
 ;; Keywords: markup, languages, html

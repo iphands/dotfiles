@@ -5,7 +5,8 @@
 ;; Author: Nicolas Petton <nicolas@petton.fr>
 ;; URL: https://github.com/NicolasPetton/xref-js2
 ;; Keywords: javascript, convenience, tools
-;; Version: 1.0
+;; Package-Version: 20240504.1449
+;; Package-Revision: e215af9eedac
 ;; Package: xref-js2
 ;; Package-Requires: ((emacs "25.1") (js2-mode "20150909"))
 
