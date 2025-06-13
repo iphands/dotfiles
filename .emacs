@@ -69,23 +69,23 @@
  '(js2-basic-offset 2)
  '(js2-bounce-indent-p t)
  '(package-selected-packages
-	 '(bazel cargo clang-format cmake-mode coffee-mode company company-box
-					 company-c-headers company-cmake company-ctags company-go
-					 company-shell csv-mode dockerfile-mode eglot eldoc epc
-					 eslint-fix flow-minor-mode flycheck-color-mode-line
-					 flycheck-jest flycheck-kotlin flycheck-pyflakes
-					 flycheck-pyre flycheck-rust flymake-jshint flymake-json
-					 flymake-shellcheck fzf git-modes go-eldoc go-imenu go-mode
-					 groovy-mode helm helm-git helm-go-package helm-ls-git
-					 highline js2-highlight-vars js2-mode json-mode json-rpc
-					 kotlin-mode lineno lsp-mode lsp-pyre lsp-python-ms lsp-ui
-					 lua-mode magit magit-filenotify magit-find-file
-					 markdown-mode+ move-text multiple-cursors neotree
-					 nginx-mode phi-rectangle powershell prettier protobuf-mode
-					 puppet-mode puppetfile-mode racer rjsx-mode rust-mode
-					 rustic sass-mode smex systemd tide toml-mode
-					 typescript-mode web-mode xref-js2 yafolding yaml-mode
-					 yasnippet)))
+	 '(bazel cargo cargo-mode clang-format cmake-mode coffee-mode company
+					 company-box company-c-headers company-cmake company-ctags
+					 company-go company-shell csv-mode dockerfile-mode eglot
+					 eldoc epc eslint-fix flow-minor-mode
+					 flycheck-color-mode-line flycheck-jest flycheck-kotlin
+					 flycheck-pyflakes flycheck-pyre flycheck-rust
+					 flymake-jshint flymake-json flymake-shellcheck fzf
+					 git-modes go-eldoc go-imenu go-mode groovy-mode helm
+					 helm-git helm-go-package helm-ls-git highline
+					 js2-highlight-vars js2-mode json-mode json-rpc kotlin-mode
+					 lineno lsp-mode lsp-pyre lsp-python-ms lsp-ui lua-mode
+					 magit magit-filenotify magit-find-file markdown-mode+
+					 move-text multiple-cursors neotree nginx-mode phi-rectangle
+					 powershell prettier protobuf-mode puppet-mode
+					 puppetfile-mode racer rjsx-mode rust-mode rustic sass-mode
+					 smex systemd tide toml-mode typescript-mode web-mode
+					 xref-js2 yafolding yaml-mode yasnippet)))
 
 ;; fzf
 ;; (setq fzf/directory-start "~/j/cloudbridge")
