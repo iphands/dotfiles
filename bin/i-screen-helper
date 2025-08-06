@@ -46,9 +46,11 @@ _do_work() {
   MON_WORK_TWO=$(grep "$MON_WORK_TWO_ID" "$CACHE" | cut -d' ' -f1)
 
   echo "## Found both doing work desk setup"
-  wlr-randr --output "$MON_WORK_ONE" --above "$MAIN"
-  wlr-randr --output "$MON_WORK_TWO" --right-of "$MON_WORK_ONE"
-  wlr-randr --output "$MAIN" --pos 0,0
+	# NOTE: See: https://github.com/labwc/labwc/issues/2941 we need the upper left to be 0,0 otherwise
+	# Other outputs have negative coords, and this breaks X11 / Xwaylands head. Leading to things that cant be interacted with
+	wlr-randr --output "$MON_WORK_ONE" --pos 0,0
+	wlr-randr --output "$MON_WORK_TWO" --right-of "$MON_WORK_ONE"
+	wlr-randr --output "$MAIN" --below "$MON_WORK_ONE"
   return 0
 }
 
@@ -58,10 +60,19 @@ _main() {
   [[ "$2" == "from_auto" ]] && echo "Auto detected mode \"$MODE\""
 
   set +e
-  OTHEr=$(grep '^[a-zA-Z]' "$CACHE" | grep -v eDP-1 | head -n1 | awk '{print $1}')
+  OTHER=$(grep '^[a-zA-Z]' "$CACHE" | grep -v eDP-1 | head -n1 | awk '{print $1}')
   set -e
 
   case $MODE in
+	"luke")
+		MON_LEFT_ID=3CQ72533W9
+		MON_RIGHT_ID=3CQ64716KX
+		MON_LEFT=$(grep  "$MON_LEFT_ID"  "$CACHE" | cut -d' ' -f1)
+		MON_RIGHT=$(grep "$MON_RIGHT_ID" "$CACHE" | cut -d' ' -f1)
+		wlr-randr --output "$MON_LEFT"  --left-of  "$MAIN"
+		wlr-randr --output "$MON_RIGHT" --right-of "$MAIN"
+		wlr-randr --output "$MAIN" --pos 0,0
+	;;
   "above" | "work")
     _do_work || {
       _check $OTHER
@@ -70,7 +81,7 @@ _main() {
     ;;
   "same" | "same-as")
     _check $OTHER
-    xrandr --output $OTHER --same-as $MAIN
+    wlr-randr --output $OTHER --same-as $MAIN
     ;;
   "home")
     OTHER=$(grep $MON_HOME_ID $CACHE | cut -d' ' -f1)
