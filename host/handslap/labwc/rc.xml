@@ -3,7 +3,7 @@
     <theme>
 				<name>Lean</name>
 				<cornerRadius>4</cornerRadius>
-				<font name="sans" size="12" />
+				<font name="RedHatText" size="12" />
     </theme>
     <margin top="5" bottom="5" left="5" right="5" output="" />
     <desktops number="4">
@@ -29,7 +29,7 @@
     </windowRules>
     <keyboard>
 				<default />
-				<keybind key="W-r"><action name="Execute" command="~/bin/dmenu_env_fix" /></keybind>
+				<keybind key="W-r"><action name="Execute" command="~/bin/menu" /></keybind>
 
 				<keybind key="A-Left"><action name="None" /></keybind>
 				<keybind key="A-Right"><action name="None" /></keybind>
