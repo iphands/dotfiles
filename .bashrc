@@ -11,10 +11,8 @@
 
 
 export TERM=screen-256color
-export EDITOR='emacs -nw'
 
 GSETTINGS_BACKEND=keyfile
-EDITOR='emacs -nw'
 HISTSIZE=1000000
 HISTFILESIZE=$HISTSIZE
 
@@ -24,6 +22,11 @@ else
   alias ls='ls -G'
 fi
 
+# Emacs stuff
+export EDITOR='emacs -nw'
+alias emacs_daemon='emacs --daemon'
+alias emacs='emacsclient -nw -c -a ""'
+
 # User specific aliases and functions
 alias less='less -iX'
 alias egrep='grep -E --colour=auto'
@@ -32,10 +35,9 @@ alias fgrep='LC_ALL="C" fgrep --color'
 alias sshnocheck='ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
 alias scpnocheck='scp -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
 alias unfuck_scrolling='tput rmcup'
-alias emacs='emacs -nw'
 
 # Work around odd fluxbox chrome click on menus issue
-alias browser='google-chrome-stable --disable-features=SendMouseLeaveEvents'
+# alias browser='google-chrome-stable --disable-features=SendMouseLeaveEvents'
 # alias groot='cd "`git rev-parse --show-toplevel`"'
 
 GIT=`which git`

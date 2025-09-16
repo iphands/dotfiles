@@ -11,9 +11,6 @@ fi
 PATH=$PATH:$HOME/.local/bin:$HOME/bin
 export PATH
 
-EDITOR=emacs
-export EDITOR
-
 if [ -f ~/.profile ]
 then
     source ~/.profile
