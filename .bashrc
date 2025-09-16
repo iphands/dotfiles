@@ -24,7 +24,7 @@ fi
 
 # Emacs stuff
 export EDITOR='emacs -nw'
-alias emacs_daemon='emacs --daemon'
+alias emacs_daemon='/usr/bin/emacs --daemon'
 alias emacs='emacsclient -nw -c -a ""'
 
 # User specific aliases and functions
