@@ -157,8 +157,7 @@
     (tabson)))
 
 ;; STAHP
-;; (global-set-key "\C-xp" 'toggle-tabs)
-(tabsoff)
+(global-set-key "\C-xp" 'toggle-tabs)
 (tabsoff)
 
 (global-set-key (kbd "C-x w q") (lambda () (interactive) (save-buffers-kill-emacs t)))
@@ -458,4 +457,6 @@
 (put 'upcase-region 'disabled nil)
 (put 'downcase-region 'disabled nil)
 
+(tabsoff)
+(setq-default indent-tabs-mode nil)
 ;;; .emacs ends here
