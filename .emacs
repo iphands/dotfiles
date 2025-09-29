@@ -172,12 +172,9 @@
 (global-set-key "\C-x\\" 'delete-trailing-whitespace)
 
 
-(add-to-list 'auto-mode-alist '("\\.scss\\'" . sass-mode))
+
 
 ;;(load "drupal-mode")
-;;(add-to-list 'auto-mode-alist '("\\.\\(module\\|test\\|install\\|theme\\)$" . drupal-mode))
-(add-to-list 'auto-mode-alist '("\\.\\(php\\|inc\\)$" . hack-mode))
-;;(add-to-list 'auto-mode-alist '("\\.info" . conf-windows-mode))
 
 					;(require 'flymake-jslint)
 					;(add-hook 'js2-mode-hook
@@ -337,14 +334,11 @@
 
 ;; (setq flymake-gui-warnings-enabled nil)
 
-
 ;; (add-to-list 'load-path "/lib/node_modules/tern/emacs/")
 ;; (autoload 'tern-mode "tern.el" nil t)
 ;; (add-hook 'js3-mode-hook (lambda () (auto-complete-mode) (flymake-jslint-load) (tern-mode t)))
 ;; (add-hook 'js3-mode-hook (lambda () (auto-complete-mode) (flymake-jslint-load)))
 ;; (add-hook 'python-mode-hook (lambda () (auto-complete-mode)))
-
-
 
 ;; (custom-set-variables
 ;; '(eclim-eclipse-dirs '("~/eclipse"))
@@ -360,6 +354,8 @@
 ;; (require 'ac-emacs-eclim-source)
 ;; (ac-emacs-eclim-config)
 
+;; ;; MODES
+
 ;; use web-mode for .jsx files
 (add-to-list 'auto-mode-alist '("\\.js$" .  rjsx-mode))
 (add-to-list 'auto-mode-alist '("\\.jsx$" . rjsx-mode))
@@ -374,6 +370,16 @@
 (add-to-list 'auto-mode-alist '("BUCK$" .  bazel-starlark-mode))
 (add-to-list 'auto-mode-alist '("PACKAGE$" .  bazel-starlark-mode))
 (add-to-list 'auto-mode-alist '("TARGETS$" .  bazel-starlark-mode))
+
+;; use groovy-mode for Jenkins stuff
+(add-to-list 'auto-mode-alist '("Jenkinsfile" . groovy-mode))
+(add-to-list 'auto-mode-alist '("\\.jenkinsfile\\'" . groovy-mode))
+
+;; Extra modes
+(add-to-list 'auto-mode-alist '("\\.scss\\'" . sass-mode))
+(add-to-list 'auto-mode-alist '("\\.\\(php\\|inc\\)$" . hack-mode))
+;;(add-to-list 'auto-mode-alist '("\\.info" . conf-windows-mode))
+;;(add-to-list 'auto-mode-alist '("\\.\\(module\\|test\\|install\\|theme\\)$" . drupal-mode))
 
 ;; http://www.flycheck.org/manual/latest/index.html
 (when (require 'flycheck nil 'noerror)
@@ -416,9 +422,6 @@
   (setq web-mode-code-indent-offset 2))
 (add-hook 'web-mode-hook  'my-web-mode-hook)
 
-(add-to-list 'auto-mode-alist '("Jenkinsfile" . groovy-mode))
-(add-to-list 'auto-mode-alist '("\\.jenkinsfile\\'" . groovy-mode))
-
 (defun my-sh-mode-hook ()
   "My preferences for sh-mode"
   (setq sh-basic-offset 2)
@@ -450,13 +453,16 @@
 ;; (global-set-key [(shift f3)] 'highlight-symbol-prev)
 ;; (global-set-key [(meta f3)] 'highlight-symbol-query-replace)
 
-;; BACKUP FILES
+;; Disale backup files (ie .#foo and foo~ files)
 (setq make-backup-files nil)
 (setq auto-save-default nil)
 
+;; I dont like this upcase/downcase shortcut
 (put 'upcase-region 'disabled nil)
 (put 'downcase-region 'disabled nil)
 
+;; Kill auto tabs
 (tabsoff)
 (setq-default indent-tabs-mode nil)
+
 ;;; .emacs ends here
