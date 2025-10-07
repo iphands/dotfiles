@@ -1,2 +1,2 @@
 ((magit-blame nil
-							("-w")))
+              ("-w")))

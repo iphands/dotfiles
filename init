@@ -6,6 +6,7 @@ mkdir -p "$current"
 
 host=unknown
 [[ "$HOSTNAME" =~ "PC2K41CN" ]] && host=handslap
+[[ "$HOSTNAME" =~ "PF5KC9XD" ]] && host=handslap
 [[ "$HOSTNAME" =~ "cosmo" ]] && host=cosmo
 [[ "$HOSTNAME" =~ "station" ]] && host=station
 

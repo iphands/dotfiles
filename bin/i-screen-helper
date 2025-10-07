@@ -48,9 +48,9 @@ _do_work() {
   echo "## Found both doing work desk setup"
 	# NOTE: See: https://github.com/labwc/labwc/issues/2941 we need the upper left to be 0,0 otherwise
 	# Other outputs have negative coords, and this breaks X11 / Xwaylands head. Leading to things that cant be interacted with
-	wlr-randr --output "$MON_WORK_ONE" --pos 0,0
+	wlr-randr --output "$MON_WORK_ONE" --pos 0,0 --scale 1
 	wlr-randr --output "$MON_WORK_TWO" --right-of "$MON_WORK_ONE"
-	wlr-randr --output "$MAIN" --below "$MON_WORK_ONE"
+	wlr-randr --output "$MAIN" --below "$MON_WORK_ONE" --scale 1.5
   return 0
 }
 
