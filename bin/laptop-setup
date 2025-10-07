@@ -1,0 +1,49 @@
+#!/bin/bash
+
+dnf remove \
+  '*abrt*' \
+  '*amd*' \
+  '*atheros*' \
+  '*libvirt*' \
+  '*staroff*' \
+  '*libreoff*' \
+  '*nvidia*'
+
+dnf install -y \
+  GraphicsMagick \
+  atk-devel \
+  autoconf \
+  automake \
+  bees \
+  blueman-applet \
+  cairo-devel \
+  cairo-gobject-devel \
+  cargo \
+  cheese \
+  dash \
+  eog \
+  fping \
+  fzf \
+  gdk-pixbuf2-devel \
+  gimp \
+  glib2-devel \
+  grim \
+  jq \
+  mako \
+  maui-linux \
+  meld \
+  network-manager-applet \
+  openssh-askpass \
+  pango-devel \
+  pavucontrol \
+  ripgrep \
+  rust-gdk+v3_24-devel.noarch \
+  slurp \
+  swaybg \
+  swayimg \
+  thunar \
+  tidy \
+  tig \
+  wavemon \
+  wireguard-tools \
+  zstd
