@@ -14,6 +14,7 @@ dnf install -y \
   atk-devel \
   autoconf \
   automake \
+  axel \
   bees \
   blueman-applet \
   cairo-devel \
@@ -25,10 +26,13 @@ dnf install -y \
   fping \
   fzf \
   gdk-pixbuf2-devel \
+  gedit \
   gimp \
   glib2-devel \
   grim \
+  helm \
   jq \
+  kubernetes1.30-client \
   mako \
   maui-linux \
   meld \
