@@ -3,5 +3,5 @@ STAMP=`date +%s`
 BASE="${HOME}/Screenshots"
 FILE="${BASE}/${STAMP}.jpg"
 mkdir -p "$BASE"
-touch $FILE
-grim -t jpeg -q 85 -g "$(slurp)" - > $FILE
+touch "$FILE"
+grim -t jpeg -q 85 -g "$(slurp)" - > "$FILE"

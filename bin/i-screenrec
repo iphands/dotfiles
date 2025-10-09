@@ -3,8 +3,8 @@ STAMP=`date +%s`
 BASE="${HOME}/Videos"
 FILE="${BASE}/${STAMP}.mkv"
 mkdir -p "$BASE"
-touch $FILE
-wf-recorder -g "$(slurp)" -yf ~/Videos/recording.mkv
+touch "$FILE"
+wf-recorder -g "$(slurp)" -yf "$FILE"
 
 # SIZE=1920x1080
 # SIZE=1280×720
