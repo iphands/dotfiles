@@ -49,5 +49,6 @@ dnf install -y \
   tidy \
   tig \
   wavemon \
+  wf-recorder \
   wireguard-tools \
   zstd

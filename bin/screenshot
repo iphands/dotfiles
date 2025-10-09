@@ -1,5 +1,0 @@
-#!/bin/bash
-stamp=`date +%s`
-file="$HOME/Downloads/${stamp}.jpg"
-touch $file
-magick import $file
