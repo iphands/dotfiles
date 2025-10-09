@@ -1,5 +1,7 @@
 #!/bin/bash
-stamp=`date +%s`
-file="$HOME/Downloads/${stamp}.jpg"
-touch $file
-grim -t jpeg -q 85 -g "$(slurp)" - > $file
+STAMP=`date +%s`
+BASE="${HOME}/Screenshots"
+FILE="${BASE}/${STAMP}.jpg"
+mkdir -p "$BASE"
+touch $FILE
+grim -t jpeg -q 85 -g "$(slurp)" - > $FILE

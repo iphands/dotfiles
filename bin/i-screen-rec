@@ -1,5 +1,0 @@
-#!/bin/bash
-SIZE=1920x1080
-# SIZE=1280×720
-# ffmpeg -video_size $SIZE -f x11grab -i :0.0+100,200 -vf format=pix_fmts=yuv420p -f v4l2 /dev/video2
-ffmpeg -video_size $SIZE -framerate 9 -f x11grab -i :0.0+0,0 -vf format=pix_fmts=yuv420p -f v4l2 /dev/video2
