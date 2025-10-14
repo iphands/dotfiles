@@ -76,7 +76,7 @@ _main() {
   "above" | "work")
     _do_work || {
       _check $OTHER
-      xrandr --output $OTHER --above $MAIN
+      wlr-randr --output $OTHER --above $MAIN
     }
     ;;
   "same" | "same-as")
