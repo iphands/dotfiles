@@ -17,6 +17,7 @@ dnf install -y \
   axel \
   bees \
   blueman-applet \
+  brightnessctl \
   cairo-devel \
   cairo-gobject-devel \
   cargo \
@@ -37,6 +38,7 @@ dnf install -y \
   maui-linux \
   meld \
   network-manager-applet \
+  nmtui \
   openssh-askpass \
   pango-devel \
   pavucontrol \
