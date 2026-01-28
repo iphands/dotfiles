@@ -34,6 +34,7 @@ dnf install -y \
   helm \
   jq \
   kubernetes1.30-client \
+  lm_sensors-devel \
   mako \
   maui-linux \
   meld \
@@ -42,6 +43,7 @@ dnf install -y \
   openssh-askpass \
   pango-devel \
   pavucontrol \
+  powertop \
   ripgrep \
   rust-gdk+v3_24-devel.noarch \
   slurp \

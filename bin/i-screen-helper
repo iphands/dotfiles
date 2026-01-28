@@ -12,6 +12,8 @@ MON_WORK_ONE_ID=73GTT81Q441L
 MON_WORK_TWO_ID=73GTT69MA1DL
 MON_HOME_ID=Sony
 
+wlr-randr --output eDP-1 --scale 1.5
+
 _check() {
   if [[ $1 == "" ]]
   then
@@ -48,8 +50,8 @@ _do_work() {
   echo "## Found both doing work desk setup"
 	# NOTE: See: https://github.com/labwc/labwc/issues/2941 we need the upper left to be 0,0 otherwise
 	# Other outputs have negative coords, and this breaks X11 / Xwaylands head. Leading to things that cant be interacted with
-	wlr-randr --output "$MON_WORK_ONE" --pos 0,0 --scale 1
-	wlr-randr --output "$MON_WORK_TWO" --right-of "$MON_WORK_ONE"
+	wlr-randr --output "$MON_WORK_TWO" --pos 0,0 --scale 1
+	wlr-randr --output "$MON_WORK_ONE" --right-of "$MON_WORK_TWO"
 	wlr-randr --output "$MAIN" --below "$MON_WORK_ONE" --scale 1.5
   return 0
 }
@@ -76,7 +78,7 @@ _main() {
   "above" | "work")
     _do_work || {
       _check $OTHER
-      wlr-randr --output $OTHER --above $MAIN
+      wlr-randr --output $MAIN --below $OTHER
     }
     ;;
   "same" | "same-as")
@@ -85,8 +87,8 @@ _main() {
     ;;
   "home")
     OTHER=$(grep $MON_HOME_ID $CACHE | cut -d' ' -f1)
-    wlr-randr --output $MON_HOME --right-of $MAIN --pos 1920,-1300
     wlr-randr --output $MAIN --pos 0,0
+    wlr-randr --output $MON_HOME --right-of $MAIN # --pos 1920,-1300
     ;;
   "single")
     wlr-randr --output $MAIN --pos 0,0
