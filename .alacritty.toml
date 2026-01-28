@@ -7,6 +7,9 @@ save_to_clipboard = true
 [colors.normal]
 black = "#666666"
 
+[terminal]
+osc52 = "CopyPaste"  # or "OnlyCopy"
+
 [colors.primary]
 background = "#242424"
 foreground = "#f6f3e8"
