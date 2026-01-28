@@ -8,7 +8,7 @@
 
 (menu-bar-mode -1)
 
-(setq max-lisp-eval-depth 1024)
+(setq max-lisp-eval-depth 40960)
 (setq lsp-ui-imenu-auto-refresh t)
 (setq lsp-enable-file-watchers nil)
 
@@ -67,35 +67,35 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
-	 '("e24180589c0267df991cf54bf1a795c07d00b24169206106624bb844292807b9"
-		 "c4e6fe8f5728a5d5fd0e92538f68c3b4e8b218bcfb5e07d8afff8731cc5f3df0"
-		 "42ac06835f95bc0a734c21c61aeca4286ddd881793364b4e9bc2e7bb8b6cf848"
-		 default))
+   '("e24180589c0267df991cf54bf1a795c07d00b24169206106624bb844292807b9"
+     "c4e6fe8f5728a5d5fd0e92538f68c3b4e8b218bcfb5e07d8afff8731cc5f3df0"
+     "42ac06835f95bc0a734c21c61aeca4286ddd881793364b4e9bc2e7bb8b6cf848"
+     default))
  '(elpy-syntax-check-command "pyflakes")
  '(help-at-pt-display-when-idle '(flymake-overlay) nil (help-at-pt))
  '(help-at-pt-timer-delay 1.5)
  '(inhibit-startup-screen t)
- '(js-indent-level 2 t)
+ '(js-indent-level 2)
  '(js2-basic-offset 2)
  '(js2-bounce-indent-p t)
  '(package-selected-packages
-	 '(bazel cargo cargo-mode clang-format cmake-mode coffee-mode company
-					 company-box company-c-headers company-cmake company-ctags
-					 company-go company-shell csv-mode dockerfile-mode eglot
-					 eldoc epc eslint-fix flow-minor-mode
-					 flycheck-color-mode-line flycheck-jest flycheck-kotlin
-					 flycheck-pyflakes flycheck-pyre flycheck-rust
-					 flymake-jshint flymake-json flymake-shellcheck fzf
-					 git-modes go-eldoc go-imenu go-mode groovy-mode helm
-					 helm-git helm-go-package helm-ls-git highline
-					 js2-highlight-vars js2-mode json-mode json-rpc kotlin-mode
-					 lineno lsp-mode lsp-pyre lsp-python-ms lsp-ui lua-mode
-					 magit magit-filenotify magit-find-file markdown-mode+
-					 move-text multiple-cursors neotree nginx-mode phi-rectangle
-					 powershell prettier protobuf-mode puppet-mode
-					 puppetfile-mode racer rjsx-mode rust-mode rustic sass-mode
-					 smex systemd tide toml-mode typescript-mode web-mode
-					 xref-js2 yafolding yaml-mode yasnippet)))
+   '(bazel cargo cargo-mode clang-format cmake-mode coffee-mode company
+           company-box company-c-headers company-cmake company-ctags
+           company-go company-shell csv-mode dockerfile-mode eglot
+           eldoc epc eslint-fix flow-minor-mode
+           flycheck-color-mode-line flycheck-jest flycheck-kotlin
+           flycheck-pyflakes flycheck-pyre flycheck-rust
+           flymake-jshint flymake-json flymake-shellcheck fzf
+           git-modes go-eldoc go-imenu go-mode groovy-mode helm
+           helm-git helm-go-package helm-ls-git highline
+           js2-highlight-vars js2-mode json-mode json-rpc kotlin-mode
+           lineno lsp-mode lsp-pyre lsp-python-ms lsp-ui lua-mode
+           magit magit-filenotify magit-find-file markdown-mode+
+           move-text multiple-cursors neotree nginx-mode phi-rectangle
+           powershell prettier protobuf-mode puppet-mode
+           puppetfile-mode racer rjsx-mode rustic sass-mode smex
+           systemd tide toml-mode typescript-mode web-mode xref-js2
+           yafolding yaml-mode yasnippet)))
 
 ;; fzf
 ;; (setq fzf/directory-start "~/j/cloudbridge")
@@ -229,12 +229,11 @@
 (defun my-rust-mode-hook()
   "Setup my rust mode stuff"
   ;; (toggle-debug-on-error)
-  (company-mode)
-  (racer-mode)
-  ;; (rustic-mode)
+  ;; (company-mode)
+  ;; (racer-mode)
+  (rust-mode)
   (local-set-key (kbd "C-x a") 'rust-format-buffer))
 (add-hook 'rust-mode-hook 'my-rust-mode-hook)
-
 
 (defun my-kotlin-mode-hook()
   "Setup my kotlin mode stuff"
