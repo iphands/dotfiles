@@ -92,10 +92,10 @@
            lineno lsp-mode lsp-pyre lsp-python-ms lsp-ui lua-mode
            magit magit-filenotify magit-find-file markdown-mode+
            move-text multiple-cursors neotree nginx-mode phi-rectangle
-           powershell prettier protobuf-mode puppet-mode
-           puppetfile-mode racer rjsx-mode rustic sass-mode smex
-           systemd tide toml-mode typescript-mode web-mode xref-js2
-           yafolding yaml-mode yasnippet)))
+           php-mode powershell prettier protobuf-mode puppet-mode
+           puppetfile-mode racer rjsx-mode rust-mode rustic sass-mode
+           smex systemd tide toml-mode typescript-mode web-mode
+           xref-js2 yafolding yaml-mode yasnippet)))
 
 ;; fzf
 ;; (setq fzf/directory-start "~/j/cloudbridge")
