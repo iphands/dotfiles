@@ -18,3 +18,5 @@
 	clean = git-lfs clean -- %f
 [core]
 	excludesfile = ~/.gitignore
+[safe]
+	directory = /mnt/noir/scratch/ai/comfy/custom_nodes/ComfyUI-Distributed
