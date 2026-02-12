@@ -231,7 +231,6 @@
   ;; (toggle-debug-on-error)
   ;; (company-mode)
   ;; (racer-mode)
-  (rust-mode)
   (local-set-key (kbd "C-x a") 'rust-format-buffer))
 (add-hook 'rust-mode-hook 'my-rust-mode-hook)
 
