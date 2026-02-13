@@ -11,6 +11,7 @@ MAX_AGE_SECONDS=$((MAX_AGE_DAYS * SECONDS_PER_DAY))
 DB_FILE="/root/ban/badactors.db"
 BANLOG_FILE="/root/ban/.ban.log"
 MY_IP_FILE="/root/ban/myip.txt"
+WHITELIST_FILE="/root/ban/whitelist.txt"
 
 # Old files to clean up (migration)
 OLD_LIST_FILE="/root/ban/.ip.list.txt"
@@ -21,6 +22,7 @@ OLD_LIST_BAK="/root/ban/.ip.list.txt.bak"
 declare -A ip_last_seen
 declare -A ip_first_seen
 declare -A ip_hit_count
+declare -A whitelist_ips
 
 # Detect IP family (ipv4 or ipv6)
 get_ip_family() {
@@ -91,6 +93,75 @@ count_active_ips() {
     echo "$count"
 }
 
+# Create default whitelist file with examples if it doesn't exist
+create_default_whitelist() {
+    if [[ ! -f "$WHITELIST_FILE" ]]; then
+        cat > "$WHITELIST_FILE" << 'EOF'
+# SSH Ban Whitelist
+# One entry per line. Supports:
+# - IPv4 addresses (e.g., 192.168.1.100)
+# - IPv6 addresses (e.g., 2001:db8::1)
+# - Hostnames (resolved at runtime via getent)
+# - Comments start with #
+
+# Example trusted IPs
+# 192.168.1.100
+# trusted-server.example.com
+EOF
+        echo "Created default whitelist: $WHITELIST_FILE"
+    fi
+}
+
+# Migrate MY_IP_FILE to whitelist on first run
+migrate_myip_to_whitelist() {
+    if [[ -f "$MY_IP_FILE" && ! -f "$WHITELIST_FILE" ]]; then
+        echo "# Migrated from myip.txt on $(date)" > "$WHITELIST_FILE"
+        cat "$MY_IP_FILE" >> "$WHITELIST_FILE"
+        rm "$MY_IP_FILE"
+        echo "Migrated $MY_IP_FILE to $WHITELIST_FILE"
+    fi
+}
+
+# Resolve hostnames in whitelist to IP addresses
+resolve_whitelist() {
+    whitelist_ips=()
+    
+    if [[ ! -f "$WHITELIST_FILE" ]]; then
+        return
+    fi
+    
+    while IFS= read -r entry || [[ -n "$entry" ]]; do
+        # Skip empty lines and comments
+        [[ -z "$entry" || "$entry" =~ ^[[:space:]]*# ]] && continue
+        
+        # Trim whitespace
+        entry=$(echo "$entry" | xargs)
+        
+        # Check if it looks like an IP (contains . or :) or a hostname
+        if [[ "$entry" == *"."* || "$entry" == *":"* ]]; then
+            # Looks like an IP - add directly
+            whitelist_ips["$entry"]=1
+        else
+            # Try to resolve hostname
+            local resolved_ips
+            resolved_ips=$(getent hosts "$entry" 2>/dev/null | awk '{print $1}')
+            if [[ -n "$resolved_ips" ]]; then
+                while read -r ip; do
+                    [[ -n "$ip" ]] && whitelist_ips["$ip"]=1
+                done <<< "$resolved_ips"
+            else
+                echo "Warning: Could not resolve hostname: $entry"
+            fi
+        fi
+    done < "$WHITELIST_FILE"
+}
+
+# Check if an IP is in the whitelist
+is_whitelisted() {
+    local ip="$1"
+    [[ -n "${whitelist_ips[$ip]}" ]]
+}
+
 # Parse command line arguments
 if [ "$1" != "FULL" ]
 then
@@ -101,6 +172,11 @@ fi
 
 # Load existing database
 load_database
+
+# Initialize whitelist (migrate old myip.txt, create default, resolve hostnames)
+migrate_myip_to_whitelist
+create_default_whitelist
+resolve_whitelist
 
 # Get old count (non-expired IPs)
 OLD_COUNT=$(count_active_ips)
@@ -118,18 +194,27 @@ save_database
 echo "Bouncing firewall"
 firewall-cmd --reload
 
-# Get my IP
-MY_IP=$(cat "$MY_IP_FILE")
+# Get my IP (if file still exists - may have been migrated to whitelist)
+if [[ -f "$MY_IP_FILE" ]]; then
+    MY_IP=$(cat "$MY_IP_FILE")
+else
+    MY_IP=""
+fi
 
 # Add non-expired IPs to firewall
 echo "Adding bad actors"
 for ip in "${!ip_last_seen[@]}"; do
     if ! is_expired "$ip"; then
-        if [[ "$MY_IP" != "$ip" ]]; then
-            family=$(get_ip_family "$ip")
-            echo "  adding $ip"
-            firewall-cmd --add-rich-rule="rule family='${family}' source address='$ip' reject"
+        # Skip whitelisted IPs and MY_IP
+        if is_whitelisted "$ip"; then
+            continue
         fi
+        if [[ -n "$MY_IP" && "$MY_IP" == "$ip" ]]; then
+            continue
+        fi
+        family=$(get_ip_family "$ip")
+        echo "  adding $ip"
+        firewall-cmd --add-rich-rule="rule family='${family}' source address='$ip' reject"
     fi
 done
 
