@@ -1,0 +1,10 @@
+# Whitelist sample file
+# IPs and hostnames to exclude from banning
+
+# Direct IPs
+192.168.1.1
+2001:db8::10
+
+# Hostnames (will be resolved)
+localhost
+trusted-server

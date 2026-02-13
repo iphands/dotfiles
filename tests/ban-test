@@ -1,0 +1,168 @@
+#!/bin/bash
+# Comprehensive test suite for sbin/ban script
+
+set -eo pipefail
+
+# Get paths
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
+BAN_SCRIPT="$PROJECT_ROOT/sbin/ban"
+TEST_HELPERS="$SCRIPT_DIR/ban-test-lib/lib/test-helpers.sh"
+
+# Source the ban script (without executing main)
+source "$BAN_SCRIPT"
+
+# Source test helpers
+source "$TEST_HELPERS"
+
+# Test IP validation functions
+test_ip_validation() {
+	assert_equals "$(get_ip_family '192.168.1.1')" "ipv4" "get_ip_family recognizes IPv4"
+	assert_equals "$(get_ip_family '2001:db8::1')" "ipv6" "get_ip_family recognizes IPv6"
+
+	is_valid_ip "192.168.1.1"; local ret=$?
+	assert_success "$ret" "is_valid_ip accepts valid IPv4"
+
+	is_valid_ip "2001:db8::1"; ret=$?
+	assert_success "$ret" "is_valid_ip accepts valid IPv6"
+
+	is_valid_ip "not.an.ip"; ret=$?
+	assert_failure "$ret" "is_valid_ip rejects invalid IP"
+}
+
+test_database_operations() {
+	load_database "$BAN_DB_FILE"
+	assert_equals "${#ip_last_seen[@]}" "0" "load_database initializes empty arrays"
+
+	add_or_refresh_ip "192.168.1.100"
+	add_or_refresh_ip "2001:db8::1"
+	assert_equals "${#ip_last_seen[@]}" "2" "add_or_refresh_ip adds new IPs"
+
+	save_database "$BAN_DB_FILE"
+	assert_file_exists "$BAN_DB_FILE" "save_database creates file"
+
+	load_database "$BAN_DB_FILE"
+	assert_not_empty "${ip_last_seen[192.168.1.100]}" "load_database restores IPv4"
+	assert_equals "${ip_hit_count[192.168.1.100]}" "1" "load_database preserves hit count"
+}
+
+test_ip_refresh() {
+	add_or_refresh_ip "192.168.1.50"
+	local first_ts="${ip_last_seen[192.168.1.50]}"
+	assert_equals "${ip_hit_count[192.168.1.50]}" "1" "First add sets hit count to 1"
+
+	sleep 1
+	add_or_refresh_ip "192.168.1.50"
+	local second_ts="${ip_last_seen[192.168.1.50]}"
+	assert_equals "${ip_hit_count[192.168.1.50]}" "2" "Refresh increments hit count"
+	assert_not_equals "$first_ts" "$second_ts" "Refresh updates last_seen"
+}
+
+test_expiry_logic() {
+	local now; now=$(date +%s)
+	local old_timestamp=$((now - (MAX_AGE_DAYS * 86400 + 3600)))
+	local ret
+
+	is_expired "$old_timestamp"; ret=$?
+	assert_success "$ret" "is_expired recognizes expired timestamp"
+
+	local recent_timestamp=$((now - 3600))
+	is_expired "$recent_timestamp"; ret=$?
+	assert_failure "$ret" "is_expired accepts recent timestamp"
+}
+
+test_prune_expired() {
+	local now; now=$(date +%s)
+
+	ip_last_seen[192.168.1.1]=$((now - 3600))
+	ip_first_seen[192.168.1.1]=$((now - 86400))
+	ip_hit_count[192.168.1.1]="5"
+
+	ip_last_seen[192.168.1.2]=$((now - (MAX_AGE_DAYS * 86400 + 3600)))
+	ip_first_seen[192.168.1.2]=$((now - (MAX_AGE_DAYS * 86400 + 86400)))
+	ip_hit_count[192.168.1.2]="10"
+
+	local expired; expired=$(prune_expired_ips)
+	assert_equals "$expired" "1" "prune_expired_ips correctly identifies 1 expired IP"
+}
+
+test_parse_ssh_logs() {
+	local fixture_file="$SCRIPT_DIR/ban-test-lib/fixtures/ssh-failed.log"
+	local ips; ips=$(cat "$fixture_file" | BAN_TEST_MODE=1 parse_ssh_logs "ignored")
+
+	assert_contains "$ips" "192.168.1.100" "parse_ssh_logs extracts IPv4"
+	assert_contains "$ips" "2001:db8::1" "parse_ssh_logs extracts IPv6"
+}
+
+test_parse_nginx_jndi() {
+	local fixture_file="$SCRIPT_DIR/ban-test-lib/fixtures/nginx-jndi.log"
+	local ips; ips=$(cat "$fixture_file" | BAN_TEST_MODE=1 parse_nginx_jndi)
+
+	assert_contains "$ips" "192.168.1.150" "parse_nginx_jndi extracts IPv4"
+	assert_contains "$ips" "2001:db8::99" "parse_nginx_jndi extracts IPv6"
+}
+
+test_parse_nginx_404() {
+	local fixture_file="$SCRIPT_DIR/ban-test-lib/fixtures/nginx-404.log"
+	local ips; ips=$(cat "$fixture_file" | BAN_TEST_MODE=1 parse_nginx_404)
+
+	assert_contains "$ips" "192.168.1.200" "parse_nginx_404 extracts IPv4"
+	assert_contains "$ips" "2001:db8::88" "parse_nginx_404 extracts IPv6"
+}
+
+test_whitelist_operations() {
+	cat > "$BAN_WHITELIST_FILE" << 'EOF'
+192.168.1.1
+2001:db8::10
+EOF
+
+	load_whitelist "$BAN_WHITELIST_FILE"
+
+	is_whitelisted "192.168.1.1"; ret=$?
+	assert_success "$ret" "is_whitelisted recognizes IPv4"
+
+	is_whitelisted "192.168.1.2"; ret=$?
+	assert_failure "$ret" "is_whitelisted rejects non-whitelisted IPv4"
+}
+
+test_count_active_ips() {
+	local now; now=$(date +%s)
+
+	ip_last_seen[192.168.1.1]=$((now - 3600))
+	ip_hit_count[192.168.1.1]="1"
+	ip_last_seen[192.168.1.2]=$((now - (MAX_AGE_DAYS * 86400 + 3600)))
+	ip_hit_count[192.168.1.2]="1"
+
+	local active; active=$(count_active_ips)
+	assert_equals "$active" "1" "count_active_ips counts only non-expired IPs"
+}
+
+test_get_log_since() {
+	local result; result=$(get_log_since "")
+	assert_equals "$result" "300 minutes ago" "get_log_since default is 5 hours"
+
+	result=$(get_log_since "FULL")
+	assert_equals "$result" "30 days ago" "get_log_since FULL is 30 days"
+}
+
+main_test() {
+	echo "=================================================="
+	echo "Ban Script Test Suite"
+	echo "=================================================="
+
+	run_test "IP Validation" test_ip_validation
+	run_test "Database Operations" test_database_operations
+	run_test "IP Refresh and Hit Counting" test_ip_refresh
+	run_test "Expiry Logic" test_expiry_logic
+	run_test "Pruning Expired Entries" test_prune_expired
+	run_test "SSH Log Parsing" test_parse_ssh_logs
+	run_test "Nginx JNDI Log Parsing" test_parse_nginx_jndi
+	run_test "Nginx 404 Log Parsing" test_parse_nginx_404
+	run_test "Whitelist Operations" test_whitelist_operations
+	run_test "Count Active IPs" test_count_active_ips
+	run_test "Get Log Since" test_get_log_since
+
+	print_test_summary
+}
+
+main_test

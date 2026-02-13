@@ -1,71 +1,457 @@
 #!/bin/bash
-set -e
+# Ban script: Security tool to block malicious IP addresses
+#
+# Scans system logs for SSH brute-force attempts and suspicious nginx requests,
+# then adds them to firewall rules. Supports both IPv4 and IPv6, with timestamp
+# tracking and 10-day expiry mechanism.
+#
+# Usage:
+#   ban              # Scan logs from last 5 hours
+#   ban FULL         # Full scan of logs from last 30 days
+#
+# Data format (TSV database):
+#   IP<TAB>LAST_SEEN_EPOCH<TAB>FIRST_SEEN_EPOCH<TAB>HIT_COUNT
+#
+# Environment variables (for testing):
+#   BAN_TEST_MODE=1              # Enable test mode (no real firewall changes)
+#   BAN_DB_FILE=path/to/db.tsv   # Override database file path
+#   BAN_WHITELIST_FILE=path      # Override whitelist file path
+#   BAN_LOG_FILE=path            # Override log file path
+#   MAX_AGE_DAYS=10              # Override expiry time (default: 10 days)
 
-if [ "$1" != "FULL" ]
-then
-  opt="300 minutes ago"
-else
-  opt="30 days ago"
+set -eo pipefail
+
+# Configuration - Parameterizable for testing
+: "${BAN_DB_FILE:=/root/ban/badactors.db}"
+: "${BAN_WHITELIST_FILE:=/root/ban/whitelist.txt}"
+: "${BAN_LOG_FILE:=/root/ban/.ban.log}"
+: "${BAN_TEST_MODE:=0}"
+: "${MAX_AGE_DAYS:=10}"
+
+# IPv4 and IPv6 regex patterns
+readonly IPV4_PATTERN='([0-9]{1,3}\.){3}[0-9]{1,3}'
+readonly IPV6_PATTERN='([0-9a-fA-F]{0,4}:){2,7}[0-9a-fA-F]{0,4}'
+
+# ============================================================================
+# IP Validation and Detection Functions
+# ============================================================================
+
+# Determine IP family (ipv4 or ipv6)
+get_ip_family() {
+	local ip="$1"
+	if [[ "$ip" =~ : ]]; then
+		echo "ipv6"
+	else
+		echo "ipv4"
+	fi
+}
+
+# Validate IP format (basic check)
+is_valid_ip() {
+	local ip="$1"
+	if [[ "$ip" =~ ^${IPV4_PATTERN}$ ]]; then
+		return 0
+	fi
+	if [[ "$ip" =~ ^${IPV6_PATTERN}$ ]]; then
+		return 0
+	fi
+	return 1
+}
+
+# Check if IP entry is expired based on last_seen timestamp
+is_expired() {
+	local last_seen="$1"
+	local now
+	now=$(date +%s)
+	local age=$(( now - last_seen ))
+	[[ $age -gt $((MAX_AGE_DAYS * 86400)) ]]
+}
+
+# ============================================================================
+# Database Operations Functions
+# ============================================================================
+
+# Load TSV database into associative arrays
+# Arrays: ip_last_seen, ip_first_seen, ip_hit_count
+load_database() {
+	local db_file="$1"
+
+	# Clear any existing arrays
+	unset ip_last_seen ip_first_seen ip_hit_count
+	declare -gA ip_last_seen=()
+	declare -gA ip_first_seen=()
+	declare -gA ip_hit_count=()
+
+	if [[ ! -f "$db_file" ]]; then
+		return 0
+	fi
+
+	while IFS=$'\t' read -r ip last_seen first_seen hit_count; do
+		[[ -z "$ip" ]] && continue
+		ip_last_seen["$ip"]="$last_seen"
+		ip_first_seen["$ip"]="$first_seen"
+		ip_hit_count["$ip"]="$hit_count"
+	done < "$db_file"
+}
+
+# Save associative arrays to TSV database atomically
+save_database() {
+	local db_file="$1"
+	local tmp_file="${db_file}.tmp"
+
+	{
+		for ip in "${!ip_last_seen[@]}"; do
+			printf '%s\t%s\t%s\t%s\n' \
+				"$ip" \
+				"${ip_last_seen[$ip]}" \
+				"${ip_first_seen[$ip]}" \
+				"${ip_hit_count[$ip]}"
+		done
+	} | sort > "$tmp_file"
+
+	mv "$tmp_file" "$db_file"
+}
+
+# Add new IP or refresh existing IP timestamp
+add_or_refresh_ip() {
+	local ip="$1"
+	local now
+	now=$(date +%s)
+
+	if [[ -z "${ip_last_seen[$ip]}" ]]; then
+		# New IP
+		ip_last_seen["$ip"]="$now"
+		ip_first_seen["$ip"]="$now"
+		ip_hit_count["$ip"]="1"
+	else
+		# Existing IP - refresh timestamp and increment count
+		ip_last_seen["$ip"]="$now"
+		ip_hit_count["$ip"]=$(( ip_hit_count[$ip] + 1 ))
+	fi
+}
+
+# Count non-expired IPs in database
+count_active_ips() {
+	local active=0
+	for ip in "${!ip_last_seen[@]}"; do
+		if ! is_expired "${ip_last_seen[$ip]}"; then
+			((active++))
+		fi
+	done
+	echo "$active"
+}
+
+# Remove expired entries from database arrays
+prune_expired_ips() {
+	local expired_count=0
+	local ip
+	local -A new_last new_first new_hit
+
+	# Keep only non-expired IPs in new arrays
+	for ip in "${!ip_last_seen[@]}"; do
+		if is_expired "${ip_last_seen[$ip]}"; then
+			((expired_count++))
+		else
+			new_last["$ip"]="${ip_last_seen[$ip]}"
+			new_first["$ip"]="${ip_first_seen[$ip]}"
+			new_hit["$ip"]="${ip_hit_count[$ip]}"
+		fi
+	done
+
+	# Clear global arrays
+	local all_ips=()
+	for ip in "${!ip_last_seen[@]}"; do
+		all_ips+=("$ip")
+	done
+	for ip in "${all_ips[@]}"; do
+		unset ip_last_seen["$ip"]
+		unset ip_first_seen["$ip"]
+		unset ip_hit_count["$ip"]
+	done
+
+	# Restore non-expired IPs
+	for ip in "${!new_last[@]}"; do
+		ip_last_seen["$ip"]="${new_last[$ip]}"
+		ip_first_seen["$ip"]="${new_first[$ip]}"
+		ip_hit_count["$ip"]="${new_hit[$ip]}"
+	done
+
+	echo "$expired_count"
+}
+
+# ============================================================================
+# Whitelist Operations Functions
+# ============================================================================
+
+# Load whitelist from file, resolve hostnames to IPs
+load_whitelist() {
+	local whitelist_file="$1"
+
+	declare -gA whitelisted_ips=()
+
+	if [[ ! -f "$whitelist_file" ]]; then
+		return 0
+	fi
+
+	while IFS= read -r entry; do
+		[[ -z "$entry" ]] && continue
+		[[ "$entry" =~ ^# ]] && continue  # Skip comments
+
+		# If entry contains dots/colons, assume it's an IP
+		if [[ "$entry" =~ [.:] ]]; then
+			whitelisted_ips["$entry"]=1
+		else
+			# Try to resolve as hostname
+			local resolved
+			resolved=$(getent hosts "$entry" 2>/dev/null | awk '{print $1}' || true)
+			if [[ -n "$resolved" ]]; then
+				whitelisted_ips["$resolved"]=1
+			fi
+		fi
+	done < "$whitelist_file"
+}
+
+# Check if IP is in whitelist
+is_whitelisted() {
+	local ip="$1"
+	[[ -n "${whitelisted_ips[$ip]}" ]] && return 0
+	return 1
+}
+
+# ============================================================================
+# Log Parsing Functions (Testable via stdin/parameters)
+# ============================================================================
+
+# Extract IPs from SSH failed password logs
+parse_ssh_logs() {
+	local since="$1"
+	local log_data
+
+	if [[ "$BAN_TEST_MODE" == "1" ]]; then
+		log_data=$(cat)  # Read from stdin in test mode
+	else
+		log_data=$(journalctl -u sshd --since="$since" 2>/dev/null || true)
+	fi
+
+	# Extract both IPv4 and IPv6 from "Failed password ... from X" lines
+	echo "$log_data" | \
+		grep 'Failed password' | \
+		grep ' from ' | \
+		grep -oE "from (${IPV4_PATTERN}|${IPV6_PATTERN})" | \
+		cut -d' ' -f2 | \
+		sort -u
+}
+
+# Extract IPs from nginx JNDI exploit attempt logs
+parse_nginx_jndi() {
+	local log_data
+
+	if [[ "$BAN_TEST_MODE" == "1" ]]; then
+		log_data=$(cat)  # Read from stdin in test mode
+	else
+		log_data=$(grep jndi /var/log/nginx/*.access.log 2>/dev/null || true)
+	fi
+
+	echo "$log_data" | \
+		grep -oE "^(${IPV4_PATTERN}|${IPV6_PATTERN})" | \
+		sort -u
+}
+
+# Extract IPs from nginx suspicious 404 requests
+parse_nginx_404() {
+	local log_data
+
+	if [[ "$BAN_TEST_MODE" == "1" ]]; then
+		log_data=$(cat)  # Read from stdin in test mode
+	else
+		log_data=$(grep 404 /var/log/nginx/*access.log 2>/dev/null || true)
+	fi
+
+	echo "$log_data" | \
+		grep -E '(x00\.x00|\.git/config|\.env|\.php|env\.local|phpunit|wp-)' | \
+		grep -oE "(${IPV4_PATTERN}|${IPV6_PATTERN})" | \
+		sort -u
+}
+
+# ============================================================================
+# Firewall Operations Functions
+# ============================================================================
+
+# Reload firewall configuration
+reload_firewall() {
+	if [[ "$BAN_TEST_MODE" == "1" ]]; then
+		echo "[TEST] Would reload firewall"
+		return 0
+	fi
+	firewall-cmd --reload > /dev/null 2>&1 || true
+}
+
+# Add single IP to firewall with correct family handling
+add_firewall_rule() {
+	local ip="$1"
+	local family
+
+	family=$(get_ip_family "$ip")
+
+	if [[ "$BAN_TEST_MODE" == "1" ]]; then
+		echo "[TEST] Would add rule: family=$family ip=$ip"
+		return 0
+	fi
+
+	firewall-cmd --permanent --ipset=bad_ips --add-entry="$ip" > /dev/null 2>&1 || true
+}
+
+# Apply all non-expired, non-whitelisted IPs to firewall
+apply_bans() {
+	local added=0
+
+	# Initialize firewall ipset
+	firewall-cmd --permanent --new-ipset=bad_ips --type=hash:ip 2>/dev/null || true
+
+	# Add each active, non-whitelisted IP
+	for ip in "${!ip_last_seen[@]}"; do
+		# Skip expired entries
+		if is_expired "${ip_last_seen[$ip]}"; then
+			continue
+		fi
+
+		# Skip whitelisted entries
+		if is_whitelisted "$ip"; then
+			continue
+		fi
+
+		add_firewall_rule "$ip"
+		((added++))
+	done
+
+	# Apply IPv4 rejection rule
+	if [[ "$BAN_TEST_MODE" == "1" ]]; then
+		echo "[TEST] Would add IPv4 rejection rule"
+	else
+		firewall-cmd --permanent --add-rich-rule='rule family="ipv4" source ipset="bad_ips" reject' 2>/dev/null || true
+	fi
+
+	echo "$added"
+}
+
+# ============================================================================
+# Utility Functions
+# ============================================================================
+
+# Parse command line arguments to determine log age
+get_log_since() {
+	if [[ "$1" == "FULL" ]]; then
+		echo "30 days ago"
+	else
+		echo "300 minutes ago"
+	fi
+}
+
+# Ensure required directories exist
+ensure_directories() {
+	local db_dir
+	db_dir=$(dirname "$BAN_DB_FILE")
+	mkdir -p "$db_dir" 2>/dev/null || true
+}
+
+# Acquire file lock for preventing concurrent runs
+acquire_lock() {
+	local lock_file="/var/run/ban.lock"
+	local timeout=30
+	local elapsed=0
+
+	while [[ $elapsed -lt $timeout ]]; do
+		if mkdir "$lock_file" 2>/dev/null; then
+			echo "$lock_file"
+			return 0
+		fi
+		sleep 1
+		((elapsed++))
+	done
+
+	return 1
+}
+
+# Release file lock
+release_lock() {
+	local lock_file="$1"
+	rmdir "$lock_file" 2>/dev/null || true
+}
+
+# ============================================================================
+# Main Execution Function
+# ============================================================================
+
+main() {
+	# Check root privileges
+	if [[ "$BAN_TEST_MODE" != "1" ]] && [[ $EUID -ne 0 ]]; then
+		echo "Error: This script must be run as root" >&2
+		return 1
+	fi
+
+	# Create directories if needed
+	ensure_directories
+
+	# Acquire lock to prevent concurrent runs
+	local lock_file
+	if ! lock_file=$(acquire_lock); then
+		echo "Error: Could not acquire lock (another instance running?)" >&2
+		return 1
+	fi
+	trap "release_lock '$lock_file'" EXIT
+
+	echo "## Loading database"
+	load_database "$BAN_DB_FILE"
+
+	echo "## Loading whitelist"
+	load_whitelist "$BAN_WHITELIST_FILE"
+
+	echo "## Finding bad actors"
+	local since
+	since=$(get_log_since "$1")
+
+	# Parse SSH logs
+	while IFS= read -r ip; do
+		[[ -n "$ip" ]] && is_valid_ip "$ip" && add_or_refresh_ip "$ip"
+	done < <(parse_ssh_logs "$since")
+
+	# Parse nginx JNDI logs
+	while IFS= read -r ip; do
+		[[ -n "$ip" ]] && is_valid_ip "$ip" && add_or_refresh_ip "$ip"
+	done < <(parse_nginx_jndi)
+
+	# Parse nginx 404 logs
+	while IFS= read -r ip; do
+		[[ -n "$ip" ]] && is_valid_ip "$ip" && add_or_refresh_ip "$ip"
+	done < <(parse_nginx_404)
+
+	echo "## Pruning expired entries"
+	local expired
+	expired=$(prune_expired_ips)
+	echo "Removed $expired expired entries"
+
+	echo "## Bouncing firewall"
+	reload_firewall
+
+	echo "## Adding bad actors"
+	local added
+	added=$(apply_bans)
+	echo "Added $added rules"
+
+	echo "## Saving database"
+	save_database "$BAN_DB_FILE"
+
+	local active
+	active=$(count_active_ips)
+
+	echo "## Results"
+	echo "Active banned IPs: $active"
+	echo "$active $(date)" >> "$BAN_LOG_FILE"
+
+	return 0
+}
+
+# Only execute main if script is not sourced
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+	main "$@"
 fi
-
-LIST_FILE="/root/ban/.ip.list.txt"
-BANLOG_FILE="/root/ban/.ban.log"
-LIST_FILE_RAW="${LIST_FILE}.raw"
-
-touch $LIST_FILE
-touch $LIST_FILE_RAW
-
-OLD_COUNT="$(firewall-cmd --ipset=bad_ips --get-entries | wc -l)"
-OLD_SUM="`md5sum $LIST_FILE`"
-
-echo "## Finding bad actors"
-set +e
-journalctl -u sshd --since="${opt}" | grep 'Failed password' | grep ' from ' | grep -E -o 'from [0-9\.]*' >> $LIST_FILE_RAW
-grep jndi /var/log/nginx/*.access.log | grep -E '^[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}. -' | awk '{print $1}' >> $LIST_FILE_RAW
-grep jndi /var/log/nginx/error.log | grep host | grep -E -o 'host: "[0-9.]*"$' | cut -d\" -f2 >> $LIST_FILE_RAW
-grep 404 /var/log/nginx/*access.log | grep \
-    -e 'x00.x00' \
-    -e .git/config \
-    -e /.env \
-    -e \.php \
-    -e env.local \
-    -e phpunit \
-    -e wp-content \
-    -e wp-good \
-    -e wp-inc \
-    -e wp-includes \
-    -e wp-json \
-    -e wp-login \
-    /var/log/nginx/*access.log | cut -d':' -f2 | cut -d' ' -f1 | sort -u >> $LIST_FILE_RAW
-set -e
-
-cat $LIST_FILE_RAW | sort -u | cut -f2 -d' ' | grep '^[0-9]' > $LIST_FILE
-NEW_SUM="`md5sum $LIST_FILE`"
-
-# [[ "$OLD_SUM" == "$NEW_SUM" ]] && exit 0
-
-echo "## Bouncing firewall"
-# systemctl restart firewall
-firewall-cmd --reload
-firewall-cmd --permanent --new-ipset=bad_ips --type=hash:ip || true
-
-echo "## Adding bad actors"
-firewall-cmd --permanent --ipset=bad_ips --add-entries-from-file="$LIST_FILE"
-
-echo "## Exlude me"
-for var in 67.185.161.120
-do
-    firewall-cmd --permanent --ipset=bad_ips --remove-entry "$var" || true
-done
-
-echo "## Enable rejections"
-firewall-cmd --permanent --add-rich-rule='rule family="ipv4" source ipset="bad_ips" reject'
-
-echo "## Old count:"
-echo $OLD_COUNT
-
-echo "## New count:"
-firewall-cmd --ipset=bad_ips --get-entries | wc -l
-echo "`wc -l $LIST_FILE | awk '{print $1}'` `date`" >> $BANLOG_FILE
-
-firewall-cmd --ipset=bad_ips --get-entries > $LIST_FILE_RAW
