@@ -2,6 +2,16 @@
 # Ban script - blocks SSH brute-force attackers using firewall
 set -eo pipefail
 
+# Detect IP family (ipv4 or ipv6)
+get_ip_family() {
+    local ip="$1"
+    if [[ "$ip" == *":"* ]]; then
+        echo "ipv6"
+    else
+        echo "ipv4"
+    fi
+}
+
 if [ "$1" != "FULL" ]
 then
   opt="300 minutes ago"
@@ -17,7 +27,7 @@ LIST_FILE_TMP="${LIST_FILE}.bak"
 OLD_COUNT="$(fgrep -c 'from' "$LIST_FILE_RAW" 2>/dev/null || true)"
 
 echo "Finding bad actors"
-time journalctl -u sshd --since="${opt}" | fgrep 'Failed password' | fgrep ' from ' | egrep -o 'from [0-9\.]*' >> "$LIST_FILE_RAW"
+time journalctl -u sshd --since="${opt}" | fgrep 'Failed password' | fgrep ' from ' | grep -oE 'from ([0-9]{1,3}\.){3}[0-9]{1,3}|from ([0-9a-fA-F]{0,4}:){2,7}[0-9a-fA-F]{0,4}' >> "$LIST_FILE_RAW"
 sort -u "$LIST_FILE_RAW" | cut -f2 -d' ' > "$LIST_FILE"
 
 echo "Bouncing firewall"
@@ -29,9 +39,10 @@ echo "Adding bad actors"
 while IFS= read -r IP
 do
   if [[ "$MY_IP" != "$IP" ]]; then
+    family=$(get_ip_family "$IP")
     echo "  adding $IP"
     # iptables -w 60 -A IN_public_deny -s $IP -j REJECT
-    firewall-cmd --add-rich-rule="rule family='ipv4' source address='$IP' reject"
+    firewall-cmd --add-rich-rule="rule family='${family}' source address='$IP' reject"
   fi
 done < "$LIST_FILE"
 
