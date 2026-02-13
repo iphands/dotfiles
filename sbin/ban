@@ -2,6 +2,26 @@
 # Ban script - blocks SSH brute-force attackers using firewall
 set -eo pipefail
 
+# Constants for expiration
+MAX_AGE_DAYS=10
+SECONDS_PER_DAY=86400
+MAX_AGE_SECONDS=$((MAX_AGE_DAYS * SECONDS_PER_DAY))
+
+# File paths
+DB_FILE="/root/ban/badactors.db"
+BANLOG_FILE="/root/ban/.ban.log"
+MY_IP_FILE="/root/ban/myip.txt"
+
+# Old files to clean up (migration)
+OLD_LIST_FILE="/root/ban/.ip.list.txt"
+OLD_LIST_RAW="/root/ban/.ip.list.txt.raw"
+OLD_LIST_BAK="/root/ban/.ip.list.txt.bak"
+
+# Associative arrays for tracking IPs
+declare -A ip_last_seen
+declare -A ip_first_seen
+declare -A ip_hit_count
+
 # Detect IP family (ipv4 or ipv6)
 get_ip_family() {
     local ip="$1"
@@ -12,6 +32,66 @@ get_ip_family() {
     fi
 }
 
+# Load database from TSV file into associative arrays
+load_database() {
+    if [[ -f "$DB_FILE" ]]; then
+        while IFS=$'\t' read -r ip last first count; do
+            ip_last_seen["$ip"]="$last"
+            ip_first_seen["$ip"]="$first"
+            ip_hit_count["$ip"]="$count"
+        done < "$DB_FILE"
+    fi
+}
+
+# Save associative arrays to TSV file with atomic write
+save_database() {
+    local temp_file="${DB_FILE}.tmp.$$"
+    {
+        for ip in "${!ip_last_seen[@]}"; do
+            echo -e "${ip}\t${ip_last_seen[$ip]}\t${ip_first_seen[$ip]}\t${ip_hit_count[$ip]}"
+        done
+    } > "$temp_file"
+    mv "$temp_file" "$DB_FILE"
+}
+
+# Check if IP is older than MAX_AGE_DAYS
+is_expired() {
+    local ip="$1"
+    local now=$(date +%s)
+    local last_seen="${ip_last_seen[$ip]:-0}"
+    local age=$((now - last_seen))
+    [[ $age -gt $MAX_AGE_SECONDS ]]
+}
+
+# Add new IP or refresh existing IP's timestamp
+add_or_refresh_ip() {
+    local ip="$1"
+    local now=$(date +%s)
+    
+    if [[ -z "${ip_last_seen[$ip]}" ]]; then
+        # New IP
+        ip_last_seen["$ip"]="$now"
+        ip_first_seen["$ip"]="$now"
+        ip_hit_count["$ip"]="1"
+    else
+        # Existing IP - refresh timestamp and increment count
+        ip_last_seen["$ip"]="$now"
+        ip_hit_count["$ip"]=$((ip_hit_count[$ip] + 1))
+    fi
+}
+
+# Count non-expired IPs in database
+count_active_ips() {
+    local count=0
+    for ip in "${!ip_last_seen[@]}"; do
+        if ! is_expired "$ip"; then
+            ((count++))
+        fi
+    done
+    echo "$count"
+}
+
+# Parse command line arguments
 if [ "$1" != "FULL" ]
 then
   opt="300 minutes ago"
@@ -19,40 +99,53 @@ else
   opt="7 days ago"
 fi
 
-LIST_FILE="/root/ban/.ip.list.txt"
-BANLOG_FILE="/root/ban/.ban.log"
-LIST_FILE_RAW="${LIST_FILE}.raw"
-LIST_FILE_TMP="${LIST_FILE}.bak"
+# Load existing database
+load_database
 
-OLD_COUNT="$(fgrep -c 'from' "$LIST_FILE_RAW" 2>/dev/null || true)"
+# Get old count (non-expired IPs)
+OLD_COUNT=$(count_active_ips)
 
+# Find bad actors from journalctl
 echo "Finding bad actors"
-time journalctl -u sshd --since="${opt}" | fgrep 'Failed password' | fgrep ' from ' | grep -oE 'from ([0-9]{1,3}\.){3}[0-9]{1,3}|from ([0-9a-fA-F]{0,4}:){2,7}[0-9a-fA-F]{0,4}' >> "$LIST_FILE_RAW"
-sort -u "$LIST_FILE_RAW" | cut -f2 -d' ' > "$LIST_FILE"
+while IFS= read -r IP; do
+    [[ -n "$IP" ]] && add_or_refresh_ip "$IP"
+done < <(time journalctl -u sshd --since="${opt}" | fgrep 'Failed password' | fgrep ' from ' | grep -oE 'from ([0-9]{1,3}\.){3}[0-9]{1,3}|from ([0-9a-fA-F]{0,4}:){2,7}[0-9a-fA-F]{0,4}' | cut -f2 -d' ')
 
+# Save updated database
+save_database
+
+# Bounce firewall
 echo "Bouncing firewall"
-# systemctl restart firewall
 firewall-cmd --reload
 
-MY_IP=$(cat /root/ban/myip.txt)
-echo "Adding bad actors"
-while IFS= read -r IP
-do
-  if [[ "$MY_IP" != "$IP" ]]; then
-    family=$(get_ip_family "$IP")
-    echo "  adding $IP"
-    # iptables -w 60 -A IN_public_deny -s $IP -j REJECT
-    firewall-cmd --add-rich-rule="rule family='${family}' source address='$IP' reject"
-  fi
-done < "$LIST_FILE"
+# Get my IP
+MY_IP=$(cat "$MY_IP_FILE")
 
+# Add non-expired IPs to firewall
+echo "Adding bad actors"
+for ip in "${!ip_last_seen[@]}"; do
+    if ! is_expired "$ip"; then
+        if [[ "$MY_IP" != "$ip" ]]; then
+            family=$(get_ip_family "$ip")
+            echo "  adding $ip"
+            firewall-cmd --add-rich-rule="rule family='${family}' source address='$ip' reject"
+        fi
+    fi
+done
+
+# Log counts
 echo "Old count:"
 echo "$OLD_COUNT"
 
+NEW_COUNT=$(count_active_ips)
 echo "New count:"
-wc -l < "$LIST_FILE"
-echo "$(wc -l < "$LIST_FILE") $(date)" >> "$BANLOG_FILE"
+echo "$NEW_COUNT"
+echo "$NEW_COUNT $(date)" >> "$BANLOG_FILE"
 
-cp "$LIST_FILE_RAW" "$LIST_FILE_TMP"
-sort -u "$LIST_FILE_TMP" | fgrep -v 'from from' > "$LIST_FILE_RAW"
-rm "$LIST_FILE_TMP"
+# Clean up old files (one-time migration)
+for old_file in "$OLD_LIST_FILE" "$OLD_LIST_RAW" "$OLD_LIST_BAK"; do
+    if [[ -f "$old_file" ]]; then
+        echo "Removing old file: $old_file"
+        rm "$old_file"
+    fi
+done
