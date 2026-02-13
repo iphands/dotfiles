@@ -1,6 +1,6 @@
-;; -*- emacs-lisp -*- <14/03/27 10:40:52 /home/iphands/.emacs.d/tramp>
+;; -*- emacs-lisp -*- <26/02/08 16:53:22 ~/.emacs.d/tramp>
 ;; Tramp connection history.  Don't change this file.
-;; You can delete it, forcing Tramp to reapply the checks.
+;; Run `M-x tramp-cleanup-all-connections' instead.
 
-((["scpc" nil "xmlns" nil]
-  nil))
+(((tramp-file-name "cache" nil nil nil nil nil nil)
+  ("tramp-version" "2.7.3.30.2")))
