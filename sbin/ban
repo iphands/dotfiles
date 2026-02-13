@@ -1,6 +1,32 @@
 #!/bin/bash
 # Ban script - blocks SSH brute-force attackers using firewall
+#
+# Purpose:
+#   Scans journalctl for SSH failed password attempts and adds
+#   firewall rules to block offending IP addresses.
+#
+# Data format (badactors.db):
+#   IP<TAB>LAST_SEEN_EPOCH<TAB>FIRST_SEEN_EPOCH<TAB>HIT_COUNT
+#
+# Whitelist format (whitelist.txt):
+#   One entry per line: IP, IPv6, or hostname (resolved via getent)
+#
+# Usage:
+#   ./ban          # Scan last 300 minutes of logs
+#   ./ban FULL     # Scan last 7 days of logs
+#
 set -eo pipefail
+
+# Must run as root
+if [[ "$(id -u)" -ne 0 ]]; then
+    echo "Error: must run as root" >&2
+    exit 1
+fi
+
+# Prevent concurrent runs
+LOCK_FILE="/var/lock/ssh-ban.lock"
+exec 200>"$LOCK_FILE"
+flock -n 200 || { echo "Error: another instance is running" >&2; exit 1; }
 
 # Constants for expiration
 MAX_AGE_DAYS=10
@@ -32,6 +58,13 @@ get_ip_family() {
     else
         echo "ipv4"
     fi
+}
+
+# Check if string looks like a valid IP address
+is_valid_ip() {
+    local ip="$1"
+    # Basic check: contains only valid IP characters and is non-empty
+    [[ -n "$ip" && "$ip" =~ ^[0-9a-fA-F.:]+$ ]]
 }
 
 # Load database from TSV file into associative arrays
@@ -184,7 +217,7 @@ OLD_COUNT=$(count_active_ips)
 # Find bad actors from journalctl
 echo "Finding bad actors"
 while IFS= read -r IP; do
-    [[ -n "$IP" ]] && add_or_refresh_ip "$IP"
+    [[ -n "$IP" ]] && is_valid_ip "$IP" && add_or_refresh_ip "$IP"
 done < <(time journalctl -u sshd --since="${opt}" | fgrep 'Failed password' | fgrep ' from ' | grep -oE 'from ([0-9]{1,3}\.){3}[0-9]{1,3}|from ([0-9a-fA-F]{0,4}:){2,7}[0-9a-fA-F]{0,4}' | cut -f2 -d' ')
 
 # Save updated database
