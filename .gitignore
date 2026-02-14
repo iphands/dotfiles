@@ -7,11 +7,11 @@
 *.elc
 .\#*
 
-/.emacs.d/eln-cache/
-
-/.gitconfig-meta
-
 /.DS_Store
 /.emacs.d/ac-comphist.dat
+/.emacs.d/eln-cache/
 /.emacs.d/ido.last
 /.emacs.d/smex-items
+/.gitconfig-meta
+/.claude
+/.sisyphus
