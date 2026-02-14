@@ -9,6 +9,7 @@ host=unknown
 [[ "$HOSTNAME" =~ "PF5KC9XD" ]] && host=handslap
 [[ "$HOSTNAME" =~ "cosmo" ]] && host=cosmo
 [[ "$HOSTNAME" =~ "station" ]] && host=station
+[[ "$HOSTNAME" == "ahands.org" ]] && host=ahands
 
 echo
 echo "## Found host: $host"
@@ -31,13 +32,14 @@ install_host() {
   git_target=$1
   target=$2
   [[ "$host" == "unknown" ]] && return 0
+  [[ -d host/$host/$git_target ]] || return 0
 
   pushd host/$host/$git_target >/dev/null
-  mkdir -p ~/$target
+  mkdir -p $target
   for var in *
   do
-    echo "-- installing ~/$target/$var"
-    ln -nfs $PWD/$var ~/$target/$var
+    echo "-- installing $target/$var"
+    ln -nfs $PWD/$var $target/$var
   done
   popd >/dev/null
 }
@@ -84,9 +86,11 @@ fi
 
 echo
 echo "## Host specific"
-install_host fluxbox .fluxbox
-install_host labwc   .config/labwc
-install_host waybar  .config/waybar
+install_host fluxbox "${HOME}/.fluxbox"
+install_host labwc   "${HOME}/.config/labwc"
+install_host waybar  "${HOME}/.config/waybar"
+install_host fail2ban/jail    /etc/fail2ban/jail.d
+install_host fail2ban/filter /etc/fail2ban/filter.d
 
 echo
 echo "## Install sytemd"
