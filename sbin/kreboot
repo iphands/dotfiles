@@ -1,0 +1,34 @@
+#!/bin/bash
+set -e
+REQ_VER="$1"
+VERSION=$(ls /boot/vmlinuz* | sort -nu | tail -n1 | cut -d'-' -f2-)
+echo
+echo "## Setup"
+echo "- current: `uname -r`"
+echo "- found:   $VERSION"
+
+[[ "$REQ_VER" =~ "dry" ]] && {
+        echo "Dry run exit"
+        exit 0
+}
+
+[[ "$REQ_VER" != "" ]] && {
+        echo "- trying user version: $REQ_VER"
+}
+
+echo
+echo "## Stopping containers"
+time podman stop --all || time podman stop --all
+echo Done
+
+echo
+echo "## Syncing disks"
+sync
+sync &
+echo Done
+
+echo
+echo "## Rebooting into $VERSION"
+kexec -l /boot/vmlinuz-${VERSION} --initrd=/boot/initrd.img-${VERSION} --reuse-cmdline
+kexec -e
+echo Done
