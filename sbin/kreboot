@@ -1,34 +1,161 @@
 #!/bin/bash
-set -e
-REQ_VER="$1"
-VERSION=$(ls /boot/vmlinuz* | sort -nu | tail -n1 | cut -d'-' -f2-)
+# kreboot -- kexec into an installed kernel, stopping podman containers first.
+#
+# The kernel is loaded BEFORE anything is torn down: kexec -l is reversible
+# (kexec -u), podman stop --all is not. Loading first means a bad kernel path,
+# missing modules, or a kernel without CONFIG_KEXEC aborts cleanly instead of
+# leaving the machine with every container stopped and no reboot.
+
+set -euo pipefail
+shopt -s nullglob
+
+# kexec lives in /sbin, which is absent from an unprivileged PATH -- without
+# this, `kreboot --dry` as a normal user reports "kexec not installed".
+export PATH="/usr/sbin:/sbin:$PATH"
+
+DRY=0
+FAST=0
+FORCE=0
+REQ_VER=""
+
+die() { echo "ERROR: $*" >&2; exit 1; }
+
+usage() {
+	cat <<'EOF'
+usage: kreboot [--dry] [--fast] [--force] [VERSION]
+
+  VERSION   substring of an installed kernel, e.g. 6.12.85
+            omitted -> newest by version sort
+  --dry     show what would happen, change nothing
+  --fast    raw `kexec -e` instead of `systemctl kexec`
+            (skips unmount / remount-ro -- fast but dirty)
+  --force   boot even if /lib/modules/<release> is missing
+EOF
+}
+
+for arg in "$@"; do
+	case "$arg" in
+	--dry | -n | dry) DRY=1 ;;
+	--fast) FAST=1 ;;
+	--force) FORCE=1 ;;
+	-h | --help)
+		usage
+		exit 0
+		;;
+	-*) die "unknown flag: $arg" ;;
+	*) REQ_VER="$arg" ;;
+	esac
+done
+
+## Select the kernel
+# Note: NOT `ls | sort -n`. sort -n reads a leading number from each line, but
+# every line starts with /boot/, so every key is 0, every line compares equal,
+# and -u collapses them to one. sort -V is the only correct sort here.
+CANDIDATES=()
+for k in /boot/vmlinuz-*; do
+	[[ "$k" == *.old ]] && continue
+	[[ -f "$k" ]] && CANDIDATES+=("$k")
+done
+((${#CANDIDATES[@]})) || die "no kernels found in /boot"
+
+mapfile -t CANDIDATES < <(printf '%s\n' "${CANDIDATES[@]}" | sort -V -r)
+
+if [[ -n "$REQ_VER" ]]; then
+	MATCHES=()
+	for k in "${CANDIDATES[@]}"; do
+		[[ "$k" == *"$REQ_VER"* ]] && MATCHES+=("$k")
+	done
+	((${#MATCHES[@]})) || die "no kernel in /boot matching '$REQ_VER'"
+	if ((${#MATCHES[@]} > 1)); then
+		echo "ERROR: '$REQ_VER' is ambiguous, ${#MATCHES[@]} matches:" >&2
+		printf '     %s\n' "${MATCHES[@]#/boot/vmlinuz-}" >&2
+		exit 1
+	fi
+	CANDIDATES=("${MATCHES[@]}")
+fi
+
+KERNEL="${CANDIDATES[0]}"
+SUFFIX="${KERNEL#/boot/vmlinuz-}" # builds /boot paths
+RELEASE="${SUFFIX#linux-}"        # uname -r form; see kernel-helper fix_rename()
+INITRD="/boot/initrd.img-${SUFFIX}"
+
+## Preflight -- everything that can fail, before anything is touched
+# (--dry stays usable as a normal user, so the root check is the one exception)
+((DRY || EUID == 0)) || die "must run as root"
+command -v kexec >/dev/null || die "kexec not installed"
+[[ -e /sys/kernel/kexec_loaded ]] ||
+	die "kexec unsupported in $(uname -r) (CONFIG_KEXEC not set)"
+[[ -r "$KERNEL" ]] || die "cannot read $KERNEL"
+
+if [[ ! -d "/lib/modules/${RELEASE}" ]]; then
+	((FORCE)) || die "/lib/modules/${RELEASE} missing -- no modules for this kernel (--force to override)"
+	echo "WARNING: /lib/modules/${RELEASE} missing, continuing anyway (--force)"
+fi
+
+[[ "$RELEASE" == "$(uname -r)" ]] &&
+	echo "WARNING: selected kernel is already running"
+
+KEXEC_ARGS=("$KERNEL")
+# Gentoo hosts here boot monolithic with no initramfs at all; Debian always has one.
+if [[ -f "$INITRD" ]]; then
+	KEXEC_ARGS+=(--initrd="$INITRD")
+	INITRD_DESC="$INITRD"
+else
+	INITRD_DESC="(none)"
+fi
+KEXEC_ARGS+=(--reuse-cmdline)
+
+if ((FAST)); then
+	JUMP="kexec -e"
+	JUMP_DESC="kexec -e (fast, no unmount)"
+else
+	JUMP="systemctl kexec"
+	JUMP_DESC="systemctl kexec (clean)"
+fi
+
 echo
 echo "## Setup"
-echo "- current: `uname -r`"
-echo "- found:   $VERSION"
+echo "- current: $(uname -r)"
+echo "- booting: $RELEASE"
+echo "- kernel:  $KERNEL"
+echo "- initrd:  $INITRD_DESC"
+echo "- mode:    $JUMP_DESC"
 
-[[ "$REQ_VER" =~ "dry" ]] && {
-        echo "Dry run exit"
-        exit 0
+((DRY)) && {
+	echo
+	echo "## Dry run, would execute:"
+	echo "kexec -l ${KEXEC_ARGS[*]}"
+	echo "$JUMP"
+	exit 0
 }
 
-[[ "$REQ_VER" != "" ]] && {
-        echo "- trying user version: $REQ_VER"
-}
+echo
+echo "## Loading kernel"
+kexec -l "${KEXEC_ARGS[@]}"
+[[ "$(</sys/kernel/kexec_loaded)" == "1" ]] || die "kexec -l reported success but no kernel is loaded"
+# From here on, a failure must unload the staged kernel rather than leave it primed.
+trap 'echo "aborting, unloading kernel"; kexec -u || true' ERR INT TERM
+echo Done
 
 echo
 echo "## Stopping containers"
-time podman stop --all || time podman stop --all
+time podman stop --all -t 30 || time podman stop --all -t 10
 echo Done
 
 echo
 echo "## Syncing disks"
 sync
-sync &
 echo Done
 
 echo
-echo "## Rebooting into $VERSION"
-kexec -l /boot/vmlinuz-${VERSION} --initrd=/boot/initrd.img-${VERSION} --reuse-cmdline
-kexec -e
-echo Done
+echo "## Rebooting into $RELEASE"
+trap - ERR INT TERM
+if ((FAST)); then
+	kexec -e || true
+else
+	systemctl kexec || true
+fi
+
+# Neither jump returns on success. Reaching here means the reboot failed while
+# the containers are already down, so say exactly what state the box is in.
+die "reboot failed -- kernel is still staged ('kexec -u' to cancel), containers are stopped"
