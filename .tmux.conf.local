@@ -5,6 +5,10 @@
 #         Copyright 2012— Gregory Pakosz (@gpakosz).
 
 
+set -g @plugin 'tmux-plugins/tmux-resurrect'
+set -g @plugin 'tmux-plugins/tpm'
+run '~/.tmux/plugins/tpm/tpm'
+
 # ==============================================================================
 # KEYBINDINGS
 # ==============================================================================
