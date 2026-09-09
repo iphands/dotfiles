@@ -53,7 +53,7 @@
 	<item label="Chrome"><action name="Execute" command="~/bin/browser" /></item>
 	<item label="Alacritty"><action name="Execute" command="alacritty" /></item>
 	<item label="Lutris"><action name="Execute" command="flatpak run net.lutris.Lutris" /></item>
-	<item label="Steam"><action name="Execute" icon="steam" command="steam" /></item>
+	<item label="Steam" icon="steam"><action name="Execute" command="steam" /></item>
 	<separator />
 	<item label="Reconfigure">
 	    <action name="Reconfigure" />
