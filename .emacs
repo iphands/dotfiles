@@ -75,7 +75,7 @@
  '(help-at-pt-display-when-idle '(flymake-overlay) nil (help-at-pt))
  '(help-at-pt-timer-delay 1.5)
  '(inhibit-startup-screen t)
- '(js-indent-level 2)
+ '(js-indent-level 2 t)
  '(js2-basic-offset 2)
  '(js2-bounce-indent-p t)
  '(package-selected-packages
@@ -88,14 +88,15 @@
            flymake-jshint flymake-json flymake-shellcheck fzf
            git-modes go-eldoc go-imenu go-mode groovy-mode helm
            helm-git helm-go-package helm-ls-git highline
-           js2-highlight-vars js2-mode json-mode json-rpc kotlin-mode
-           lineno lsp-mode lsp-pyre lsp-python-ms lsp-ui lua-mode
-           magit magit-filenotify magit-find-file markdown-mode+
-           move-text multiple-cursors neotree nginx-mode phi-rectangle
-           php-mode powershell prettier protobuf-mode puppet-mode
-           puppetfile-mode racer rjsx-mode rust-mode rustic sass-mode
-           smex systemd tide toml-mode typescript-mode web-mode
-           xref-js2 yafolding yaml-mode yasnippet)))
+           js2-highlight-vars js2-mode json-mode json-rpc just-mode
+           kotlin-mode lineno lsp-mode lsp-pyre lsp-python-ms lsp-ui
+           lua-mode magit magit-filenotify magit-find-file
+           markdown-mode+ move-text multiple-cursors neotree
+           nginx-mode phi-rectangle php-mode powershell prettier
+           protobuf-mode puppet-mode puppetfile-mode racer rjsx-mode
+           rust-mode rustic sass-mode smex systemd tide toml-mode
+           typescript-mode web-mode xref-js2 yafolding yaml-mode
+           yasnippet)))
 
 ;; fzf
 ;; (setq fzf/directory-start "~/j/cloudbridge")
