@@ -15,3 +15,6 @@
 /.gitconfig-meta
 /.claude
 /.sisyphus
+/tmp
+**/.claude/settings.local.json
+**/.omo
