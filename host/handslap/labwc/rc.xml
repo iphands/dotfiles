@@ -39,6 +39,9 @@
 				<keybind key="A-F11"><action name="Execute" command="~/bin/sleep-loop" /></keybind>
 				<keybind key="A-F12"><action name="Execute" command="swaylock -f -c 220033" /></keybind>
 
+				<keybind key="XF86MonBrightnessUp"><action name="Execute" command="~/bin/brightness up" /></keybind>
+				<keybind key="XF86MonBrightnessDown"><action name="Execute" command="~/bin/brightness down" /></keybind>
+
 				<keybind key="C-F1"><action name="GoToDesktop" to="1" /></keybind>
 				<keybind key="C-F2"><action name="GoToDesktop" to="2" /></keybind>
 				<keybind key="C-F3"><action name="GoToDesktop" to="3" /></keybind>
