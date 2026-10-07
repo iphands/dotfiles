@@ -12,7 +12,7 @@ MON_WORK_ONE_ID=73GTT81Q441L
 MON_WORK_TWO_ID=73GTT69MA1DL
 MON_HOME_ID=Sony
 
-wlr-randr --output eDP-1 --scale 1.5
+wlr-randr --output eDP-1 --scale 1.5 --mode 2880x1800@60
 
 _check() {
   if [[ $1 == "" ]]
