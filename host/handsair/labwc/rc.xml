@@ -78,7 +78,7 @@
 		<libinput>
 				<device category="default">
 						<tap>no</tap>
-						<naturalScroll>yes</naturalScroll>
+						<naturalScroll>no</naturalScroll>
 				</device>
 		</libinput>
 </labwc_config>
