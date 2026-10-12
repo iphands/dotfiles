@@ -5,6 +5,7 @@ TYPE=$(loginctl show-session "$ID" -p Type)
 [[ "$TYPE" =~ "wayland" ]] && {
   google-chrome-stable \
     --enable-features=UseOzonePlatform,WaylandWindowDecorations,AcceleratedVideoEncoder,AcceleratedVideoDecodeLinuxGL \
+    --disable-features=NativeNotifications \
     --force-device-scale-factor=1 \
     --ozone-platform=wayland \
     --disable-features=SendMouseLeaveEvents \
