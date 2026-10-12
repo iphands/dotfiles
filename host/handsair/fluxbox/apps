@@ -1,0 +1,13 @@
+[app] (name=fbrun)
+  [Position]	(CENTER)	{0 0}
+  [Layer]	{2}
+[end]
+[app] (name=xosview) (class=XOsview)
+  [Sticky]	{yes}
+[end]
+[app] (name=google-chrome) (class=google-chrome) (role=pop-up)
+  [Head]	{1}
+[end]
+[app] (name=randy) (class=Randy)
+  [Layer]	{12}
+[end]

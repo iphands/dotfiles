@@ -1,0 +1,84 @@
+<?xml version="1.0"?>
+<labwc_config>
+    <theme>
+				<name>Lean</name>
+				<cornerRadius>4</cornerRadius>
+				<font name="RedHatText" size="12" />
+    </theme>
+    <margin top="5" bottom="5" left="5" right="5" output="" />
+    <desktops number="4">
+				<popupTime>200</popupTime>
+    </desktops>
+    <resize>
+				<popupShow>Always</popupShow>
+				<drawContents>no</drawContents>
+    </resize>
+    <windowSwitcher preview="yes" outlines="yes">
+				<osd show="yes" />
+				<fields>
+						<field content="icon" width="10%" />
+						<field content="custom" format="%b | %n -> %T" width="90%" />
+				</fields>
+    </windowSwitcher>
+    <windowRules>
+				<windowRule title="Randy" serverDecoration="no" skipTaskbar="yes" skipWindowSwitcher="yes" ignoreFocusRequest="no" fixedPosition="no">
+						<action name="ToggleAlwaysOnBottom" />
+						<action name="toggleOmnipresent" />
+						<action name="MoveToEdge" direction="up" snapWindows="no" />
+						<action name="MoveToEdge" direction="right" snapWindows="no" />
+				</windowRule>
+    </windowRules>
+    <keyboard>
+				<default />
+				<keybind key="W-r"><action name="Execute" command="~/bin/menu" /></keybind>
+
+				<!-- Mac style Cmd-Tab (Alt-Tab still comes from default) -->
+				<keybind key="W-Tab"><action name="NextWindow" workspace="current" /></keybind>
+				<keybind key="W-S-Tab"><action name="PreviousWindow" workspace="current" /></keybind>
+
+				<keybind key="A-Left"><action name="None" /></keybind>
+				<keybind key="A-Right"><action name="None" /></keybind>
+
+				<keybind key="A-F7"><action name="Execute" command="~/bin/i-screenshot" /></keybind>
+				<keybind key="A-F10"><action name="ToggleMaximize" /></keybind>
+				<keybind key="A-F11"><action name="Execute" command="~/bin/sleep-loop" /></keybind>
+				<keybind key="A-F12"><action name="Execute" command="swaylock -f -c 220033" /></keybind>
+
+				<!-- M2 top row (hid_apple fnmode=2: hold Fn, which is the physical Ctrl key) -->
+				<keybind key="XF86MonBrightnessDown"><action name="Execute" command="~/bin/brightness down" /></keybind>
+				<keybind key="XF86MonBrightnessUp"><action name="Execute" command="~/bin/brightness up" /></keybind>
+				<keybind key="XF86LaunchA"><action name="Execute" command="~/bin/i-screenshot" /></keybind>
+				<keybind key="XF86Search"><action name="Execute" command="~/bin/menu" /></keybind>
+				<keybind key="XF86AudioMicMute"><action name="Execute" command="~/bin/i-toggle-mute" /></keybind>
+				<keybind key="XF86Sleep"><action name="Execute" command="swaylock -f -c 220033" /></keybind>
+				<keybind key="XF86AudioPrev"><action name="Execute" command="playerctl previous" /></keybind>
+				<keybind key="XF86AudioPlay"><action name="Execute" command="playerctl play-pause" /></keybind>
+				<keybind key="XF86AudioNext"><action name="Execute" command="playerctl next" /></keybind>
+				<keybind key="XF86AudioMute"><action name="Execute" command="wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle" /></keybind>
+				<keybind key="XF86AudioLowerVolume"><action name="Execute" command="wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-" /></keybind>
+				<keybind key="XF86AudioRaiseVolume"><action name="Execute" command="wpctl set-volume -l 1.0 @DEFAULT_AUDIO_SINK@ 5%+" /></keybind>
+
+				<!-- No kbd backlight keys on the M2 Air -->
+				<keybind key="A-F1"><action name="Execute" command="~/bin/brightness kbd-down" /></keybind>
+				<keybind key="A-F2"><action name="Execute" command="~/bin/brightness kbd-up" /></keybind>
+
+				<keybind key="C-F1"><action name="GoToDesktop" to="1" /></keybind>
+				<keybind key="C-F2"><action name="GoToDesktop" to="2" /></keybind>
+				<keybind key="C-F3"><action name="GoToDesktop" to="3" /></keybind>
+				<keybind key="C-F4"><action name="GoToDesktop" to="4" /></keybind>
+
+				<keybind key="W-F1"><action name="SendToDesktop" to="1" /></keybind>
+				<keybind key="W-F2"><action name="SendToDesktop" to="2" /></keybind>
+				<keybind key="W-F3"><action name="SendToDesktop" to="3" /></keybind>
+				<keybind key="W-F4"><action name="SendToDesktop" to="4" /></keybind>
+    </keyboard>
+    <mouse>
+				<default />
+    </mouse>
+		<libinput>
+				<device category="default">
+						<tap>no</tap>
+						<naturalScroll>yes</naturalScroll>
+				</device>
+		</libinput>
+</labwc_config>

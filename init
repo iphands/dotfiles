@@ -10,6 +10,7 @@ host=unknown
 [[ "$HOSTNAME" =~ "cosmo" ]] && host=cosmo
 [[ "$HOSTNAME" =~ "station" ]] && host=station
 [[ "$HOSTNAME" == "ahands.org" ]] && host=ahands
+[[ "$HOSTNAME" == "handsair" ]] && host=handsair
 
 echo
 echo "## Found host: $host"
