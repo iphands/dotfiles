@@ -1,0 +1,28 @@
+#!/bin/bash
+# brightness up|down|kbd-up|kbd-down
+# Screen steps get finer as brightness approaches 0, and never hit 0 (black)
+
+DEV=""
+[[ -e /sys/class/backlight/apple-panel-bl ]] && DEV="-d apple-panel-bl"
+
+function pct() {
+    local cur=$(brightnessctl $DEV get)
+    local max=$(brightnessctl $DEV max)
+    echo $(( cur * 100 / max ))
+}
+
+function step() {
+    local p=$(pct)
+    if   (( p < 10 )); then echo 1
+    elif (( p < 25 )); then echo 2
+    else echo 5
+    fi
+}
+
+case $1 in
+    up)       brightnessctl -q $DEV set "$(step)%+" ;;
+    down)     brightnessctl -q $DEV -n1 set "$(step)%-" ;;
+    kbd-up)   brightnessctl -q -d kbd_backlight set 10%+ ;;
+    kbd-down) brightnessctl -q -d kbd_backlight set 10%- ;;
+    *) echo "usage: $0 up|down|kbd-up|kbd-down" >&2; exit 1 ;;
+esac
