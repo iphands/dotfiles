@@ -1,5 +1,5 @@
 #!/bin/bash
-# brightness up|down|kbd-up|kbd-down
+# brightness up|down|kbd-up|kbd-down|kbd-cycle
 # Screen steps get finer as brightness approaches 0, and never hit 0 (black)
 
 DEV=""
@@ -24,5 +24,13 @@ case $1 in
     down)     brightnessctl -q $DEV -n1 set "$(step)%-" ;;
     kbd-up)   brightnessctl -q -d kbd_backlight set 10%+ ;;
     kbd-down) brightnessctl -q -d kbd_backlight set 10%- ;;
-    *) echo "usage: $0 up|down|kbd-up|kbd-down" >&2; exit 1 ;;
+    kbd-cycle)
+        levels=(0 1 5 10 51 100)
+        cur=$(brightnessctl -d kbd_backlight get)
+        next=0
+        for l in "${levels[@]}"; do
+            (( l > cur )) && { next=$l; break; }
+        done
+        brightnessctl -q -d kbd_backlight set "$next" ;;
+    *) echo "usage: $0 up|down|kbd-up|kbd-down|kbd-cycle" >&2; exit 1 ;;
 esac

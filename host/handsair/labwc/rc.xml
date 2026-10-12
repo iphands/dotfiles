@@ -61,6 +61,7 @@
 				<!-- No kbd backlight keys on the M2 Air -->
 				<keybind key="A-F1"><action name="Execute" command="~/bin/brightness kbd-down" /></keybind>
 				<keybind key="A-F2"><action name="Execute" command="~/bin/brightness kbd-up" /></keybind>
+				<keybind key="W-space"><action name="Execute" command="~/bin/brightness kbd-cycle" /></keybind>
 
 				<keybind key="C-F1"><action name="GoToDesktop" to="1" /></keybind>
 				<keybind key="C-F2"><action name="GoToDesktop" to="2" /></keybind>
