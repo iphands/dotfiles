@@ -64,14 +64,14 @@
 				<keybind key="W-space"><action name="Execute" command="~/bin/brightness kbd-cycle" /></keybind>
 
 				<keybind key="C-F1"><action name="GoToDesktop" to="1" /></keybind>
-				<keybind key="C-F2"><action name="GoToDesktop" to="2" /></keybind>
-				<keybind key="C-F3"><action name="GoToDesktop" to="3" /></keybind>
-				<keybind key="C-F4"><action name="GoToDesktop" to="4" /></keybind>
+				<!-- <keybind key="C-F2"><action name="GoToDesktop" to="2" /></keybind> -->
+				<!-- <keybind key="C-F3"><action name="GoToDesktop" to="3" /></keybind> -->
+				<!-- <keybind key="C-F4"><action name="GoToDesktop" to="4" /></keybind> -->
 
 				<keybind key="W-F1"><action name="SendToDesktop" to="1" /></keybind>
-				<keybind key="W-F2"><action name="SendToDesktop" to="2" /></keybind>
-				<keybind key="W-F3"><action name="SendToDesktop" to="3" /></keybind>
-				<keybind key="W-F4"><action name="SendToDesktop" to="4" /></keybind>
+				<!-- <keybind key="W-F2"><action name="SendToDesktop" to="2" /></keybind> -->
+				<!-- <keybind key="W-F3"><action name="SendToDesktop" to="3" /></keybind> -->
+				<!-- <keybind key="W-F4"><action name="SendToDesktop" to="4" /></keybind> -->
     </keyboard>
     <mouse>
 				<default />
