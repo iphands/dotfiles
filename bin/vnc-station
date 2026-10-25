@@ -1,12 +1,16 @@
 #!/bin/bash
 set -e
 
-ssh root@station.lan su - merozas "bash -c 'XDG_RUNTIME_DIR=/run/user/1001 wayvnc debug 0.0.0.0'" &
-sleep 0.250
-vncviewer station.lan -CompressLevel 0 -CustomCompressLevel 1 -QualityLevel 0 -AutoSelect 1
+# wayvnc listens on station's loopback only; reach it through an ssh tunnel on local :5901
+# (5901 so it doesn't collide with vnc-adrian's wayvnc on cosmo's :5900)
+ssh -o ExitOnForwardFailure=yes -L 5901:127.0.0.1:5900 root@station.lan su - merozas "bash -c 'XDG_RUNTIME_DIR=/run/user/1001 WAYLAND_DISPLAY=wayland-0 wayvnc -Ldebug 127.0.0.1'" &
+# station's wayvnc (0.9.x) has no --exit-on-disconnect, so always kill it on the way out
+trap "ssh root@station.lan runuser -u merozas -- killall -q wayvnc || true" EXIT
 
-for job in `jobs -p`
-do
-  wait $job
+# wait up to ~5s for wayvnc to listen on station
+for _ in $(seq 20); do
+  [ -n "$(ssh root@station.lan "ss -Hltn 'sport = :5900'")" ] && break
+  sleep 0.25
 done
-ssh root@station.lan runuser -u merozas -- 'killall wayvnc'
+
+vncviewer 127.0.0.1::5901 -CompressLevel 0 -CustomCompressLevel 1 -QualityLevel 0 -AutoSelect 1
