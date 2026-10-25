@@ -1,12 +1,14 @@
 #!/bin/bash
 set -e
 
-ssh merozas@cosmo.lan 'x0vncserver -SecurityTypes None -display :1' &
-sleep 0.250
-vncviewer localhost -CompressLevel 0 -CustomCompressLevel 1 -QualityLevel 0 -AutoSelect 1
+# Adrian's labwc session lives on seat1 of cosmo, so wayvnc runs here as merozas
+ssh merozas@cosmo.lan 'XDG_RUNTIME_DIR=/run/user/1001 WAYLAND_DISPLAY=wayland-0 wayvnc -e -Ldebug 127.0.0.1' &
+trap "ssh merozas@cosmo.lan 'killall -q wayvnc' || true" EXIT
 
-for job in `jobs -p`
-do
-  wait $job
+# wait up to 5s for wayvnc to listen (don't probe with a connect, -e would exit on the disconnect)
+for _ in $(seq 50); do
+  [ -n "$(ss -Hltn 'sport = :5900')" ] && break
+  sleep 0.1
 done
-ssh root@station.lan runuser -u merozas -- 'killall x0vncserver'
+
+vncviewer 127.0.0.1 -CompressLevel 0 -CustomCompressLevel 1 -QualityLevel 0 -AutoSelect 1
