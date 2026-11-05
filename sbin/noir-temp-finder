@@ -1,0 +1,226 @@
+#!/bin/bash
+# temp_find.sh — find the lowest iDRAC fan speed that holds CPU package temp
+# <= TARGET_C under sustained full sysbench load.
+#
+# Starts at START_SPEED (default 0x1b) and bumps by one step at a time.
+# At each speed:
+#   1. settle:  poll sensors until temps are stable (spread <= SPREAD_C over WINDOW_SECS,
+#               after at least MIN_DWELL secs), or MAX_DWELL elapses.
+#               If temp ever hits ABORT_C (100C), the speed is marked HOT and we bump immediately.
+#   2. measure: once settled, record low/avg/high for MEASURE_SECS.
+#               If high <= TARGET_C (and never hit ABORT_C) → done, that's the speed.
+#
+# Two sysbench loads run continuously in parallel in the background (each restarted if it
+# finishes or dies): a CPU test (THREADS) and a memory test (MEM_THREADS).
+# On exit (done, error, Ctrl-C) both are stopped and fans are restored via ~/sbin/fan-fix-noir.
+#
+# Usage:   ~/incoming/temp_find.sh [start_hex]
+# Tunables (env): TARGET_C ABORT_C POLL_SECS WINDOW_SECS SPREAD_C MIN_DWELL MAX_DWELL
+#                 MEASURE_SECS MAX_SPEED THREADS SB_TIME MEM_THREADS MEM_BLOCK MEM_TOTAL
+
+set -u
+
+START_SPEED=${1:-0x1b}
+TARGET_C=${TARGET_C:-85}           # success if measured high <= this
+ABORT_C=${ABORT_C:-100}            # temp at/above this → speed fails, bump now
+POLL_SECS=${POLL_SECS:-5}
+WINDOW_SECS=${WINDOW_SECS:-120}    # stability window
+SPREAD_C=${SPREAD_C:-2}            # stable when (max - min) over window <= this
+MIN_DWELL=${MIN_DWELL:-60}         # min secs at a speed before it can count as stable
+MAX_DWELL=${MAX_DWELL:-120}        # stop waiting for stability after this, measure anyway
+MEASURE_SECS=${MEASURE_SECS:-90 }  # measurement period after settling
+MAX_SPEED=${MAX_SPEED:-0x64}       # never go above this (0x64 = 100%)
+THREADS=${THREADS:-20}
+SB_TIME=${SB_TIME:-1900}
+MEM_THREADS=${MEM_THREADS:-10}
+MEM_BLOCK=${MEM_BLOCK:-1M}
+MEM_TOTAL=${MEM_TOTAL:-100T}
+
+CPU_CMD=(sysbench --threads="$THREADS" --time="$SB_TIME" cpu run)
+MEM_CMD=(sysbench --threads="$MEM_THREADS" --time="$SB_TIME" --memory-block-size="$MEM_BLOCK" --memory-total-size="$MEM_TOTAL" memory run)
+
+IDRAC=noir-idrac.lan
+OUTDIR=~/incoming
+STAMP=$(date +%Y%m%d-%H%M%S)
+RESULTS=$OUTDIR/temp_find_results_$STAMP.csv
+SAMPLES=$OUTDIR/temp_find_samples_$STAMP.csv
+LOG=$OUTDIR/temp_find_$STAMP.log
+
+# shellcheck disable=SC1090
+source ~/.ipmi_pass   # provides PASS
+: "${PASS:?PASS not set by ~/.ipmi_pass}"
+
+CPU_PID=""
+MEM_PID=""
+CUR_SPEED="(unset)"
+
+log() { echo "$(date '+%F %T') $*" | tee -a "$LOG"; }
+
+ipmi_raw() { ipmitool -I lanplus -U root -P "$PASS" -H "$IDRAC" raw "$@" >/dev/null 2>&1; }
+
+set_fan() {
+  local spd=$1 try
+  for try in 1 2 3; do
+    if ipmi_raw 0x30 0x30 0x01 0x00 && ipmi_raw 0x30 0x30 0x02 0xff "$spd"; then
+      CUR_SPEED=$spd
+      return 0
+    fi
+    log "WARN: ipmitool failed setting $spd (attempt $try)"
+    sleep 2
+  done
+  log "ERROR: could not set fan speed to $spd"
+  return 1
+}
+
+# Hottest "Package id N" reading, as a number (e.g. 83.0)
+read_temp() {
+  sensors 2>/dev/null | awk '
+    BEGIN { m = -1 }
+    /^Package id/ { t = $4; gsub(/[^0-9.]/, "", t); if (t + 0 > m) m = t + 0 }
+    END { if (m < 0) exit 1; printf "%.1f\n", m }'
+}
+
+# stats v1 v2 ... → "low avg high spread"
+stats() {
+  printf '%s\n' "$@" | awk '
+    NR == 1 { lo = hi = $1 }
+    { s += $1; if ($1 < lo) lo = $1; if ($1 > hi) hi = $1 }
+    END { printf "%.1f %.1f %.1f %.1f\n", lo, s / NR, hi, hi - lo }'
+}
+
+ge() { awk -v a="$1" -v b="$2" 'BEGIN { exit !(a >= b) }'; }
+le() { awk -v a="$1" -v b="$2" 'BEGIN { exit !(a <= b) }'; }
+fmax() { awk -v a="$1" -v b="$2" 'BEGIN { print (a > b ? a : b) }'; }
+
+# Each load runs in its own restart loop so it stays up for the whole test.
+start_cpu() { ( while :; do "${CPU_CMD[@]}" >/dev/null 2>&1; sleep 1; done ) & CPU_PID=$!; }
+start_mem() { ( while :; do "${MEM_CMD[@]}" >/dev/null 2>&1; sleep 1; done ) & MEM_PID=$!; }
+
+start_load() { start_cpu; start_mem; }
+
+# Called every poll: restart a load loop if it has died, and warn if its sysbench is missing.
+ensure_load() {
+  kill -0 "$CPU_PID" 2>/dev/null || { log "WARN: CPU load loop died, restarting"; start_cpu; }
+  kill -0 "$MEM_PID" 2>/dev/null || { log "WARN: memory load loop died, restarting"; start_mem; }
+  pgrep -f -x "${CPU_CMD[*]}" >/dev/null || log "WARN: sysbench cpu not running (loop restarting it)"
+  pgrep -f -x "${MEM_CMD[*]}" >/dev/null || log "WARN: sysbench memory not running (loop restarting it)"
+}
+
+cleanup() {
+  trap - EXIT INT TERM
+  log "Cleaning up: stopping sysbench (cpu + memory)"
+  # Kill the restart loops first so they can't respawn, then the sysbench processes.
+  [[ -n $CPU_PID ]] && kill "$CPU_PID" 2>/dev/null
+  [[ -n $MEM_PID ]] && kill "$MEM_PID" 2>/dev/null
+  pkill -f -x "${CPU_CMD[*]}" 2>/dev/null
+  pkill -f -x "${MEM_CMD[*]}" 2>/dev/null
+  log "Restoring fans with ~/sbin/fan-fix-noir (last test speed was $CUR_SPEED)"
+  ~/sbin/fan-fix-noir >/dev/null 2>&1 || log "WARNING: fan-fix-noir failed — fans left at $CUR_SPEED"
+  log "Results: $RESULTS"
+  log "Samples: $SAMPLES"
+}
+trap cleanup EXIT
+trap 'log "Interrupted"; exit 130' INT TERM
+
+record() {  # status secs low avg high peak
+  local hex=$1; shift
+  printf '%s,%s,%d,%s,%s,%s,%s,%s,%s\n' "$(date '+%F %T')" "$hex" "$((hex))" "$@" >> "$RESULTS"
+}
+
+# ---------------------------------------------------------------------------
+
+command -v sysbench >/dev/null || { echo "sysbench not found"; exit 1; }
+read_temp >/dev/null || { echo "Could not read 'Package id' from sensors"; exit 1; }
+
+WIN_N=$(( WINDOW_SECS / POLL_SECS ))
+spd=$((START_SPEED))
+max_spd=$((MAX_SPEED))
+
+echo "timestamp,speed_hex,speed_pct,status,secs_at_speed,low_c,avg_c,high_c,peak_c" > "$RESULTS"
+echo "timestamp,speed_hex,phase,temp_c" > "$SAMPLES"
+
+log "Start speed $(printf '0x%02x' "$spd"), target <= ${TARGET_C}C sustained, abort at ${ABORT_C}C"
+log "Starting sysbench cpu:    ${CPU_CMD[*]}"
+log "Starting sysbench memory: ${MEM_CMD[*]}"
+start_load
+
+found=""
+while (( spd <= max_spd )); do
+  hex=$(printf '0x%02x' "$spd")
+  set_fan "$hex" || exit 1
+  log "=== Fan $hex ($((spd))%) ==="
+
+  step_start=$SECONDS
+  peak=0
+  status=""
+  win=()
+
+  # --- Phase 1: settle -----------------------------------------------------
+  while :; do
+    sleep "$POLL_SECS"
+    ensure_load
+    t=$(read_temp) || { log "WARN: sensor read failed"; continue; }
+    elapsed=$(( SECONDS - step_start ))
+    echo "$(date '+%F %T'),$hex,settle,$t" >> "$SAMPLES"
+    peak=$(fmax "$peak" "$t")
+
+    if ge "$t" "$ABORT_C"; then
+      status=HOT
+      log "  ${t}C >= ${ABORT_C}C after ${elapsed}s — bumping fan"
+      break
+    fi
+
+    win+=("$t")
+    (( ${#win[@]} > WIN_N )) && win=("${win[@]:1}")
+    read -r lo avg hi spread <<< "$(stats "${win[@]}")"
+    log "  settle ${elapsed}s  now=${t}C  window lo/avg/hi=${lo}/${avg}/${hi}  spread=${spread}"
+
+    if (( elapsed >= MIN_DWELL && ${#win[@]} >= WIN_N )) && le "$spread" "$SPREAD_C"; then
+      status=STABLE; break
+    fi
+    if (( elapsed >= MAX_DWELL )); then
+      status=UNSTABLE
+      log "  not stable after ${MAX_DWELL}s, measuring anyway"
+      break
+    fi
+  done
+
+  if [[ $status == HOT ]]; then
+    read -r lo avg hi _ <<< "$(stats "${win[@]:-$peak}")"
+    record "$hex" HOT "$(( SECONDS - step_start ))" "$lo" "$avg" "$hi" "$peak"
+    spd=$(( spd + 1 ))
+    continue
+  fi
+
+  # --- Phase 2: measure ----------------------------------------------------
+  log "  $status — measuring for ${MEASURE_SECS}s"
+  meas=()
+  m_start=$SECONDS
+  while (( SECONDS - m_start < MEASURE_SECS )); do
+    sleep "$POLL_SECS"
+    ensure_load
+    t=$(read_temp) || { log "WARN: sensor read failed"; continue; }
+    echo "$(date '+%F %T'),$hex,measure,$t" >> "$SAMPLES"
+    meas+=("$t")
+    peak=$(fmax "$peak" "$t")
+    if ge "$t" "$ABORT_C"; then
+      status=HOT
+      log "  ${t}C >= ${ABORT_C}C during measure — bumping fan"
+      break
+    fi
+  done
+
+  read -r lo avg hi _ <<< "$(stats "${meas[@]:-$peak}")"
+  record "$hex" "$status" "$(( SECONDS - step_start ))" "$lo" "$avg" "$hi" "$peak"
+  log "  RESULT $hex: low=${lo} avg=${avg} high=${hi} peak=${peak} ($status)"
+
+  if [[ $status != HOT ]] && le "$hi" "$TARGET_C"; then
+    found=$hex
+    log "*** $hex holds <= ${TARGET_C}C sustained (high ${hi}C, avg ${avg}C) ***"
+    break
+  fi
+  spd=$(( spd + 1 ))
+done
+
+[[ -z $found ]] && log "Reached MAX_SPEED $MAX_SPEED without holding <= ${TARGET_C}C"
+exit 0
