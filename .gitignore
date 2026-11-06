@@ -8,10 +8,12 @@
 .\#*
 
 /.DS_Store
-# Emacs state is NOT listed here any more: this file is also core.excludesfile
-# (see .gitconfig), so repo-local patterns here are inert in every other repo
-# while still being maintained like they mattered. The ~/.emacs.d tier boundary
-# lives in .emacs.d/.gitignore.
+# Emacs config is emacs/ (authored only); ./init symlinks it into a REAL
+# ~/.emacs.d and nothing under .emacs.d is tracked. This line only hides the
+# leftover .emacs.d/ on a host that pulled but has not run ./init yet (init
+# moves it out). Anchored because this file is also core.excludesfile (see
+# .gitconfig) and is read by every repo.
+/.emacs.d/
 /.gitconfig-meta
 /.claude
 /.sisyphus

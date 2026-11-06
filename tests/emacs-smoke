@@ -1,0 +1,151 @@
+#!/bin/bash
+# End-to-end "new machine" check for the Emacs setup. Needs a real Emacs 30+
+# and the network; tests/emacs-test is the no-Emacs, git-only guard.
+#
+#   tests/emacs-smoke                    fresh temp HOME, full download (~1-2 min)
+#   KEEP_HOME=/some/dir tests/emacs-smoke  reuse/keep that HOME (fast reruns)
+#   EMACS=/usr/bin/emacs-31 tests/emacs-smoke
+#
+# Steps: link emacs/* into $HOME/.emacs.d the way ./init does, run
+# bin/emacs-bootstrap from nothing (an empty gnupg home included), run it again
+# (must not install anything), then load init.el and visit sample files,
+# checking major modes and the per-mode C-x a bindings.
+#
+# Canonical clone: ~/prog/dotfiles
+
+set -eo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
+
+source "$SCRIPT_DIR/ban-test-lib/lib/test-helpers.sh"
+
+cd "$PROJECT_ROOT" || exit 1
+
+EMACS_BIN="${EMACS:-emacs}"
+if ! "$EMACS_BIN" --batch --eval '(kill-emacs (if (>= emacs-major-version 30) 0 1))' 2>/dev/null; then
+	echo "emacs-smoke: needs a real Emacs 30+ as \$EMACS (got: $EMACS_BIN)" >&2
+	exit 2
+fi
+
+if [[ -n "${KEEP_HOME:-}" ]]; then
+	SMOKE_HOME="$KEEP_HOME"
+	mkdir -p "$SMOKE_HOME"
+else
+	SMOKE_HOME="$(mktemp -d)"
+	trap 'rm -rf "$SMOKE_HOME"' EXIT
+fi
+SMOKE_LOG="$SMOKE_HOME/smoke-logs"
+mkdir -p "$SMOKE_HOME/.emacs.d" "$SMOKE_LOG"
+for f in early-init.el init.el lisp; do
+	[[ -e "$PROJECT_ROOT/emacs/$f" ]] && ln -sfn "$PROJECT_ROOT/emacs/$f" "$SMOKE_HOME/.emacs.d/$f"
+done
+
+bootstrap() {
+	HOME="$SMOKE_HOME" EMACS="$EMACS_BIN" "$PROJECT_ROOT/bin/emacs-bootstrap" "$@"
+}
+
+test_bootstrap_installs_everything() {
+	local rc=0
+	bootstrap >"$SMOKE_LOG/first.log" 2>&1 || rc=$?
+	assert_success "$rc" "emacs-bootstrap exits 0 (log: $SMOKE_LOG/first.log)" || {
+		grep -E 'emacs-bootstrap|Failed to install' "$SMOKE_LOG/first.log" | sed 's/^/    /'
+		return 1
+	}
+	assert_contains "$(cat "$SMOKE_LOG/first.log")" "emacs-bootstrap: OK, all" \
+		"emacs-bootstrap reports every declared package installed"
+}
+
+test_package_keyring_was_imported() {
+	assert_file_exists "$SMOKE_HOME/.emacs.d/elpa/gnupg/pubring.kbx" \
+		"GNU ELPA keyring imported into the fresh gnupg home (signed archives verified in batch)"
+}
+
+test_bootstrap_is_idempotent() {
+	local rc=0 log
+	bootstrap >"$SMOKE_LOG/second.log" 2>&1 || rc=$?
+	assert_success "$rc" "second emacs-bootstrap exits 0" || return 1
+	log=$(grep -E "Package .* installed|Contacting host|Importing package-keyring" "$SMOKE_LOG/second.log" || true)
+	assert_empty "$log" "second run installs nothing and touches no network"
+}
+
+# file<TAB>expected major-mode<TAB>expected local C-x a ("-" = don't check)
+read -r -d '' EXPECT <<'EOF' || true
+a.go	go-mode	gofmt-before-save
+a.rs	rustic-mode	rust-format-buffer
+a.cpp	c++-mode	clang-format-buffer
+a.js	rjsx-mode	-
+a.jsx	rjsx-mode	-
+a.ts	typescript-mode	-
+a.tsx	typescript-mode	-
+a.py	python-mode	-
+a.cconf	python-mode	-
+a.sh	sh-mode	-
+a.yaml	yaml-mode	-
+a.json	json-mode	-
+a.md	markdown-mode	-
+a.kt	kotlin-mode	-
+a.lua	lua-mode	-
+a.toml	toml-mode	-
+a.scss	sass-mode	-
+a.bzl	bazel-starlark-mode	-
+TARGETS	bazel-starlark-mode	-
+Dockerfile	dockerfile-mode	-
+Jenkinsfile	groovy-mode	-
+CMakeLists.txt	cmake-mode	-
+EOF
+
+test_modes_and_bindings() {
+	local files="$SMOKE_HOME/files" out name mode key got
+	rm -rf "$files" && mkdir -p "$files"
+	while IFS=$'\t' read -r name _ _; do : >"$files/$name"; done <<<"$EXPECT"
+
+	out=$(HOME="$SMOKE_HOME" "$EMACS_BIN" --batch --init-directory="$SMOKE_HOME/.emacs.d" \
+		-l "$SMOKE_HOME/.emacs.d/early-init.el" \
+		--eval '(progn (package-initialize) (load (locate-user-emacs-file "init.el") nil t))' \
+		--eval "(dolist (f (directory-files \"$files\" t \"^[^.]\"))
+		  (condition-case e
+		      (with-current-buffer (find-file-noselect f)
+		        (let ((b (local-key-binding (kbd \"C-x a\"))))
+		          (princ (format \"RESULT\t%s\t%s\t%s\n\" (file-name-nondirectory f) major-mode
+		                         (if (and b (symbolp b)) b \"-\")))))
+		    (error (princ (format \"RESULT\t%s\tERROR %S\t-\n\" (file-name-nondirectory f) e)))))" \
+		2>"$SMOKE_LOG/modes.err" | grep '^RESULT' || true)
+
+	assert_not_empty "$out" "positive control: init loaded and files were visited (stderr: $SMOKE_LOG/modes.err)" || return 1
+	local rc=0
+	while IFS=$'\t' read -r name mode key; do
+		got=$(awk -F'\t' -v n="$name" '$2 == n {print $3}' <<<"$out")
+		assert_equals "$got" "$mode" "$name opens in $mode" || rc=1
+		if [[ "$key" != "-" ]]; then
+			got=$(awk -F'\t' -v n="$name" '$2 == n {print $4}' <<<"$out")
+			assert_equals "$got" "$key" "$name: C-x a runs $key" || rc=1
+		fi
+	done <<<"$EXPECT"
+	return $rc
+}
+
+test_nothing_written_into_the_repo() {
+	assert_empty "$(git status --porcelain --untracked-files=all -- emacs bin)" \
+		"nothing was written into emacs/ or bin/ (custom.el, elpa, .elc all stay in ~/.emacs.d)"
+}
+
+main_test() {
+	local rc=0
+
+	echo "========================================"
+	echo "Emacs smoke test (HOME=$SMOKE_HOME)"
+	echo "========================================"
+
+	# A failed install makes every later step meaningless, so stop there.
+	run_test "Bootstrap" test_bootstrap_installs_everything || { print_test_summary; return 1; }
+	run_test "Bootstrap" test_package_keyring_was_imported || rc=1
+	run_test "Bootstrap" test_bootstrap_is_idempotent || rc=1
+	run_test "Config" test_modes_and_bindings || rc=1
+	run_test "Hygiene" test_nothing_written_into_the_repo || rc=1
+
+	print_test_summary || rc=1
+	return $rc
+}
+
+main_test

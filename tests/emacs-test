@@ -1,15 +1,16 @@
 #!/bin/bash
-# Guards the ~/.emacs.d tier boundary.
+# Guards the Emacs layout: authored config is tracked under emacs/, and nothing
+# under .emacs.d is tracked, ever.
 #
-# That directory is a git worktree that Emacs ALSO WRITES TO (history files,
-# completion caches, byte-compiled code, downloaded language servers), so
-# anything that is not authored config must stay out of the index. The
-# enforcement is the whitelist in .emacs.d/.gitignore; THIS suite only detects
-# that whitelist being removed or defeated. There is no runner in tests/ -
-# nothing invokes this file either, so run it by hand:  tests/emacs-test
+# ./init makes ~/.emacs.d a REAL local directory and symlinks emacs/init.el,
+# emacs/early-init.el (and emacs/lisp, if it exists) into it. Packages are
+# declared with use-package in emacs/init.el and fetched from the network by
+# bin/emacs-bootstrap; elpa/, caches and history never touch this worktree.
 #
-# Every assertion is a plain git query, so it runs on any host and in a
-# container with no Emacs binary. Do not add assertions that need Emacs here.
+# Every assertion is a plain git or grep query, so this runs on any host and in
+# a container with no Emacs. The Emacs-dependent end-to-end check (fresh HOME,
+# real downloads) is tests/emacs-smoke. Nothing runs this automatically; run it
+# by hand:  tests/emacs-test
 #
 # Canonical clone: ~/prog/dotfiles
 
@@ -22,15 +23,15 @@ source "$SCRIPT_DIR/ban-test-lib/lib/test-helpers.sh"
 
 cd "$PROJECT_ROOT" || exit 1
 
-# Tracked files under .emacs.d. core.quotePath=false because git C-quotes
-# non-ASCII paths, and a quoted path can never equal an unquoted expectation.
-tracked_emacs_d() {
-	git -c core.quotePath=false ls-files -- .emacs.d
+# core.quotePath=false: git C-quotes non-ASCII paths, and a quoted path can
+# never equal an unquoted expectation.
+ls_files() {
+	git -c core.quotePath=false ls-files "$@"
 }
 
 # ---------------------------------------------------------------------------
-# Positive controls: without these, "found no offenders" is equally consistent
-# with "the invariant holds" and "the pathspec matched nothing at all".
+# Positive controls. Without these, "found no offenders" is equally consistent
+# with "the invariant holds" and "the query matched nothing at all".
 # ---------------------------------------------------------------------------
 
 test_running_against_repo_root() {
@@ -38,220 +39,104 @@ test_running_against_repo_root() {
 		"suite is running against its own repo root, not a stray clone"
 }
 
-test_whitelist_file_is_tracked() {
-	assert_file_exists "$PROJECT_ROOT/.emacs.d/.gitignore" \
-		".emacs.d/.gitignore exists"
-	assert_not_empty "$(git ls-files -- .emacs.d/.gitignore)" \
-		".emacs.d/.gitignore is TRACKED (an untracked ignore file keeps working locally and silently does not exist anywhere else)"
-}
-
-test_positive_control_file_tracked() {
-	assert_not_empty "$(git ls-files -- .emacs.d/.emacs)" \
-		"positive control: .emacs.d/.emacs is tracked, so ls-files under .emacs.d works"
+test_authored_files_are_tracked() {
+	local f
+	for f in emacs/init.el emacs/early-init.el bin/emacs-bootstrap; do
+		assert_not_empty "$(ls_files -- "$f")" "$f is tracked" || return 1
+	done
+	assert_equals "$(git ls-files -s -- bin/emacs-bootstrap | cut -d' ' -f1)" "100755" \
+		"bin/emacs-bootstrap is tracked executable (./init links bin/* onto PATH)"
 }
 
 # ---------------------------------------------------------------------------
 # The load-bearing invariants.
 # ---------------------------------------------------------------------------
 
-# Derived, so it needs no maintenance and starts guarding elpa automatically the
-# day elpa is untracked. A generated file sneaking into the index IS a
-# tracked-file-matches-an-ignore-rule violation.
-test_no_tracked_file_matches_an_ignore_rule() {
-	local f offenders=""
-	while IFS= read -r f; do
-		[[ -n "$f" ]] || continue
-		if git check-ignore -q --no-index -- "$f"; then
-			offenders+=" $f"
-		fi
-	done < <(tracked_emacs_d | grep -v '^\.emacs\.d/elpa/' || true)
-	assert_empty "$offenders" \
-		"no tracked non-elpa file under .emacs.d matches an ignore rule (offenders:$offenders)"
+test_nothing_tracked_under_dot_emacs_d() {
+	assert_empty "$(ls_files -- .emacs.d | head -5)" \
+		"nothing is tracked under .emacs.d/ (packages come from emacs-bootstrap, state stays local)"
 }
 
-# Bounds the set without an allowlist that has to be edited every time an
-# authored file is added. Kills the "whitelist silently empty -> everything
-# green" vacuity.
-test_tracked_non_elpa_count_is_bounded() {
-	local n verdict
-	n=$(tracked_emacs_d | grep -cv '^\.emacs\.d/elpa/' || true)
-	verdict=1
-	# Deliberately loose. early-init.el, lisp/packages.el and lisp/bootstrap.el
-	# are all planned additions, and an exact count breaks on every legitimate
-	# file - which is the mechanism by which a guard gets neutered at 11pm to
-	# make the suite green. The load-bearing checks are the pattern denylist and
-	# test_generated_caches_stay_untracked below; this is only a bulk-addition
-	# smoke detector ("did a directory just land in here").
-	(( n <= 12 )) && verdict=0
-	assert_equals "$verdict" "0" \
-		"tracked non-elpa files under .emacs.d are few (got $n, want <= 12)"
-}
-
-# Cache and keystore paths, stated explicitly rather than inferred from the
-# derived invariant. `/*` already ignores them, so a re-add would also trip
-# test_no_tracked_file_matches_an_ignore_rule - but a keystore-shaped path
-# deserves a failure message that names the path, not a general invariant.
-test_generated_caches_stay_untracked() {
-	local offenders
-	offenders=$(git ls-files -- .emacs.d/elpa/archives .emacs.d/elpa/gnupg \
-		.emacs.d/transient)
-	assert_empty "$offenders" \
-		"elpa/archives (downloaded index), elpa/gnupg (GnuPG home) and transient/ (switch history) are not tracked (offenders:${offenders:+ $offenders})"
-}
-
-# Extension denylist instead of a filename allowlist: scales to any future
-# authored file and still catches the exact classes that have been a problem
-# here. Byte-compiled code is per-Emacs-version, .beam/.tar are vendored
-# third-party payloads, and the three trailing paths are regenerable state.
-test_no_generated_artifact_patterns_tracked() {
-	local offenders
-	offenders=$(tracked_emacs_d | grep -E \
-		'\.elc$|\.eln$|\.beam$|\.tar$|\.tar\.gz$|^\.emacs\.d/elpa/archives/|^\.emacs\.d/elpa/gnupg/|^\.emacs\.d/transient/' \
-		|| true)
-	assert_empty "$offenders" \
-		"no byte-compiled / vendored-binary / cache-shaped path is tracked (offenders:$offenders)"
-}
-
-# This directory has already had a committed lock file symlink in it once. The
-# only symlink that belongs here is the .emacs -> ../.emacs init fallback.
-test_only_the_init_fallback_is_a_symlink() {
-	local links
-	links=$(git ls-files -s -- .emacs.d | awk '$1 == "120000" { print $4 }' | sort)
-	assert_equals "$links" ".emacs.d/.emacs" \
-		"the only tracked symlink under .emacs.d is .emacs (got: ${links:-none})"
-}
-
-test_no_runtime_state_tracked() {
-	local f offenders=""
-	for f in recentf tramp .lsp-session-v1 network-security.data \
-		url/cookies games/snake-scores .#recentf smex-items \
-		ido.last ac-comphist.dat custom.el package-quickstart.el; do
-		if [[ -n "$(git ls-files -- ".emacs.d/$f")" ]]; then
-			offenders+=" .emacs.d/$f"
-		fi
-	done
-	assert_empty "$offenders" \
-		"no Emacs runtime state is tracked (offenders:$offenders)"
-}
-
-test_no_bytecode_tracked() {
-	assert_equals "$(tracked_emacs_d | grep -c '\.elc$' || true)" "0" \
-		"no byte-compiled .elc is tracked (permanent guard: bytecode is per-Emacs-version)"
-}
-
-# ---------------------------------------------------------------------------
-# Ignore semantics. -q (not -v) is required for the "not ignored" direction:
-# -v prints the matching pattern even when it is negated. --no-index decouples
-# "the rule matches" from "the index contains it", which is what lets a still-
-# tracked elpa path be asserted as ignored. Both flags exist since git 1.8.3.
-# ---------------------------------------------------------------------------
-
-test_generated_paths_are_ignored() {
-	local p rc
-	for p in .emacs.d/recentf .emacs.d/ido.last .emacs.d/smex-items \
-		.emacs.d/ac-comphist.dat .emacs.d/custom.el \
-		.emacs.d/tramp .emacs.d/.lsp-session-v1 \
-		.emacs.d/network-security.data '.emacs.d/.#recentf' \
-		.emacs.d/url/cookies .emacs.d/games/snake-scores \
-		.emacs.d/eshell/history \
-		.emacs.d/transient/history.el .emacs.d/transient/level.el \
-		.emacs.d/transient/manifest.el \
-		.emacs.d/elpa/archives/gnu/archive-contents \
-		.emacs.d/elpa/archives/melpa/archive-contents \
-		.emacs.d/elpa/gnupg/pubring.gpg .emacs.d/elpa/gnupg/trustdb.gpg \
-		.emacs.d/elpa/gnupg/tofu.db .emacs.d/elpa/gnupg/pubring.kbx \
-		.emacs.d/elpa/gnupg/random_seed \
-		.emacs.d/elpa/gnupg/S.gpg-agent \
-		.emacs.d/.cache/lsp/json-languageserver/server \
-		.emacs.d/elpa/lsp-mode-20260124.1451/lsp-mode.el; do
-		rc=0
-		git check-ignore -q --no-index -- "$p" || rc=$?
-		assert_equals "$rc" "0" "ignored: $p"
-	done
-}
-
-# Pins the SOURCE of the rule, so the suite cannot go green off a repo-global
-# pattern while the nested whitelist is missing.
-test_ignore_rules_come_from_the_nested_file() {
-	local p src
-	for p in .emacs.d/recentf .emacs.d/ido.last .emacs.d/ac-comphist.dat \
-		.emacs.d/transient/history.el \
-		.emacs.d/elpa/archives/gnu/archive-contents \
-		.emacs.d/elpa/gnupg/pubring.gpg \
-		.emacs.d/elpa/lsp-mode-20260124.1451/lsp-mode.el \
-		.emacs.d/.cache/lsp/foo; do
-		src=$(git check-ignore -v --no-index -- "$p" || true)
-		assert_contains "$src" ".emacs.d/.gitignore" \
-			"rule for $p comes from the nested whitelist"
-	done
-}
-
-test_authored_paths_are_not_ignored() {
-	local p rc
-	for p in .emacs.d/.gitignore .emacs.d/.emacs .emacs.d/early-init.el \
-		.emacs.d/.dir-locals.el .emacs.d/lisp/packages.el \
-		.emacs.d/lisp/bootstrap.el .emacs.d/lisp/hosts/cosmo.el; do
-		rc=0
-		git check-ignore -q --no-index -- "$p" || rc=$?
-		assert_equals "$rc" "1" "trackable: $p"
-	done
-}
-
-# A bare `*` instead of `/*` matches at every depth, so `!lisp/` would
-# re-include only the directory and every .el under it would be silently lost.
-# This is the one regression this whole suite exists to catch.
-test_nested_authored_dirs_are_not_shadowed() {
+test_dot_emacs_d_is_ignored_by_root_rule() {
 	local src
-	src=$(git check-ignore -v --no-index -- .emacs.d/lisp/hosts/cosmo.el || true)
-	assert_equals "$src" "" \
-		"lisp/hosts/*.el is not shadowed by the depth-1 pattern (bare '*' would break this)"
+	src=$(git check-ignore -v --no-index -- .emacs.d/elpa/foo-1.0/foo.el || true)
+	assert_contains "$src" ".gitignore:" \
+		".emacs.d/ leftovers are ignored (got: ${src:-not ignored})" || return 1
+	assert_contains "$src" "/.emacs.d/" \
+		"...and by the anchored /.emacs.d/ rule, not some unrelated pattern"
 }
 
-# Speculative re-includes are forbidden: package.el and customize can both
-# CREATE an init file, so `!init.el` would be a permanent hole.
-test_init_el_stays_ignored() {
-	local rc=0
-	git check-ignore -q --no-index -- .emacs.d/init.el || rc=$?
-	assert_equals "$rc" "0" "init.el is ignored (no speculative re-include)"
+test_emacs_dir_is_elisp_only() {
+	local offenders
+	offenders=$(ls_files -- emacs | grep -v '\.el$' || true)
+	assert_empty "$offenders" "everything tracked under emacs/ is a .el file"
+}
+
+test_no_generated_elisp_tracked_anywhere() {
+	local offenders
+	offenders=$(ls_files | grep -E '\.(elc|eln)$|(^|/)custom\.el$|(^|/)elpa/' || true)
+	assert_empty "$offenders" \
+		"no .elc/.eln, custom.el or elpa/ tracked anywhere in the repo"
+}
+
+test_no_symlinks_under_emacs() {
+	local links
+	links=$(git ls-files -s -- emacs | awk '$1 == "120000" {print $4}')
+	assert_empty "$links" \
+		"no symlinks tracked under emacs/ (./init makes the links, the repo holds the files)"
+}
+
+# The old layout symlinked the whole of .emacs.d (and .emacs) from the dotfile
+# loop, which is what made the worktree Emacs's state dir.
+test_init_does_not_link_emacs_wholesale() {
+	local loop
+	loop=$(sed -n '/^for var in "\.Xdefaults"/,/^do$/p' init)
+	assert_not_empty "$loop" "positive control: found the dotfile loop in ./init" || return 1
+	assert_empty "$(grep -F '".emacs' <<<"$loop" || true)" \
+		"./init's dotfile loop does not link .emacs or .emacs.d" || return 1
+	assert_not_empty "$(grep -x 'install_emacs' init || true)" \
+		"./init calls install_emacs"
+}
+
+test_packages_are_declared_not_customized() {
+	assert_not_empty "$(grep -E '^\(setq use-package-always-ensure t' emacs/init.el || true)" \
+		"emacs/init.el sets use-package-always-ensure (that is what installs packages)" || return 1
+	assert_not_empty "$(grep -E '^\(setq custom-file ' emacs/init.el || true)" \
+		"emacs/init.el sends Customize to a local custom-file" || return 1
+	# Code only: init.el's comments explain this very rule by name.
+	assert_empty "$(grep -nE '^[^;]*package-selected-packages' emacs/init.el || true)" \
+		"emacs/init.el has no package-selected-packages (package.el rewrites it on every install)"
+}
+
+test_archives_are_https() {
+	assert_not_empty "$(grep -E '"https://melpa\.org/packages/"' emacs/early-init.el || true)" \
+		"positive control: MELPA is configured in emacs/early-init.el" || return 1
+	assert_empty "$(grep -nE '"http://' emacs/early-init.el emacs/init.el || true)" \
+		"no plain-http package archive (MELPA packages are unsigned)"
 }
 
 main_test() {
 	local rc=0
 
-	echo "=================================================="
-	echo "Emacs tier-boundary Test Suite"
-	echo "=================================================="
+	echo "========================================"
+	echo "Emacs layout guard"
+	echo "========================================"
 
 	# `|| rc=1`, never `|| true`: with `|| true` a test that dies early leaves
-	# TESTS_FAILED at 0 and the suite reports green. This shape catches both an
+	# TESTS_FAILED at 0 and the suite reports green. This form catches both an
 	# assert failure and an early death, and still reaches print_test_summary.
 	run_test "Positive controls" test_running_against_repo_root || rc=1
-	run_test "Positive controls" test_whitelist_file_is_tracked || rc=1
-	run_test "Positive controls" test_positive_control_file_tracked || rc=1
-	run_test "Invariants" test_no_tracked_file_matches_an_ignore_rule || rc=1
-	run_test "Invariants" test_tracked_non_elpa_count_is_bounded || rc=1
-	run_test "Invariants" test_generated_caches_stay_untracked || rc=1
-	run_test "Invariants" test_no_generated_artifact_patterns_tracked || rc=1
-	run_test "Invariants" test_only_the_init_fallback_is_a_symlink || rc=1
-	run_test "Invariants" test_no_runtime_state_tracked || rc=1
-	run_test "Invariants" test_no_bytecode_tracked || rc=1
-	run_test "Ignore semantics" test_generated_paths_are_ignored || rc=1
-	run_test "Ignore semantics" test_ignore_rules_come_from_the_nested_file || rc=1
-	run_test "Ignore semantics" test_authored_paths_are_not_ignored || rc=1
-	run_test "Ignore semantics" test_nested_authored_dirs_are_not_shadowed || rc=1
-	run_test "Ignore semantics" test_init_el_stays_ignored || rc=1
+	run_test "Positive controls" test_authored_files_are_tracked || rc=1
+	run_test "Invariants" test_nothing_tracked_under_dot_emacs_d || rc=1
+	run_test "Invariants" test_dot_emacs_d_is_ignored_by_root_rule || rc=1
+	run_test "Invariants" test_emacs_dir_is_elisp_only || rc=1
+	run_test "Invariants" test_no_generated_elisp_tracked_anywhere || rc=1
+	run_test "Invariants" test_no_symlinks_under_emacs || rc=1
+	run_test "Install" test_init_does_not_link_emacs_wholesale || rc=1
+	run_test "Packages" test_packages_are_declared_not_customized || rc=1
+	run_test "Packages" test_archives_are_https || rc=1
 
 	print_test_summary || rc=1
-
-	# Printed, not asserted: an assertion here would encode the defect as a pass
-	# condition and go red the day elpa is finally untracked, which is how
-	# guards get deleted. This is a migration progress bar: watch it reach 0,
-	# then assert 0 and delete these two lines.
-	local trees
-	trees=$(tracked_emacs_d | grep -c '^\.emacs\.d/elpa/' || true)
-	echo "status: vendored elpa package TREES still tracked: $trees files - known wart, pending bin/emacs-bootstrap"
-	echo "status: archives/ (index cache) and gnupg/ (GnuPG home) are already untracked; recoverable from tag elpa-fork-final"
-
 	return $rc
 }
 
