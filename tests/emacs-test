@@ -1,0 +1,201 @@
+#!/bin/bash
+# Guards the ~/.emacs.d tier boundary.
+#
+# That directory is a git worktree that Emacs ALSO WRITES TO (history files,
+# completion caches, byte-compiled code, downloaded language servers), so
+# anything that is not authored config must stay out of the index. The
+# enforcement is the whitelist in .emacs.d/.gitignore; THIS suite only detects
+# that whitelist being removed or defeated. There is no runner in tests/ -
+# nothing invokes this file either, so run it by hand:  tests/emacs-test
+#
+# Every assertion is a plain git query, so it runs on any host and in a
+# container with no Emacs binary. Do not add assertions that need Emacs here.
+#
+# Canonical clone: ~/prog/dotfiles
+
+set -eo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
+
+source "$SCRIPT_DIR/ban-test-lib/lib/test-helpers.sh"
+
+cd "$PROJECT_ROOT" || exit 1
+
+# Tracked files under .emacs.d. core.quotePath=false because git C-quotes
+# non-ASCII paths, and a quoted path can never equal an unquoted expectation.
+tracked_emacs_d() {
+	git -c core.quotePath=false ls-files -- .emacs.d
+}
+
+# ---------------------------------------------------------------------------
+# Positive controls: without these, "found no offenders" is equally consistent
+# with "the invariant holds" and "the pathspec matched nothing at all".
+# ---------------------------------------------------------------------------
+
+test_running_against_repo_root() {
+	assert_equals "$(git rev-parse --show-toplevel)" "$PROJECT_ROOT" \
+		"suite is running against its own repo root, not a stray clone"
+}
+
+test_whitelist_file_is_tracked() {
+	assert_file_exists "$PROJECT_ROOT/.emacs.d/.gitignore" \
+		".emacs.d/.gitignore exists"
+	assert_not_empty "$(git ls-files -- .emacs.d/.gitignore)" \
+		".emacs.d/.gitignore is TRACKED (an untracked ignore file keeps working locally and silently does not exist anywhere else)"
+}
+
+test_positive_control_file_tracked() {
+	assert_not_empty "$(git ls-files -- .emacs.d/.emacs)" \
+		"positive control: .emacs.d/.emacs is tracked, so ls-files under .emacs.d works"
+}
+
+# ---------------------------------------------------------------------------
+# The load-bearing invariants.
+# ---------------------------------------------------------------------------
+
+# Derived, so it needs no maintenance and starts guarding elpa automatically the
+# day elpa is untracked. A generated file sneaking into the index IS a
+# tracked-file-matches-an-ignore-rule violation.
+test_no_tracked_file_matches_an_ignore_rule() {
+	local f offenders=""
+	while IFS= read -r f; do
+		[[ -n "$f" ]] || continue
+		if git check-ignore -q --no-index -- "$f"; then
+			offenders+=" $f"
+		fi
+	done < <(tracked_emacs_d | grep -v '^\.emacs\.d/elpa/' || true)
+	assert_empty "$offenders" \
+		"no tracked non-elpa file under .emacs.d matches an ignore rule (offenders:$offenders)"
+}
+
+# Bounds the set without an allowlist that has to be edited every time an
+# authored file is added. Kills the "whitelist silently empty -> everything
+# green" vacuity.
+test_tracked_non_elpa_count_is_bounded() {
+	local n verdict
+	n=$(tracked_emacs_d | grep -cv '^\.emacs\.d/elpa/' || true)
+	verdict=1
+	(( n <= 6 )) && verdict=0
+	assert_equals "$verdict" "0" \
+		"tracked non-elpa files under .emacs.d are few (got $n, want <= 6)"
+}
+
+test_no_runtime_state_tracked() {
+	local f offenders=""
+	for f in recentf tramp .lsp-session-v1 network-security.data \
+		url/cookies games/snake-scores .#recentf smex-items \
+		ido.last ac-comphist.dat custom.el package-quickstart.el; do
+		if [[ -n "$(git ls-files -- ".emacs.d/$f")" ]]; then
+			offenders+=" .emacs.d/$f"
+		fi
+	done
+	assert_empty "$offenders" \
+		"no Emacs runtime state is tracked (offenders:$offenders)"
+}
+
+test_no_bytecode_tracked() {
+	assert_equals "$(tracked_emacs_d | grep -c '\.elc$' || true)" "0" \
+		"no byte-compiled .elc is tracked (permanent guard: bytecode is per-Emacs-version)"
+}
+
+# ---------------------------------------------------------------------------
+# Ignore semantics. -q (not -v) is required for the "not ignored" direction:
+# -v prints the matching pattern even when it is negated. --no-index decouples
+# "the rule matches" from "the index contains it", which is what lets a still-
+# tracked elpa path be asserted as ignored. Both flags exist since git 1.8.3.
+# ---------------------------------------------------------------------------
+
+test_generated_paths_are_ignored() {
+	local p rc
+	for p in .emacs.d/recentf .emacs.d/ido.last .emacs.d/smex-items \
+		.emacs.d/ac-comphist.dat .emacs.d/custom.el \
+		.emacs.d/tramp .emacs.d/.lsp-session-v1 \
+		.emacs.d/network-security.data '.emacs.d/.#recentf' \
+		.emacs.d/url/cookies .emacs.d/games/snake-scores \
+		.emacs.d/eshell/history \
+		.emacs.d/.cache/lsp/json-languageserver/server \
+		.emacs.d/elpa/lsp-mode-20260124.1451/lsp-mode.el; do
+		rc=0
+		git check-ignore -q --no-index -- "$p" || rc=$?
+		assert_equals "$rc" "0" "ignored: $p"
+	done
+}
+
+# Pins the SOURCE of the rule, so the suite cannot go green off a repo-global
+# pattern while the nested whitelist is missing.
+test_ignore_rules_come_from_the_nested_file() {
+	local p src
+	for p in .emacs.d/recentf .emacs.d/ido.last .emacs.d/ac-comphist.dat \
+		.emacs.d/elpa/lsp-mode-20260124.1451/lsp-mode.el \
+		.emacs.d/.cache/lsp/foo; do
+		src=$(git check-ignore -v --no-index -- "$p" || true)
+		assert_contains "$src" ".emacs.d/.gitignore" \
+			"rule for $p comes from the nested whitelist"
+	done
+}
+
+test_authored_paths_are_not_ignored() {
+	local p rc
+	for p in .emacs.d/.gitignore .emacs.d/.emacs .emacs.d/early-init.el \
+		.emacs.d/.dir-locals.el .emacs.d/lisp/packages.el \
+		.emacs.d/lisp/bootstrap.el .emacs.d/lisp/hosts/cosmo.el \
+		.emacs.d/transient/history.el; do
+		rc=0
+		git check-ignore -q --no-index -- "$p" || rc=$?
+		assert_equals "$rc" "1" "trackable: $p"
+	done
+}
+
+# A bare `*` instead of `/*` matches at every depth, so `!lisp/` would
+# re-include only the directory and every .el under it would be silently lost.
+# This is the one regression this whole suite exists to catch.
+test_nested_authored_dirs_are_not_shadowed() {
+	local src
+	src=$(git check-ignore -v --no-index -- .emacs.d/lisp/hosts/cosmo.el || true)
+	assert_equals "$src" "" \
+		"lisp/hosts/*.el is not shadowed by the depth-1 pattern (bare '*' would break this)"
+}
+
+# Speculative re-includes are forbidden: package.el and customize can both
+# CREATE an init file, so `!init.el` would be a permanent hole.
+test_init_el_stays_ignored() {
+	local rc=0
+	git check-ignore -q --no-index -- .emacs.d/init.el || rc=$?
+	assert_equals "$rc" "0" "init.el is ignored (no speculative re-include)"
+}
+
+main_test() {
+	local rc=0
+
+	echo "=================================================="
+	echo "Emacs tier-boundary Test Suite"
+	echo "=================================================="
+
+	# `|| rc=1`, never `|| true`: with `|| true` a test that dies early leaves
+	# TESTS_FAILED at 0 and the suite reports green. This shape catches both an
+	# assert failure and an early death, and still reaches print_test_summary.
+	run_test "Positive controls" test_running_against_repo_root || rc=1
+	run_test "Positive controls" test_whitelist_file_is_tracked || rc=1
+	run_test "Positive controls" test_positive_control_file_tracked || rc=1
+	run_test "Invariants" test_no_tracked_file_matches_an_ignore_rule || rc=1
+	run_test "Invariants" test_tracked_non_elpa_count_is_bounded || rc=1
+	run_test "Invariants" test_no_runtime_state_tracked || rc=1
+	run_test "Invariants" test_no_bytecode_tracked || rc=1
+	run_test "Ignore semantics" test_generated_paths_are_ignored || rc=1
+	run_test "Ignore semantics" test_ignore_rules_come_from_the_nested_file || rc=1
+	run_test "Ignore semantics" test_authored_paths_are_not_ignored || rc=1
+	run_test "Ignore semantics" test_nested_authored_dirs_are_not_shadowed || rc=1
+	run_test "Ignore semantics" test_init_el_stays_ignored || rc=1
+
+	print_test_summary || rc=1
+
+	# Printed, not asserted: an assertion here would encode the defect as a pass
+	# condition and go red the day elpa is finally untracked, which is how
+	# guards get deleted. Delete this line when the count hits 0.
+	echo "status: elpa/ still tracked ($(tracked_emacs_d | grep -c '^\.emacs\.d/elpa/') files) - known wart, pending bin/emacs-bootstrap"
+
+	return $rc
+}
+
+main_test
