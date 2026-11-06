@@ -19,6 +19,7 @@
 #   5. conflict markers in the list: sync fails and changes nothing
 #   6. a config block whose package is in no list: skipped without errors,
 #      warned about, and my/package-trim-config deletes exactly that block
+#   7. a REAL (non-batch) startup through the ~/.emacs signpost loads the config
 #
 # Canonical clone: ~/prog/dotfiles
 
@@ -42,10 +43,17 @@ if [[ -n "${KEEP_DIR:-}" ]]; then
 	mkdir -p "$SMOKE"
 else
 	SMOKE="$(mktemp -d)"
-	trap 'rm -rf "$SMOKE"' EXIT
 fi
 FAKE="$SMOKE/repo"           # stands in for the dotfiles checkout
 H="$SMOKE/home"              # stands in for $HOME
+
+# package.el starts a gpg-agent for the sandbox keyring; deleting the dir
+# does not stop it, so every run used to leave one behind.
+cleanup() {
+	gpgconf --homedir "$H/.emacs.d/elpa/gnupg" --kill gpg-agent 2>/dev/null || true
+	[[ -n "${KEEP_DIR:-}" ]] || rm -rf "$SMOKE"
+}
+trap cleanup EXIT
 LOG="$SMOKE/logs"
 SHARED="$FAKE/emacs/packages.el"
 HOSTLIST="$FAKE/host/smokehost/emacs/packages-local.el"
@@ -252,6 +260,37 @@ EOF
 		"trim deleted exactly those blocks and their comment, spacing restored byte for byte"
 }
 
+# Everything above runs `emacs --batch`, which skips init files. This is a
+# REAL startup (a daemon) going through the ~/.emacs signpost, the same path
+# as `emacs` on a terminal.
+test_real_startup_through_dot_emacs() {
+	local sockdir sock out rc=0
+	ln -sfn "$FAKE/emacs/dot-emacs.el" "$H/.emacs"
+	sockdir=$(mktemp -d /tmp/emacs-smoke.XXXXXX) # unix socket paths max ~108 chars
+	sock="$sockdir/s"
+	# No XDG_CONFIG_HOME: the real ~/.config/emacs must not leak into the sandbox.
+	env -u XDG_CONFIG_HOME HOME="$H" timeout 120 "$EMACS_BIN" --daemon="$sock" \
+		>"$LOG/daemon.log" 2>&1 || rc=$?
+	assert_success "$rc" "a real (non-batch) Emacs starts through ~/.emacs (log: $LOG/daemon.log)" || {
+		rm -rf "$sockdir"; return 1
+	}
+	out=$(env -u XDG_CONFIG_HOME HOME="$H" emacsclient -s "$sock" --eval \
+		'(format "init=%s pkgs=%s M-x=%s n=%d warnings=%s"
+		   (file-name-nondirectory user-init-file)
+		   (featurep (quote my-packages))
+		   (key-binding (kbd "M-x"))
+		   (length (bound-and-true-p package-selected-packages))
+		   (if (get-buffer "*Warnings*")
+		       (with-current-buffer "*Warnings*" (buffer-string))
+		     "none"))' 2>&1 || true)
+	env -u XDG_CONFIG_HOME HOME="$H" emacsclient -s "$sock" --eval '(kill-emacs)' >/dev/null 2>&1 || true
+	rm -rf "$sockdir"
+	assert_contains "$out" "init=.emacs" "Emacs picked ~/.emacs as the init file" || return 1
+	assert_contains "$out" "pkgs=t" "...and it handed off: my-packages (from ~/.emacs.d/init.el) is loaded" || return 1
+	assert_contains "$out" "M-x=smex" "...the config took effect (M-x is smex)" || return 1
+	assert_contains "$out" 'warnings=none"' "...and startup produced no warnings or errors (got: $out)"
+}
+
 checkout_state() {
 	git status --porcelain --untracked-files=all -- emacs bin host
 	git ls-files -z --others --modified -- emacs bin host | xargs -0r sha1sum
@@ -281,6 +320,7 @@ main_test() {
 	run_test "list-packages" test_sync_follows_the_list || rc=1
 	run_test "Safety" test_conflict_markers_change_nothing || rc=1
 	run_test "Orphans" test_orphan_block_is_skipped_and_trimmed || rc=1
+	run_test "Startup" test_real_startup_through_dot_emacs || rc=1
 	run_test "Hygiene" test_real_checkout_untouched || rc=1
 
 	print_test_summary || rc=1

@@ -148,6 +148,19 @@ test_lists_not_customized() {
 		"use-package does not install (the lists decide; an :ensure would bypass them)"
 }
 
+# ~/.emacs is read INSTEAD OF ~/.emacs.d/init.el, so the signpost must hand
+# off. A comments-only ~/.emacs silently disables the whole config (verified
+# with a real daemon start in tests/emacs-smoke).
+test_dot_emacs_signpost() {
+	assert_not_empty "$(ls_files -- emacs/dot-emacs.el)" "emacs/dot-emacs.el (the ~/.emacs signpost) is tracked" || return 1
+	assert_not_empty "$(grep -E '^\(let \(\(init \(expand-file-name "init\.el" user-emacs-directory\)\)\)' emacs/dot-emacs.el || true)" \
+		"the signpost computes ~/.emacs.d/init.el" || return 1
+	assert_not_empty "$(grep -E '^ +\(load init ' emacs/dot-emacs.el || true)" \
+		"...and loads it (comments alone would disable the whole config)" || return 1
+	assert_not_empty "$(grep -F 'ln -sfn "$PWD/emacs/dot-emacs.el" ~/.emacs' init || true)" \
+		"./init links ~/.emacs to the signpost"
+}
+
 test_init_syncs_packages() {
 	assert_not_empty "$(grep -F '"$PWD/bin/emacs-bootstrap"' init || true)" \
 		"./init runs emacs-bootstrap" || return 1
@@ -184,6 +197,7 @@ main_test() {
 	run_test "Packages" test_host_package_lists || rc=1
 	run_test "Packages" test_lists_not_customized || rc=1
 	run_test "Install" test_init_syncs_packages || rc=1
+	run_test "Install" test_dot_emacs_signpost || rc=1
 	run_test "Packages" test_archives_are_https || rc=1
 
 	print_test_summary || rc=1
