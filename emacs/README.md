@@ -187,6 +187,34 @@ git pull
 Between the pull and `./init`, a freshly started Emacs on that host has
 neither a config nor packages.
 
+## When a package list has a merge conflict
+
+Two machines that each installed something before pulling can both touch
+`emacs/packages.el`. Because the list is sorted with one name per line, git
+usually merges it on its own. When it can't:
+
+1. Edit the file: keep **both** sides' names, delete the `<<<<<<<`,
+   `=======` and `>>>>>>>` lines, and keep the list sorted (an unsorted list
+   still works, but `tests/emacs-test` flags it).
+2. `tests/emacs-test` confirms the file is canonical again.
+3. Commit, then run `./init` (or `emacs-bootstrap`) and restart Emacs.
+
+Until it's fixed, nothing is lost. Emacs warns at startup and doesn't touch
+the lists, `emacs-bootstrap` exits without changing anything, and `./init`
+prints a warning but finishes.
+
+## Adding a new machine
+
+`./init` picks the host name from the `$HOSTNAME` table at the top of
+`init` (cosmo, station, handslap, ahands, handsair). A machine that isn't in
+the table still gets the full shared list, but its local list is a plain,
+untracked file. To track it:
+
+1. Add a line to that table, e.g.
+   `[[ "$HOSTNAME" =~ "newbox" ]] && host=newbox`, and commit.
+2. Run `./init`. If a local list already exists, it's moved to
+   `host/newbox/emacs/packages-local.el`. Commit that file.
+
 ## Tests
 
 | Script | Needs | Checks |
