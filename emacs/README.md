@@ -10,10 +10,14 @@ emacs/                          tracked in git
   init.el                       all config; use-package blocks only CONFIGURE
   packages.el                   SHARED package list - every machine installs these
   lisp/my-packages.el           the machinery behind the lists
+  dot-emacs.el                  the ~/.emacs signpost (see below)
   README.md                     this file
 host/<host>/emacs/
   packages-local.el             extras for that one machine (optional, tracked)
 
+~/.emacs                        -> <repo>/emacs/dot-emacs.el: comments on where
+                                   things are and how to use them, plus one line
+                                   that loads ~/.emacs.d/init.el
 ~/.emacs.d/                     a REAL local directory, never tracked
   early-init.el, init.el, lisp  -> symlinks into <repo>/emacs/
   packages-local.el             -> <repo>/host/<host>/emacs/packages-local.el
@@ -24,6 +28,17 @@ host/<host>/emacs/
 Emacs writes only into `~/.emacs.d`. The only files it changes in the repo
 are the package lists, and that is on purpose: they're how a
 `list-packages` install reaches your other machines.
+
+### `~/.emacs` is a signpost, not config
+
+Emacs loads **either** `~/.emacs` **or** `~/.emacs.d/init.el`, never both: if
+`~/.emacs` exists, `init.el` is skipped. So `~/.emacs` (a link to
+`emacs/dot-emacs.el`) is mostly comments: a map of where everything lives
+and a cheat sheet of the commands. Its single line of code loads
+`~/.emacs.d/init.el`. **Don't put config in it, and don't trim it down to
+comments only**: without that line Emacs starts with no config at all, and
+no error tells you why. Both `tests/emacs-test` and `tests/emacs-smoke`
+check for this.
 
 ## New machine
 
@@ -147,9 +162,10 @@ Environment: `EMACS` (default `emacs`) and `EMACS_DIR` (default `~/.emacs.d`).
 
 ### `./init` (`install_emacs`)
 
-- Removes a `~/.emacs` symlink, or moves a real `~/.emacs` into the backup
-  dir. **Emacs reads `~/.emacs` before `~/.emacs.d/init.el`**, so any leftover
-  silently shadows this config.
+- Links `~/.emacs` to the signpost `emacs/dot-emacs.el`. Anything else already
+  at `~/.emacs` (a hand-written file, or the old layout's link to `.emacs`) is
+  moved into `~/.dotfiles_backup/<stamp>/` first, because it would load instead
+  of your config. A link that already points at the signpost is left alone.
 - **Legacy layout** (`~/.emacs.d` is a symlink to this repo's `.emacs.d`): it
   replaces the link with a real directory and copies over local state
   (history, recentf, smex, tramp, `transient/`, ...). It doesn't copy `elpa/`,
@@ -219,8 +235,8 @@ untracked file. To track it:
 
 | Script | Needs | Checks |
 |---|---|---|
-| `tests/emacs-test` | git only, runs anywhere | nothing tracked under `.emacs.d/`; `emacs/` holds only `.el` files plus this README; `packages.el` and every `host/*/emacs/packages-local.el` are canonical (sorted, no duplicates, no conflict markers); `packages-local.el` tracked only under `host/*/emacs/`; no Customize-style package list and no `use-package-always-ensure`; `./init` syncs and links the host list; no http archives |
-| `tests/emacs-smoke` | Emacs 30+ and network | works on a *copy* of `emacs/` in a temp dir: sync from nothing; keyring imported; rerun does nothing; about 20 file types open in the right mode; `C-x a` per mode; install, make-local and delete each update the right list (and the shared list comes back byte for byte); a simulated pull installs and removes to match; conflict markers make sync fail and change nothing; an orphaned block is skipped, warned about, kept on `n` (no hang), and trimmed exactly on `y`; the real checkout is untouched |
+| `tests/emacs-test` | git only, runs anywhere | nothing tracked under `.emacs.d/`; `emacs/` holds only `.el` files plus this README; `packages.el` and every `host/*/emacs/packages-local.el` are canonical (sorted, no duplicates, no conflict markers); `packages-local.el` tracked only under `host/*/emacs/`; no Customize-style package list and no `use-package-always-ensure`; `./init` syncs and links the host list; the `~/.emacs` signpost is tracked, loads `init.el`, and is linked by `./init`; no http archives |
+| `tests/emacs-smoke` | Emacs 30+ and network | works on a *copy* of `emacs/` in a temp dir: sync from nothing; keyring imported; rerun does nothing; about 20 file types open in the right mode; `C-x a` per mode; install, make-local and delete each update the right list (and the shared list comes back byte for byte); a simulated pull installs and removes to match; conflict markers make sync fail and change nothing; an orphaned block is skipped, warned about, kept on `n` (no hang), and trimmed exactly on `y`; a **real, non-batch startup** (an Emacs daemon) through `~/.emacs` loads the config with no warnings; the real checkout is untouched |
 
 ```sh
 tests/emacs-test

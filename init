@@ -66,15 +66,16 @@ install_emacs() {
   echo "## Emacs"
   local d="$HOME/.emacs.d"
 
-  # Emacs reads ~/.emacs BEFORE ~/.emacs.d/init.el, so any leftover would
-  # silently shadow the new config.
-  if [[ -L ~/.emacs ]]; then
-    echo "-- removing legacy ~/.emacs symlink"
-    rm ~/.emacs
-  elif [[ -e ~/.emacs ]]; then
-    echo "-- moving ~/.emacs to $current/ (it would shadow ~/.emacs.d/init.el)"
+  # Emacs reads ~/.emacs INSTEAD OF ~/.emacs.d/init.el when it exists, so
+  # ~/.emacs is a signpost (emacs/dot-emacs.el): comments on where everything
+  # is and how to use it, plus one line that loads ~/.emacs.d/init.el.
+  # Anything else there (a real file, the legacy link) would shadow the config.
+  if [[ ( -e ~/.emacs || -L ~/.emacs ) && "$(readlink ~/.emacs)" != "$PWD/emacs/dot-emacs.el" ]]; then
+    echo "-- moving old ~/.emacs to $current/ (replaced by the signpost)"
     mv ~/.emacs "$current/"
   fi
+  echo "-- installing ~/.emacs -> emacs/dot-emacs.el (signpost; loads ~/.emacs.d/init.el)"
+  ln -sfn "$PWD/emacs/dot-emacs.el" ~/.emacs
 
   # Legacy layout: ~/.emacs.d -> this repo's .emacs.d, which made the worktree
   # Emacs's state directory.
