@@ -33,7 +33,6 @@ dnf install -y \
   grim \
   helm \
   jq \
-  kubernetes1.30-client \
   lm_sensors-devel \
   mako \
   maui-linux \
@@ -45,7 +44,6 @@ dnf install -y \
   pavucontrol \
   powertop \
   ripgrep \
-  rust-gdk+v3_24-devel.noarch \
   slurp \
   swaybg \
   swayimg \
@@ -56,3 +54,5 @@ dnf install -y \
   wf-recorder \
   wireguard-tools \
   zstd
+# rust-gdk+v3_24-devel.noarch \
+# kubernetes1.30-client \
