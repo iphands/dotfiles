@@ -1,19 +1,24 @@
 #!/bin/bash
-# Install (or upgrade / prune) every package emacs/init.el declares.
+# Sync this machine's Emacs packages with the package lists.
 #
-#   emacs-bootstrap            install whatever is missing (no network if nothing is)
-#   emacs-bootstrap --upgrade  refresh archives and upgrade everything
-#   emacs-bootstrap --prune    delete installed packages nothing declares or needs
+#   emacs-bootstrap            install what the lists name, remove what they dropped
+#   emacs-bootstrap --dry-run  print what would be installed/removed, change nothing
+#   emacs-bootstrap --upgrade  sync, then upgrade everything installed
 #
-# New machine: git clone && ./init && emacs-bootstrap
+# ./init runs this, so `git pull && ./init` is the whole sync.
 #
-# The package list is the set of top-level (use-package NAME ...) forms in
-# init.el, minus those with `:ensure nil'.  This script loads init.el in
-# batch mode exactly as a real start would, so it also proves init loads
-# cleanly.  Exits nonzero if anything declared is still not installed.
+# The lists: emacs/packages.el (shared) + ~/.emacs.d/packages-local.el (this
+# machine, linked to host/<host>/emacs/), written by M-x list-packages - see
+# emacs/lisp/my-packages.el. Dependencies are never listed; package.el keeps
+# what the listed packages need and removes what nothing needs any more.
 #
-# Env: EMACS (binary, default `emacs'; scripts never see the emacsclient
-# alias in .bashrc), EMACS_DIR (default ~/.emacs.d).
+# Safety: if either list is unreadable (e.g. git conflict markers) this exits 1
+# having changed nothing; it never removes anything when the lists are empty.
+# With nothing to install it makes no network calls. After syncing it loads
+# init.el exactly as a real start would, so it also proves init loads.
+#
+# Env: EMACS (binary, default `emacs'; scripts never see the emacsclient alias
+# in .bashrc), EMACS_DIR (default ~/.emacs.d).
 
 set -eo pipefail
 
@@ -22,11 +27,11 @@ usage() {
 	exit "${1:-0}"
 }
 
-mode=install
+mode=sync
 case "${1:-}" in
 	"") ;;
+	--dry-run) mode=dry-run ;;
 	--upgrade) mode=upgrade ;;
-	--prune) mode=prune ;;
 	-h|--help) usage 0 ;;
 	*) echo "unknown argument: $1" >&2; usage 2 >&2 ;;
 esac
@@ -34,7 +39,7 @@ esac
 emacs_bin="${EMACS:-emacs}"
 dir="${EMACS_DIR:-$HOME/.emacs.d}"
 
-for f in early-init.el init.el; do
+for f in early-init.el init.el lisp/my-packages.el; do
 	if [[ ! -e "$dir/$f" ]]; then
 		echo "emacs-bootstrap: $dir/$f is missing - run ./init from the dotfiles repo first" >&2
 		exit 1
@@ -46,66 +51,77 @@ read -r -d '' ELISP <<'EOF' || true
   (require 'package)
   (require 'cl-lib)
   (package-initialize)
+  (add-to-list 'load-path (locate-user-emacs-file "lisp"))
+  (require 'my-packages)
+  (my/packages-load)
 
-  (defun bootstrap--declared (file)
-    "Packages installed by FILE's top-level use-package forms."
-    (let (pkgs)
-      (with-temp-buffer
-        (insert-file-contents file)
-        (goto-char (point-min))
-        (condition-case nil
-            (while t
-              (let ((form (read (current-buffer))))
-                (when (eq (car-safe form) 'use-package)
-                  (let* ((tail (memq :ensure (cddr form)))
-                         (ensure (if tail (cadr tail) t))
-                         (pkg (cond ((null ensure) nil)
-                                    ((eq ensure t) (cadr form))
-                                    ((consp ensure) (car ensure))
-                                    (t ensure))))
-                    (when pkg (push pkg pkgs))))))
-          (end-of-file nil)))
-      (nreverse pkgs)))
+  (defun bootstrap--names (descs)
+    (mapconcat (lambda (d) (symbol-name (package-desc-name d))) descs " "))
 
-  (defun bootstrap--missing (pkgs)
-    (cl-remove-if #'package-installed-p pkgs))
+  (unless my/packages-read-ok
+    (message "emacs-bootstrap: FAILED - a package list is unreadable (see above); nothing changed")
+    (kill-emacs 1))
 
-  (let* ((init (locate-user-emacs-file "init.el"))
-         (declared (bootstrap--declared init)))
-    (unless declared
-      (message "emacs-bootstrap: found no use-package forms in %s" init)
-      (kill-emacs 1))
-    (message "emacs-bootstrap: %d packages declared in %s" (length declared) init)
+  (let* ((selected package-selected-packages)
+         (missing (cl-remove-if #'package-installed-p selected))
+         installed failed removed)
+    (message "emacs-bootstrap: %d listed (%d shared, %d this machine), %d to install"
+             (length selected) (length my/packages-shared) (length my/packages-local)
+             (length missing))
 
-    ;; Always refresh before installing: a stale cached index can name a
-    ;; version the archive no longer serves, and the download then 404s.
-    (when (or (bootstrap--missing declared) (memq bootstrap-mode '(upgrade)))
+    (when (eq bootstrap-mode 'dry-run)
+      (message "emacs-bootstrap: would install: %s"
+               (if missing (mapconcat #'symbol-name missing " ") "(nothing)"))
+      (message "emacs-bootstrap: would remove:  %s"
+               (if (null selected)
+                   "(nothing - lists are empty, refusing)"
+                 (let ((r (package--removable-packages)))
+                   (if r (bootstrap--names r) "(nothing)"))))
+      (kill-emacs 0))
+
+    ;; Refresh first: a stale cached index can name a version the archive no
+    ;; longer serves, and that download 404s.
+    (when (or missing (eq bootstrap-mode 'upgrade))
       (package-refresh-contents))
 
-    ;; Loading init is what installs: use-package-always-ensure does the work,
-    ;; through the same code path as an interactive first start.
+    ;; DONT-SELECT: installing what the lists already name must not rewrite them.
+    (dolist (p missing)
+      (condition-case err
+          (progn (package-install p t) (push p installed))
+        (error (push p failed)
+               (message "emacs-bootstrap: failed to install %s: %s"
+                        p (error-message-string err)))))
+
+    ;; Removal: whatever is neither listed nor needed by something listed.
+    ;; Computed after installing, so new dependencies count as needed.
+    (if (null selected)
+        (message "emacs-bootstrap: lists are empty - refusing to remove anything")
+      (dolist (desc (package--removable-packages))
+        (condition-case err
+            (progn (package-delete desc t t) (push (package-desc-name desc) removed))
+          (error (message "emacs-bootstrap: failed to remove %s: %s"
+                          (package-desc-name desc) (error-message-string err))))))
+
+    (when (eq bootstrap-mode 'upgrade)
+      (package-upgrade-all nil))
+
+    ;; Prove init loads, and report config blocks that were skipped.
     (condition-case err
-        (load init nil 'nomessage)
+        (load (locate-user-emacs-file "init.el") nil 'nomessage)
       (error (message "emacs-bootstrap: init.el failed to load: %s"
                       (error-message-string err))
              (kill-emacs 1)))
+    (my/package-report)
 
-    (pcase bootstrap-mode
-      ('upgrade (package-upgrade-all nil))
-      ('prune
-       (let ((package-selected-packages declared))
-         (cl-letf (((symbol-function 'y-or-n-p) #'always)
-                   ((symbol-function 'yes-or-no-p) #'always))
-           (package-autoremove)))))
-
-    (let ((missing (bootstrap--missing declared)))
-      (if missing
-          (progn
-            (message "emacs-bootstrap: FAILED, still not installed: %s"
-                     (mapconcat #'symbol-name missing " "))
-            (kill-emacs 1))
-        (message "emacs-bootstrap: OK, all %d declared packages installed"
-                 (length declared))))))
+    (message "emacs-bootstrap: installed: %s"
+             (if installed (mapconcat #'symbol-name (nreverse installed) " ") "-"))
+    (message "emacs-bootstrap: removed:   %s"
+             (if removed (mapconcat #'symbol-name (nreverse removed) " ") "-"))
+    (if failed
+        (progn (message "emacs-bootstrap: FAILED, not installed: %s"
+                        (mapconcat #'symbol-name failed " "))
+               (kill-emacs 1))
+      (message "emacs-bootstrap: OK"))))
 EOF
 
 exec "$emacs_bin" --batch --init-directory="$dir" \

@@ -1,22 +1,27 @@
 ;;; init.el --- Ian's Emacs config -*- lexical-binding: t -*-
 ;;; Commentary:
 ;; Tracked at emacs/init.el in the dotfiles repo; ./init symlinks it into a
-;; real, local ~/.emacs.d.  Every package is declared below with use-package
-;; and installed from the network on first start (or by `emacs-bootstrap').
-;; Nothing under ~/.emacs.d other than the symlinks is ever tracked.
+;; real, local ~/.emacs.d.  WHICH packages are installed is not decided here:
+;; that is emacs/packages.el (+ this host's packages-local.el), written by
+;; M-x list-packages and synced by `emacs-bootstrap' / ./init.  See
+;; lisp/my-packages.el and emacs/README.md.  This file only configures.
 ;;; Code:
 
-;; Customize writes here, NOT into this file.  package.el records every
-;; install in `package-selected-packages' through Customize, so without this
-;; each package-install would rewrite tracked config.
+;; Customize writes here, NOT into this file.
 (setq custom-file (locate-user-emacs-file "custom.el"))
 (load custom-file 'noerror 'nomessage)
 
+(add-to-list 'load-path (locate-user-emacs-file "lisp"))
+
+;; Package lists -> `package-selected-packages', and list-packages writes go
+;; back to the list files.  Must come before any use-package block.
 (require 'use-package)
-;; Install anything missing; load lazily via each package's own autoloads,
-;; which is how the old package-initialize setup behaved.
-(setq use-package-always-ensure t
-      use-package-always-defer t)
+(require 'my-packages)
+(my/packages-load)
+
+;; Load lazily via each package's own autoloads, as the old
+;; package-initialize setup did.  No :ensure: the lists decide installs.
+(setq use-package-always-defer t)
 
 ;; Disable vc.
 (setq vc-handled-backends nil)
@@ -31,8 +36,6 @@
 
 (setq inhibit-startup-screen t)
 (setq-default show-trailing-whitespace t)
-
-(add-to-list 'load-path (locate-user-emacs-file "lisp"))
 
 ;; default to better frame titles
 (setq frame-title-format
@@ -149,9 +152,10 @@
 (put 'upcase-region 'disabled nil)
 (put 'downcase-region 'disabled nil)
 
-;;; Packages
-;; One block per package.  `use-package-always-ensure' installs it; the
-;; keywords say how it gets loaded.  Built-ins are not declared.
+;;; Package config
+;; Only packages that need configuring have a block; installing is the
+;; lists' job.  Each block switches itself off if its package is not
+;; installed (my-packages.el), and startup warns about it.
 
 ;; --- completion / navigation ---
 
@@ -161,8 +165,6 @@
 
 (use-package helm
   :bind ("C-x C-d" . helm-browse-project))
-(use-package helm-ls-git)
-(use-package helm-go-package)
 
 (defun myfzf (&optional _with-preview)
   "Customized FZF launch"
@@ -175,27 +177,10 @@
                     (when (file-exists-p f)
                       (find-file f)))))))
 
-(use-package fzf)
 (global-set-key (kbd "M-p") (lambda () (interactive) (myfzf)))
 
 (use-package company
   :custom (company-idle-delay 0))
-(use-package company-ctags)
-(use-package company-shell)
-
-(use-package yasnippet)
-(use-package neotree)
-(use-package multiple-cursors)
-(use-package move-text)
-(use-package phi-rectangle)
-(use-package yafolding)
-
-;; --- git ---
-
-(use-package magit)
-(use-package magit-filenotify)
-(use-package magit-find-file)
-(use-package git-modes)
 
 ;; --- checking / lsp ---
 
@@ -217,13 +202,6 @@
   (setq-default flycheck-disabled-checkers
                 (append flycheck-disabled-checkers
                         '(json-jsonlist))))
-(use-package flycheck-pyflakes)
-(use-package flycheck-color-mode-line)
-(use-package flycheck-jest)
-(use-package flycheck-kotlin)
-(use-package flycheck-rust)
-(use-package flymake-jshint)
-(use-package flymake-json)
 
 (use-package lsp-mode
   :custom (lsp-enable-file-watchers nil))
@@ -242,7 +220,6 @@
 (use-package go-mode
   :init (setq gofmt-command "goimports")
   :hook (go-mode . my-go-mode-hook))
-(use-package go-imenu)
 
 ;; --- rust ---
 
@@ -252,9 +229,6 @@
 
 (use-package rust-mode
   :hook (rust-mode . my-rust-mode-hook))
-(use-package rustic)
-(use-package cargo)
-(use-package cargo-mode)
 
 ;; --- js / ts / web ---
 
@@ -291,13 +265,6 @@
 (use-package js2-mode
   :init (setq js2-basic-offset 2
               js2-bounce-indent-p t))
-(use-package js2-highlight-vars)
-(use-package xref-js2)
-(use-package json-mode)
-(use-package tide)
-(use-package prettier)
-(use-package eslint-fix)
-(use-package coffee-mode)
 
 ;; adjust indents for web-mode to 2 spaces
 (defun my-web-mode-hook ()
@@ -346,22 +313,6 @@
 (use-package groovy-mode
   :mode (("Jenkinsfile"        . groovy-mode)
          ("\\.jenkinsfile\\'"  . groovy-mode)))
-
-(use-package clang-format)
-(use-package cmake-mode)
-(use-package csv-mode)
-(use-package dockerfile-mode)
-(use-package just-mode)
-(use-package lua-mode)
-(use-package markdown-mode)
-(use-package nginx-mode)
-(use-package php-mode)
-(use-package powershell)
-(use-package protobuf-mode)
-(use-package puppet-mode)
-(use-package systemd)
-(use-package toml-mode)
-(use-package yaml-mode)
 
 ;; Kill auto tabs
 (tabsoff)
