@@ -1,0 +1,114 @@
+#!/bin/bash
+# Install (or upgrade / prune) every package emacs/init.el declares.
+#
+#   emacs-bootstrap            install whatever is missing (no network if nothing is)
+#   emacs-bootstrap --upgrade  refresh archives and upgrade everything
+#   emacs-bootstrap --prune    delete installed packages nothing declares or needs
+#
+# New machine: git clone && ./init && emacs-bootstrap
+#
+# The package list is the set of top-level (use-package NAME ...) forms in
+# init.el, minus those with `:ensure nil'.  This script loads init.el in
+# batch mode exactly as a real start would, so it also proves init loads
+# cleanly.  Exits nonzero if anything declared is still not installed.
+#
+# Env: EMACS (binary, default `emacs'; scripts never see the emacsclient
+# alias in .bashrc), EMACS_DIR (default ~/.emacs.d).
+
+set -eo pipefail
+
+usage() {
+	sed -n '2,8p' "$0" | sed 's/^# \{0,1\}//'
+	exit "${1:-0}"
+}
+
+mode=install
+case "${1:-}" in
+	"") ;;
+	--upgrade) mode=upgrade ;;
+	--prune) mode=prune ;;
+	-h|--help) usage 0 ;;
+	*) echo "unknown argument: $1" >&2; usage 2 >&2 ;;
+esac
+
+emacs_bin="${EMACS:-emacs}"
+dir="${EMACS_DIR:-$HOME/.emacs.d}"
+
+for f in early-init.el init.el; do
+	if [[ ! -e "$dir/$f" ]]; then
+		echo "emacs-bootstrap: $dir/$f is missing - run ./init from the dotfiles repo first" >&2
+		exit 1
+	fi
+done
+
+read -r -d '' ELISP <<'EOF' || true
+(progn
+  (require 'package)
+  (require 'cl-lib)
+  (package-initialize)
+
+  (defun bootstrap--declared (file)
+    "Packages installed by FILE's top-level use-package forms."
+    (let (pkgs)
+      (with-temp-buffer
+        (insert-file-contents file)
+        (goto-char (point-min))
+        (condition-case nil
+            (while t
+              (let ((form (read (current-buffer))))
+                (when (eq (car-safe form) 'use-package)
+                  (let* ((tail (memq :ensure (cddr form)))
+                         (ensure (if tail (cadr tail) t))
+                         (pkg (cond ((null ensure) nil)
+                                    ((eq ensure t) (cadr form))
+                                    ((consp ensure) (car ensure))
+                                    (t ensure))))
+                    (when pkg (push pkg pkgs))))))
+          (end-of-file nil)))
+      (nreverse pkgs)))
+
+  (defun bootstrap--missing (pkgs)
+    (cl-remove-if #'package-installed-p pkgs))
+
+  (let* ((init (locate-user-emacs-file "init.el"))
+         (declared (bootstrap--declared init)))
+    (unless declared
+      (message "emacs-bootstrap: found no use-package forms in %s" init)
+      (kill-emacs 1))
+    (message "emacs-bootstrap: %d packages declared in %s" (length declared) init)
+
+    ;; Always refresh before installing: a stale cached index can name a
+    ;; version the archive no longer serves, and the download then 404s.
+    (when (or (bootstrap--missing declared) (memq bootstrap-mode '(upgrade)))
+      (package-refresh-contents))
+
+    ;; Loading init is what installs: use-package-always-ensure does the work,
+    ;; through the same code path as an interactive first start.
+    (condition-case err
+        (load init nil 'nomessage)
+      (error (message "emacs-bootstrap: init.el failed to load: %s"
+                      (error-message-string err))
+             (kill-emacs 1)))
+
+    (pcase bootstrap-mode
+      ('upgrade (package-upgrade-all nil))
+      ('prune
+       (let ((package-selected-packages declared))
+         (cl-letf (((symbol-function 'y-or-n-p) #'always)
+                   ((symbol-function 'yes-or-no-p) #'always))
+           (package-autoremove)))))
+
+    (let ((missing (bootstrap--missing declared)))
+      (if missing
+          (progn
+            (message "emacs-bootstrap: FAILED, still not installed: %s"
+                     (mapconcat #'symbol-name missing " "))
+            (kill-emacs 1))
+        (message "emacs-bootstrap: OK, all %d declared packages installed"
+                 (length declared))))))
+EOF
+
+exec "$emacs_bin" --batch --init-directory="$dir" \
+	-l "$dir/early-init.el" \
+	--eval "(defvar bootstrap-mode '$mode)" \
+	--eval "$ELISP"
