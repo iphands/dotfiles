@@ -38,6 +38,7 @@
 				<keybind key="A-F10"><action name="ToggleMaximize" /></keybind>
 				<keybind key="A-F11"><action name="Execute" command="~/bin/sleep-loop" /></keybind>
 				<keybind key="A-F12"><action name="Execute" command="swaylock -f -c 220033" /></keybind>
+				<keybind key="W-p"><action name="Execute" command="~/bin/mirror" /></keybind>
 
 				<keybind key="XF86MonBrightnessUp"><action name="Execute" command="~/bin/brightness up" /></keybind>
 				<keybind key="XF86MonBrightnessDown"><action name="Execute" command="~/bin/brightness down" /></keybind>

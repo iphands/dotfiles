@@ -1,0 +1,76 @@
+#!/bin/bash
+# mirror - mirror the laptop screen onto an external display (labwc / wlroots)
+#
+#   mirror           toggle mirroring (auto-picks the external display, asks if more than one)
+#   mirror off       stop mirroring
+#   mirror OUTPUT    mirror onto a specific output, e.g. "mirror HDMI-A-1"
+#   mirror list      show outputs
+
+LOG=/tmp/mirror-${USER}.log
+
+msg() {
+  echo "mirror: $*"
+  notify-send -a mirror -t 3000 "Screen mirror" "$*" 2>/dev/null
+}
+
+stop() {
+  pkill -x wl-mirror && msg "Mirroring stopped"
+}
+
+case "${1:-}" in
+  off|stop) stop; exit 0 ;;
+  list)     wlr-randr; exit 0 ;;
+  -h|--help) sed -n '2,8p' "$0" | sed 's/^# \?//'; exit 0 ;;
+esac
+
+command -v wl-mirror >/dev/null || { msg "wl-mirror not installed: sudo dnf install wl-mirror"; exit 1; }
+
+# plain "mirror" while already mirroring == turn it off
+if [ -z "${1:-}" ] && pgrep -x wl-mirror >/dev/null; then
+  stop
+  exit 0
+fi
+pkill -x wl-mirror
+
+OUTPUTS=$(wlr-randr --json)
+
+# source: the built-in panel
+SRC=$(jq -r '[.[] | select(.enabled and (.name | test("^(eDP|LVDS|DSI)")))][0].name // empty' <<<"$OUTPUTS")
+[ -z "$SRC" ] && { msg "No enabled built-in display found"; exit 1; }
+
+# target: given on the command line, else any other connected output
+if [ -n "${1:-}" ]; then
+  DST=$1
+  jq -e --arg n "$DST" 'any(.[]; .name == $n)' <<<"$OUTPUTS" >/dev/null || { msg "No output named $DST"; exit 1; }
+else
+  mapfile -t EXT < <(jq -r --arg src "$SRC" '.[] | select(.name != $src) | "\(.name)  \(.description)"' <<<"$OUTPUTS")
+  case ${#EXT[@]} in
+    0) msg "No external display connected"; exit 1 ;;
+    1) DST=${EXT[0]} ;;
+    *)
+      BG='#161616'
+      FG='#ffffff'
+      DST=$(printf '%s\n' "${EXT[@]}" | BEMENU_BACKEND=wayland bemenu -i -l 10 -p 'Mirror to:' \
+        --fn "liberation-fonts/LiberationMono-Bold Bold" --line-height 30 \
+        --nb "$BG" --ab "$BG" --fb "$BG" --tb "$BG" --hb "$BG" --tf "$FG" --hf "$FG")
+      [ -z "$DST" ] && exit 0
+      ;;
+  esac
+  DST=${DST%%  *}
+fi
+
+# connected but turned off? turn it on
+if jq -e --arg n "$DST" 'any(.[]; .name == $n and (.enabled | not))' <<<"$OUTPUTS" >/dev/null; then
+  wlr-randr --output "$DST" --on
+  sleep 1
+fi
+
+setsid -f wl-mirror --fullscreen --fullscreen-output "$DST" "$SRC" >"$LOG" 2>&1
+sleep 1
+
+if pgrep -x wl-mirror >/dev/null; then
+  msg "Mirroring $SRC -> $DST  (run again to stop)"
+else
+  msg "wl-mirror failed, see $LOG"
+  exit 1
+fi
