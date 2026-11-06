@@ -3,9 +3,10 @@
 # under .emacs.d is tracked, ever.
 #
 # ./init makes ~/.emacs.d a REAL local directory and symlinks emacs/init.el,
-# emacs/early-init.el (and emacs/lisp, if it exists) into it. Packages are
-# declared with use-package in emacs/init.el and fetched from the network by
-# bin/emacs-bootstrap; elpa/, caches and history never touch this worktree.
+# emacs/early-init.el and emacs/lisp into it. WHICH packages get installed is
+# emacs/packages.el (+ host/<host>/emacs/packages-local.el), written by
+# M-x list-packages and synced by bin/emacs-bootstrap (run by ./init);
+# elpa/, caches and history never touch this worktree.
 #
 # Every assertion is a plain git or grep query, so this runs on any host and in
 # a container with no Emacs. The Emacs-dependent end-to-end check (fresh HOME,
@@ -98,14 +99,60 @@ test_init_does_not_link_emacs_wholesale() {
 		"./init calls install_emacs"
 }
 
-test_packages_are_declared_not_customized() {
-	assert_not_empty "$(grep -E '^\(setq use-package-always-ensure t' emacs/init.el || true)" \
-		"emacs/init.el sets use-package-always-ensure (that is what installs packages)" || return 1
+# Body of a package list: the names, one per line, in file order. The writer
+# in emacs/lisp/my-packages.el emits exactly: comment header, "(first",
+# " next" ..., " last)". Anything else means a hand edit or a bad merge.
+list_body() {
+	grep -v '^;;' "$1" | sed -e 's/^(//' -e 's/)$//' -e 's/^ //'
+}
+
+check_package_list() {
+	local f="$1" body
+	assert_empty "$(grep -vnE '^;;|^\([a-z0-9][a-z0-9+.-]*$|^ [a-z0-9][a-z0-9+.-]*\)?$|^\(\)$|^\([a-z0-9][a-z0-9+.-]*\)$' "$f" || true)" \
+		"$f: every line is a header comment or one package name in canonical form" || return 1
+	assert_empty "$(grep -nE '^(<<<<<<<|=======|>>>>>>>)' "$f" || true)" \
+		"$f: no git conflict markers" || return 1
+	body=$(list_body "$f")
+	assert_empty "$(LC_ALL=C sort -c <<<"$body" 2>&1 || true)" \
+		"$f: names are sorted (the writer sorts; unsorted means a hand edit)" || return 1
+	assert_empty "$(LC_ALL=C sort <<<"$body" | uniq -d)" "$f: no duplicate names"
+}
+
+test_shared_package_list() {
+	assert_not_empty "$(ls_files -- emacs/packages.el)" "emacs/packages.el is tracked" || return 1
+	assert_not_empty "$(list_body emacs/packages.el | grep -x magit || true)" \
+		"positive control: the shared list names magit" || return 1
+	check_package_list emacs/packages.el
+}
+
+test_host_package_lists() {
+	local f rc=0 stray
+	stray=$(ls_files | grep -E '(^|/)packages-local\.el$' | grep -vE '^host/[^/]+/emacs/packages-local\.el$' || true)
+	assert_empty "$stray" "packages-local.el is only tracked as host/<host>/emacs/packages-local.el" || return 1
+	while IFS= read -r f; do
+		[[ -n "$f" ]] || continue
+		check_package_list "$f" || rc=1
+	done < <(ls_files -- 'host/*/emacs/packages-local.el')
+	return $rc
+}
+
+test_lists_not_customized() {
 	assert_not_empty "$(grep -E '^\(setq custom-file ' emacs/init.el || true)" \
 		"emacs/init.el sends Customize to a local custom-file" || return 1
-	# Code only: init.el's comments explain this very rule by name.
-	assert_empty "$(grep -nE '^[^;]*package-selected-packages' emacs/init.el || true)" \
-		"emacs/init.el has no package-selected-packages (package.el rewrites it on every install)"
+	assert_not_empty "$(grep -E "^\(advice-add 'package--save-selected-packages-1 :override" emacs/lisp/my-packages.el || true)" \
+		"my-packages.el redirects package.el's list saving to the list files" || return 1
+	# The old drift source: the list persisted as a Customize form.
+	assert_empty "$(grep -rnE "'\(package-selected-packages" emacs || true)" \
+		"no Customize-style package-selected-packages anywhere under emacs/" || return 1
+	assert_empty "$(grep -nE '^\(setq use-package-always-ensure t' emacs/init.el || true)" \
+		"use-package does not install (the lists decide; an :ensure would bypass them)"
+}
+
+test_init_syncs_packages() {
+	assert_not_empty "$(grep -F '"$PWD/bin/emacs-bootstrap"' init || true)" \
+		"./init runs emacs-bootstrap" || return 1
+	assert_not_empty "$(grep -F 'host/$host/emacs/packages-local.el' init || true)" \
+		"./init links the per-host package list"
 }
 
 test_archives_are_https() {
@@ -133,7 +180,10 @@ main_test() {
 	run_test "Invariants" test_no_generated_elisp_tracked_anywhere || rc=1
 	run_test "Invariants" test_no_symlinks_under_emacs || rc=1
 	run_test "Install" test_init_does_not_link_emacs_wholesale || rc=1
-	run_test "Packages" test_packages_are_declared_not_customized || rc=1
+	run_test "Packages" test_shared_package_list || rc=1
+	run_test "Packages" test_host_package_lists || rc=1
+	run_test "Packages" test_lists_not_customized || rc=1
+	run_test "Install" test_init_syncs_packages || rc=1
 	run_test "Packages" test_archives_are_https || rc=1
 
 	print_test_summary || rc=1

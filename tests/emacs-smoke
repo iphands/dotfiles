@@ -1,15 +1,24 @@
 #!/bin/bash
-# End-to-end "new machine" check for the Emacs setup. Needs a real Emacs 30+
-# and the network; tests/emacs-test is the no-Emacs, git-only guard.
+# End-to-end check of the Emacs package workflow. Needs a real Emacs 30+ and
+# the network; tests/emacs-test is the no-Emacs, git-only guard.
 #
-#   tests/emacs-smoke                    fresh temp HOME, full download (~1-2 min)
-#   KEEP_HOME=/some/dir tests/emacs-smoke  reuse/keep that HOME (fast reruns)
+#   tests/emacs-smoke                      fresh temp dirs, full download (~1 min)
+#   KEEP_DIR=/some/dir tests/emacs-smoke   reuse/keep that dir (fast reruns)
 #   EMACS=/usr/bin/emacs-31 tests/emacs-smoke
 #
-# Steps: link emacs/* into $HOME/.emacs.d the way ./init does, run
-# bin/emacs-bootstrap from nothing (an empty gnupg home included), run it again
-# (must not install anything), then load init.el and visit sample files,
-# checking major modes and the per-mode C-x a bindings.
+# emacs/ is COPIED into a fake repo first, so nothing here can write to the
+# real checkout (list-packages writes emacs/packages.el by design).
+#
+#   1. sync from nothing installs every listed package; a rerun does nothing
+#   2. sample files open in the right major mode, C-x a is right per mode
+#   3. the list-packages flow: install -> line in shared list; make-local ->
+#      moves to host/<host>/emacs/packages-local.el (through a dangling link,
+#      as ./init sets it up); delete -> line gone
+#   4. "another machine pulled": a package added to / dropped from the shared
+#      list gets installed / removed by the next sync
+#   5. conflict markers in the list: sync fails and changes nothing
+#   6. a config block whose package is in no list: skipped without errors,
+#      warned about, and my/package-trim-config deletes exactly that block
 #
 # Canonical clone: ~/prog/dotfiles
 
@@ -28,45 +37,68 @@ if ! "$EMACS_BIN" --batch --eval '(kill-emacs (if (>= emacs-major-version 30) 0 
 	exit 2
 fi
 
-if [[ -n "${KEEP_HOME:-}" ]]; then
-	SMOKE_HOME="$KEEP_HOME"
-	mkdir -p "$SMOKE_HOME"
+if [[ -n "${KEEP_DIR:-}" ]]; then
+	SMOKE="$KEEP_DIR"
+	mkdir -p "$SMOKE"
 else
-	SMOKE_HOME="$(mktemp -d)"
-	trap 'rm -rf "$SMOKE_HOME"' EXIT
+	SMOKE="$(mktemp -d)"
+	trap 'rm -rf "$SMOKE"' EXIT
 fi
-SMOKE_LOG="$SMOKE_HOME/smoke-logs"
-mkdir -p "$SMOKE_HOME/.emacs.d" "$SMOKE_LOG"
+FAKE="$SMOKE/repo"           # stands in for the dotfiles checkout
+H="$SMOKE/home"              # stands in for $HOME
+LOG="$SMOKE/logs"
+SHARED="$FAKE/emacs/packages.el"
+HOSTLIST="$FAKE/host/smokehost/emacs/packages-local.el"
+
+# Fresh copy of the authored config every run; packages in $H persist with KEEP_DIR.
+rm -rf "$FAKE" "$LOG"
+mkdir -p "$FAKE" "$H/.emacs.d" "$LOG"
+cp -a "$PROJECT_ROOT/emacs" "$FAKE/emacs"
 for f in early-init.el init.el lisp; do
-	[[ -e "$PROJECT_ROOT/emacs/$f" ]] && ln -sfn "$PROJECT_ROOT/emacs/$f" "$SMOKE_HOME/.emacs.d/$f"
+	ln -sfn "$FAKE/emacs/$f" "$H/.emacs.d/$f"
 done
+# What ./init does for a known host: a link that dangles until first use.
+rm -f "$H/.emacs.d/packages-local.el"
+ln -s "$HOSTLIST" "$H/.emacs.d/packages-local.el"
 
 bootstrap() {
-	HOME="$SMOKE_HOME" EMACS="$EMACS_BIN" "$PROJECT_ROOT/bin/emacs-bootstrap" "$@"
+	HOME="$H" EMACS="$EMACS_BIN" "$PROJECT_ROOT/bin/emacs-bootstrap" "$@"
 }
 
-test_bootstrap_installs_everything() {
+# Run elisp after a normal init load (after-init has run, as in a real session).
+emacs_eval() {
+	HOME="$H" "$EMACS_BIN" --batch --init-directory="$H/.emacs.d" \
+		-l "$H/.emacs.d/early-init.el" \
+		--eval '(progn (package-initialize) (load (locate-user-emacs-file "init.el") nil t))' \
+		--eval "$1"
+}
+
+installed_count() {
+	find "$H/.emacs.d/elpa" -mindepth 1 -maxdepth 1 -type d ! -name archives ! -name gnupg | wc -l
+}
+
+test_sync_installs_everything() {
 	local rc=0
-	bootstrap >"$SMOKE_LOG/first.log" 2>&1 || rc=$?
-	assert_success "$rc" "emacs-bootstrap exits 0 (log: $SMOKE_LOG/first.log)" || {
-		grep -E 'emacs-bootstrap|Failed to install' "$SMOKE_LOG/first.log" | sed 's/^/    /'
+	bootstrap >"$LOG/sync1.log" 2>&1 || rc=$?
+	assert_success "$rc" "sync from nothing exits 0 (log: $LOG/sync1.log)" || {
+		grep 'emacs-bootstrap' "$LOG/sync1.log" | sed 's/^/    /'
 		return 1
 	}
-	assert_contains "$(cat "$SMOKE_LOG/first.log")" "emacs-bootstrap: OK, all" \
-		"emacs-bootstrap reports every declared package installed"
+	assert_contains "$(cat "$LOG/sync1.log")" "emacs-bootstrap: OK" "sync reports OK"
 }
 
-test_package_keyring_was_imported() {
-	assert_file_exists "$SMOKE_HOME/.emacs.d/elpa/gnupg/pubring.kbx" \
-		"GNU ELPA keyring imported into the fresh gnupg home (signed archives verified in batch)"
+test_keyring_imported() {
+	assert_file_exists "$H/.emacs.d/elpa/gnupg/pubring.kbx" \
+		"GNU ELPA keyring imported into the fresh gnupg home"
 }
 
-test_bootstrap_is_idempotent() {
-	local rc=0 log
-	bootstrap >"$SMOKE_LOG/second.log" 2>&1 || rc=$?
-	assert_success "$rc" "second emacs-bootstrap exits 0" || return 1
-	log=$(grep -E "Package .* installed|Contacting host|Importing package-keyring" "$SMOKE_LOG/second.log" || true)
-	assert_empty "$log" "second run installs nothing and touches no network"
+test_sync_is_idempotent() {
+	local rc=0
+	bootstrap >"$LOG/sync2.log" 2>&1 || rc=$?
+	assert_success "$rc" "second sync exits 0" || return 1
+	assert_contains "$(cat "$LOG/sync2.log")" "0 to install" "second sync has nothing to install" || return 1
+	assert_empty "$(grep -E 'Contacting host|Package .* installed|Package .* deleted' "$LOG/sync2.log" || true)" \
+		"second sync touches no network and changes nothing"
 }
 
 # file<TAB>expected major-mode<TAB>expected local C-x a ("-" = don't check)
@@ -96,24 +128,22 @@ CMakeLists.txt	cmake-mode	-
 EOF
 
 test_modes_and_bindings() {
-	local files="$SMOKE_HOME/files" out name mode key got
+	local files="$SMOKE/files" out name mode key got rc=0
 	rm -rf "$files" && mkdir -p "$files"
 	while IFS=$'\t' read -r name _ _; do : >"$files/$name"; done <<<"$EXPECT"
 
-	out=$(HOME="$SMOKE_HOME" "$EMACS_BIN" --batch --init-directory="$SMOKE_HOME/.emacs.d" \
-		-l "$SMOKE_HOME/.emacs.d/early-init.el" \
-		--eval '(progn (package-initialize) (load (locate-user-emacs-file "init.el") nil t))' \
-		--eval "(dolist (f (directory-files \"$files\" t \"^[^.]\"))
+	out=$(emacs_eval "(dolist (f (directory-files \"$files\" t \"^[^.]\"))
 		  (condition-case e
 		      (with-current-buffer (find-file-noselect f)
 		        (let ((b (local-key-binding (kbd \"C-x a\"))))
 		          (princ (format \"RESULT\t%s\t%s\t%s\n\" (file-name-nondirectory f) major-mode
 		                         (if (and b (symbolp b)) b \"-\")))))
 		    (error (princ (format \"RESULT\t%s\tERROR %S\t-\n\" (file-name-nondirectory f) e)))))" \
-		2>"$SMOKE_LOG/modes.err" | grep '^RESULT' || true)
+		2>"$LOG/modes.err" | grep '^RESULT' || true)
 
-	assert_not_empty "$out" "positive control: init loaded and files were visited (stderr: $SMOKE_LOG/modes.err)" || return 1
-	local rc=0
+	assert_not_empty "$out" "positive control: init loaded and files were visited (stderr: $LOG/modes.err)" || return 1
+	assert_empty "$(grep 'my-packages' "$LOG/modes.err" || true)" \
+		"a synced machine has no skipped config blocks" || rc=1
 	while IFS=$'\t' read -r name mode key; do
 		got=$(awk -F'\t' -v n="$name" '$2 == n {print $3}' <<<"$out")
 		assert_equals "$got" "$mode" "$name opens in $mode" || rc=1
@@ -125,24 +155,133 @@ test_modes_and_bindings() {
 	return $rc
 }
 
-test_nothing_written_into_the_repo() {
-	assert_empty "$(git status --porcelain --untracked-files=all -- emacs bin)" \
-		"nothing was written into emacs/ or bin/ (custom.el, elpa, .elc all stay in ~/.emacs.d)"
+test_list_packages_flow() {
+	local rc=0
+	# i x
+	emacs_eval "(package-install 'rainbow-delimiters)" >"$LOG/ui-install.log" 2>&1 || rc=$?
+	assert_success "$rc" "package-install in a session works (log: $LOG/ui-install.log)" || return 1
+	assert_not_empty "$(grep -x ' rainbow-delimiters' "$SHARED" || true)" \
+		"installing adds the package to the SHARED list" || return 1
+	assert_file_not_exists "$HOSTLIST" "...and does not create a host list" || return 1
+
+	# M-x my/package-make-local
+	emacs_eval "(my/package-make-local 'rainbow-delimiters)" >"$LOG/ui-local.log" 2>&1 || true
+	assert_file_exists "$HOSTLIST" \
+		"make-local creates host/<host>/emacs/packages-local.el through the dangling link" || return 1
+	assert_contains "$(cat "$HOSTLIST")" "(rainbow-delimiters)" "...containing the package" || return 1
+	assert_empty "$(grep -x ' rainbow-delimiters' "$SHARED" || true)" \
+		"...and removes it from the shared list" || return 1
+
+	# D x
+	emacs_eval "(package-delete (cadr (assq 'rainbow-delimiters package-alist)))" >"$LOG/ui-delete.log" 2>&1 || true
+	assert_empty "$(grep 'rainbow-delimiters' "$HOSTLIST" "$SHARED" || true)" \
+		"deleting removes the package from whichever list had it" || return 1
+	# Byte-for-byte, header included: the writer's canonical form IS the seed.
+	assert_equals "$(diff "$SHARED" "$PROJECT_ROOT/emacs/packages.el" && echo same)" "same" \
+		"the shared list is back to exactly what it was, byte for byte"
+}
+
+# Simulate a pull: another machine added rainbow-delimiters and dropped yafolding.
+test_sync_follows_the_list() {
+	local rc=0 out
+	sed -i 's/^ yafolding$/ rainbow-delimiters/' "$SHARED"
+	out=$(bootstrap --dry-run 2>&1 || true)
+	assert_contains "$out" "would install: rainbow-delimiters" "dry-run plans the install" || return 1
+	assert_contains "$out" "yafolding" "dry-run plans the removal" || return 1
+	bootstrap >"$LOG/sync3.log" 2>&1 || rc=$?
+	assert_success "$rc" "sync after the 'pull' exits 0 (log: $LOG/sync3.log)" || return 1
+	assert_not_empty "$(ls -d "$H"/.emacs.d/elpa/rainbow-delimiters-* 2>/dev/null || true)" \
+		"newly listed package got installed" || return 1
+	assert_empty "$(ls -d "$H"/.emacs.d/elpa/yafolding-* 2>/dev/null || true)" \
+		"dropped package got removed" || return 1
+	# Put the real list back and re-sync so a KEEP_DIR rerun starts clean.
+	cp "$PROJECT_ROOT/emacs/packages.el" "$SHARED"
+	bootstrap >"$LOG/sync4.log" 2>&1 || true
+}
+
+test_conflict_markers_change_nothing() {
+	local rc=0 before after
+	before=$(installed_count)
+	printf '<<<<<<< HEAD\n zzz\n=======\n yyy\n>>>>>>> other\n' >>"$SHARED"
+	bootstrap >"$LOG/conflict.log" 2>&1 || rc=$?
+	after=$(installed_count)
+	cp "$PROJECT_ROOT/emacs/packages.el" "$SHARED"
+	assert_failure "$rc" "sync refuses a list with conflict markers" || return 1
+	assert_contains "$(cat "$LOG/conflict.log")" "conflict markers" "...and says why" || return 1
+	assert_equals "$after" "$before" "...and installed/removed nothing"
+}
+
+test_orphan_block_is_skipped_and_trimmed() {
+	local out rc init="$FAKE/emacs/init.el"
+	cp "$init" "$SMOKE/init.before"
+	# One orphan mid-file with its comment, one at the very end.
+	python3 -I - "$init" <<'EOF'
+import sys
+p = sys.argv[1]; s = open(p).read()
+mid = ";; --- checking / lsp ---\n"
+assert mid in s
+s = s.replace(mid, ";; zz comment that belongs to the block\n(use-package zz-gone-mode\n  :mode \"\\\\.zzz\\\\'\")\n\n" + mid, 1)
+s += "\n(use-package zz-also-gone\n  :hook (prog-mode . zz-also-gone-mode))\n"
+open(p, "w").write(s)
+EOF
+	cp "$init" "$SMOKE/init.orphaned"
+	: >"$SMOKE/a.zzz"
+	trim() { # $1 = t or nil: the answer to every y-or-n-p
+		timeout 120 env HOME="$H" "$EMACS_BIN" --batch --init-directory="$H/.emacs.d" \
+			-l "$H/.emacs.d/early-init.el" \
+			--eval '(progn (package-initialize) (load (locate-user-emacs-file "init.el") nil t))' \
+			--eval "(progn (my/package-report)
+			  (with-current-buffer (find-file-noselect \"$SMOKE/a.zzz\")
+			    (princ (format \"MODE %s\n\" major-mode)))
+			  (cl-letf (((symbol-function 'y-or-n-p) (lambda (&rest _) $1)))
+			    (my/package-trim-config)))" 2>&1
+	}
+
+	rc=0; out=$(trim nil) || rc=$?
+	assert_success "$rc" "answering n finishes (no infinite loop) and exits 0" || return 1
+	assert_contains "$out" "neither list (skipped): zz-gone-mode zz-also-gone" \
+		"startup warns about both orphaned blocks" || return 1
+	assert_contains "$out" "MODE fundamental-mode" "the orphaned :mode does not break opening files" || return 1
+	assert_equals "$(diff "$SMOKE/init.orphaned" "$init" && echo same)" "same" \
+		"answering n keeps init.el unchanged" || return 1
+
+	rc=0; out=$(trim t) || rc=$?
+	assert_success "$rc" "answering y exits 0" || return 1
+	assert_contains "$out" "Deleted 2 block(s)" "trim reports both deletions" || return 1
+	assert_equals "$(diff "$SMOKE/init.before" "$init" && echo same)" "same" \
+		"trim deleted exactly those blocks and their comment, spacing restored byte for byte"
+}
+
+checkout_state() {
+	git status --porcelain --untracked-files=all -- emacs bin host
+	git ls-files -z --others --modified -- emacs bin host | xargs -0r sha1sum
+}
+CHECKOUT_BEFORE="$(checkout_state)"
+
+test_real_checkout_untouched() {
+	# Compared with a snapshot from the start, so it also holds while you have
+	# uncommitted edits of your own.
+	assert_equals "$(checkout_state)" "$CHECKOUT_BEFORE" \
+		"nothing was written into the real checkout's emacs/, bin/ or host/"
 }
 
 main_test() {
 	local rc=0
 
 	echo "========================================"
-	echo "Emacs smoke test (HOME=$SMOKE_HOME)"
+	echo "Emacs smoke test ($SMOKE)"
 	echo "========================================"
 
 	# A failed install makes every later step meaningless, so stop there.
-	run_test "Bootstrap" test_bootstrap_installs_everything || { print_test_summary; return 1; }
-	run_test "Bootstrap" test_package_keyring_was_imported || rc=1
-	run_test "Bootstrap" test_bootstrap_is_idempotent || rc=1
+	run_test "Sync" test_sync_installs_everything || { print_test_summary; return 1; }
+	run_test "Sync" test_keyring_imported || rc=1
+	run_test "Sync" test_sync_is_idempotent || rc=1
 	run_test "Config" test_modes_and_bindings || rc=1
-	run_test "Hygiene" test_nothing_written_into_the_repo || rc=1
+	run_test "list-packages" test_list_packages_flow || rc=1
+	run_test "list-packages" test_sync_follows_the_list || rc=1
+	run_test "Safety" test_conflict_markers_change_nothing || rc=1
+	run_test "Orphans" test_orphan_block_is_skipped_and_trimmed || rc=1
+	run_test "Hygiene" test_real_checkout_untouched || rc=1
 
 	print_test_summary || rc=1
 	return $rc
