@@ -117,8 +117,45 @@ install_emacs() {
     ln -sfn "$PWD/emacs/$var" "$d/$var"
   done
 
-  if [[ ! -d "$d/elpa" ]]; then
-    echo "-- no packages yet: run emacs-bootstrap"
+  # This machine's extra packages, tracked per host. The link may dangle until
+  # the first M-x my/package-make-local creates the file. Unknown host: it
+  # stays a plain local file.
+  if [[ "$host" != "unknown" ]]; then
+    local mine="$PWD/host/$host/emacs/packages-local.el"
+    local link="$d/packages-local.el"
+    if [[ -e "$link" && ! -L "$link" ]]; then
+      if [[ -e "$mine" ]]; then
+        echo "-- WARNING: both $link and $mine exist; keeping the tracked one, old local list saved to $current/"
+        mv "$link" "$current/"
+      else
+        echo "-- moving local package list into host/$host/emacs/ (commit it)"
+        mkdir -p "${mine%/*}"
+        mv "$link" "$mine"
+      fi
+    fi
+    echo "-- installing ~/.emacs.d/packages-local.el -> host/$host/emacs/packages-local.el"
+    ln -sfn "$mine" "$link"
+  fi
+
+  # Sync packages with the lists (install new, remove dropped). Never fatal:
+  # init must still finish offline or on a host without Emacs.
+  if [[ "${EMACS_BOOTSTRAP:-1}" == "0" ]]; then
+    echo "-- EMACS_BOOTSTRAP=0: skipping package sync"
+  elif [[ "$EUID" -eq 0 ]]; then
+    echo "-- running as root: skipping package sync"
+  elif ! command -v emacs >/dev/null 2>&1; then
+    echo "-- no emacs binary: skipping package sync"
+  elif ! emacs --batch --eval '(kill-emacs (if (>= emacs-major-version 30) 0 1))' 2>/dev/null; then
+    echo "-- emacs is older than 30: skipping package sync"
+  else
+    local log="$current/emacs-bootstrap.log" rc=0
+    echo "-- syncing packages (emacs-bootstrap; a fresh machine downloads ~60, about a minute)"
+    "$PWD/bin/emacs-bootstrap" >"$log" 2>&1 || rc=$?
+    grep -E '^emacs-bootstrap:|^(Warning|Error) \(my-packages\)' "$log" | sed 's/^/   /' || true
+    if [[ "$rc" -ne 0 ]]; then
+      echo "-- WARNING: emacs-bootstrap failed (offline? merge conflict in a package list?)"
+      echo "--          full log: $log - fix, then rerun ./init or emacs-bootstrap"
+    fi
   fi
 }
 
