@@ -3,8 +3,8 @@
 # This directory is a git worktree that Emacs ALSO WRITES TO: history files,
 # completion caches, byte-compiled code, downloaded language servers. The old
 # scheme tried to name each generated file in the repo's root .gitignore and
-# lost - 915 of 924 tracked files here are vendored elpa, and runtime state
-# kept slipping in. So the rule is inverted:
+# lost - 915 of 924 tracked files here WERE vendored elpa when this rule was
+# written, and runtime state kept slipping in. So the rule is inverted:
 #
 #     authored files are re-included below; anything not listed is junk by design.
 #
@@ -42,15 +42,20 @@
 # Authored elisp. Re-including the directory is what lets git descend into it.
 !lisp/
 
-# Re-include the directory, then exclude its contents, then re-include the one
-# file worth keeping. Collapsing `transient/*` + `!transient/history.el` into
-# `!transient/` re-admits transient/session-* - same parent-directory rule as
-# `/*` above, one level down.
-!transient/
-transient/*
-!transient/history.el
+# transient/ is generated state: it remembers which arguments you passed the
+# last time you ran a suffix command (history.el was 41 bytes: magit-blame's -w),
+# recoverable with one keypress. An earlier revision of this file carried
+#     !transient/  +  transient/*  +  !transient/history.el
+# solely to keep that one file - which meant tracking history.el while silently
+# ignoring its siblings level.el and manifest.el, a split nobody could justify
+# six months later. `/*` covers the whole directory now, so the dance is gone.
+# If `magit-blame -w` should be permanent, that is a setting in .emacs, not a
+# tracked cache. A fresh clone simply has no transient/ dir until one is needed.
 
-# elpa/ is a depth-1 entry, so `/*` ALREADY matches it. It stays tracked pending
-# `git rm -r --cached .emacs.d/elpa`; gitignore never untracks, so until then
-# edits to elpa files still show in `git status` while NEW files inside it do
-# not. This file is not incomplete - adding a rule here does nothing on its own.
+# elpa/ is a depth-1 entry, so `/*` ALREADY matches all of it - including
+# archives/ and gnupg/, which were untracked ahead of the rest because they are
+# a downloaded package index and a live GnuPG home, not packages. No rule here
+# does any work on its own: gitignore never untracks, so the `git rm -r --cached`
+# was the change and this file's only job is to keep those paths from coming
+# back. The package trees themselves are still tracked pending
+# bin/emacs-bootstrap; `git tag elpa-fork-final` holds the last full copy.

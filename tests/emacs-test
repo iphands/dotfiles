@@ -76,9 +76,49 @@ test_tracked_non_elpa_count_is_bounded() {
 	local n verdict
 	n=$(tracked_emacs_d | grep -cv '^\.emacs\.d/elpa/' || true)
 	verdict=1
-	(( n <= 6 )) && verdict=0
+	# Deliberately loose. early-init.el, lisp/packages.el and lisp/bootstrap.el
+	# are all planned additions, and an exact count breaks on every legitimate
+	# file - which is the mechanism by which a guard gets neutered at 11pm to
+	# make the suite green. The load-bearing checks are the pattern denylist and
+	# test_generated_caches_stay_untracked below; this is only a bulk-addition
+	# smoke detector ("did a directory just land in here").
+	(( n <= 12 )) && verdict=0
 	assert_equals "$verdict" "0" \
-		"tracked non-elpa files under .emacs.d are few (got $n, want <= 6)"
+		"tracked non-elpa files under .emacs.d are few (got $n, want <= 12)"
+}
+
+# Cache and keystore paths, stated explicitly rather than inferred from the
+# derived invariant. `/*` already ignores them, so a re-add would also trip
+# test_no_tracked_file_matches_an_ignore_rule - but a keystore-shaped path
+# deserves a failure message that names the path, not a general invariant.
+test_generated_caches_stay_untracked() {
+	local offenders
+	offenders=$(git ls-files -- .emacs.d/elpa/archives .emacs.d/elpa/gnupg \
+		.emacs.d/transient)
+	assert_empty "$offenders" \
+		"elpa/archives (downloaded index), elpa/gnupg (GnuPG home) and transient/ (switch history) are not tracked (offenders:${offenders:+ $offenders})"
+}
+
+# Extension denylist instead of a filename allowlist: scales to any future
+# authored file and still catches the exact classes that have been a problem
+# here. Byte-compiled code is per-Emacs-version, .beam/.tar are vendored
+# third-party payloads, and the three trailing paths are regenerable state.
+test_no_generated_artifact_patterns_tracked() {
+	local offenders
+	offenders=$(tracked_emacs_d | grep -E \
+		'\.elc$|\.eln$|\.beam$|\.tar$|\.tar\.gz$|^\.emacs\.d/elpa/archives/|^\.emacs\.d/elpa/gnupg/|^\.emacs\.d/transient/' \
+		|| true)
+	assert_empty "$offenders" \
+		"no byte-compiled / vendored-binary / cache-shaped path is tracked (offenders:$offenders)"
+}
+
+# This directory has already had a committed lock file symlink in it once. The
+# only symlink that belongs here is the .emacs -> ../.emacs init fallback.
+test_only_the_init_fallback_is_a_symlink() {
+	local links
+	links=$(git ls-files -s -- .emacs.d | awk '$1 == "120000" { print $4 }' | sort)
+	assert_equals "$links" ".emacs.d/.emacs" \
+		"the only tracked symlink under .emacs.d is .emacs (got: ${links:-none})"
 }
 
 test_no_runtime_state_tracked() {
@@ -114,6 +154,14 @@ test_generated_paths_are_ignored() {
 		.emacs.d/network-security.data '.emacs.d/.#recentf' \
 		.emacs.d/url/cookies .emacs.d/games/snake-scores \
 		.emacs.d/eshell/history \
+		.emacs.d/transient/history.el .emacs.d/transient/level.el \
+		.emacs.d/transient/manifest.el \
+		.emacs.d/elpa/archives/gnu/archive-contents \
+		.emacs.d/elpa/archives/melpa/archive-contents \
+		.emacs.d/elpa/gnupg/pubring.gpg .emacs.d/elpa/gnupg/trustdb.gpg \
+		.emacs.d/elpa/gnupg/tofu.db .emacs.d/elpa/gnupg/pubring.kbx \
+		.emacs.d/elpa/gnupg/random_seed \
+		.emacs.d/elpa/gnupg/S.gpg-agent \
 		.emacs.d/.cache/lsp/json-languageserver/server \
 		.emacs.d/elpa/lsp-mode-20260124.1451/lsp-mode.el; do
 		rc=0
@@ -127,6 +175,9 @@ test_generated_paths_are_ignored() {
 test_ignore_rules_come_from_the_nested_file() {
 	local p src
 	for p in .emacs.d/recentf .emacs.d/ido.last .emacs.d/ac-comphist.dat \
+		.emacs.d/transient/history.el \
+		.emacs.d/elpa/archives/gnu/archive-contents \
+		.emacs.d/elpa/gnupg/pubring.gpg \
 		.emacs.d/elpa/lsp-mode-20260124.1451/lsp-mode.el \
 		.emacs.d/.cache/lsp/foo; do
 		src=$(git check-ignore -v --no-index -- "$p" || true)
@@ -139,8 +190,7 @@ test_authored_paths_are_not_ignored() {
 	local p rc
 	for p in .emacs.d/.gitignore .emacs.d/.emacs .emacs.d/early-init.el \
 		.emacs.d/.dir-locals.el .emacs.d/lisp/packages.el \
-		.emacs.d/lisp/bootstrap.el .emacs.d/lisp/hosts/cosmo.el \
-		.emacs.d/transient/history.el; do
+		.emacs.d/lisp/bootstrap.el .emacs.d/lisp/hosts/cosmo.el; do
 		rc=0
 		git check-ignore -q --no-index -- "$p" || rc=$?
 		assert_equals "$rc" "1" "trackable: $p"
@@ -180,6 +230,9 @@ main_test() {
 	run_test "Positive controls" test_positive_control_file_tracked || rc=1
 	run_test "Invariants" test_no_tracked_file_matches_an_ignore_rule || rc=1
 	run_test "Invariants" test_tracked_non_elpa_count_is_bounded || rc=1
+	run_test "Invariants" test_generated_caches_stay_untracked || rc=1
+	run_test "Invariants" test_no_generated_artifact_patterns_tracked || rc=1
+	run_test "Invariants" test_only_the_init_fallback_is_a_symlink || rc=1
 	run_test "Invariants" test_no_runtime_state_tracked || rc=1
 	run_test "Invariants" test_no_bytecode_tracked || rc=1
 	run_test "Ignore semantics" test_generated_paths_are_ignored || rc=1
@@ -192,8 +245,12 @@ main_test() {
 
 	# Printed, not asserted: an assertion here would encode the defect as a pass
 	# condition and go red the day elpa is finally untracked, which is how
-	# guards get deleted. Delete this line when the count hits 0.
-	echo "status: elpa/ still tracked ($(tracked_emacs_d | grep -c '^\.emacs\.d/elpa/') files) - known wart, pending bin/emacs-bootstrap"
+	# guards get deleted. This is a migration progress bar: watch it reach 0,
+	# then assert 0 and delete these two lines.
+	local trees
+	trees=$(tracked_emacs_d | grep -c '^\.emacs\.d/elpa/' || true)
+	echo "status: vendored elpa package TREES still tracked: $trees files - known wart, pending bin/emacs-bootstrap"
+	echo "status: archives/ (index cache) and gnupg/ (GnuPG home) are already untracked; recoverable from tag elpa-fork-final"
 
 	return $rc
 }
