@@ -1,0 +1,56 @@
+# Tier boundary for ~/.emacs.d
+#
+# This directory is a git worktree that Emacs ALSO WRITES TO: history files,
+# completion caches, byte-compiled code, downloaded language servers. The old
+# scheme tried to name each generated file in the repo's root .gitignore and
+# lost - 915 of 924 tracked files here are vendored elpa, and runtime state
+# kept slipping in. So the rule is inverted:
+#
+#     authored files are re-included below; anything not listed is junk by design.
+#
+# The pattern MUST stay `/*` (anchored, so it matches depth-1 entries only).
+# A bare `*` has no separator, and an unanchored pattern matches at EVERY depth
+# - then `!lisp/` re-includes only the directory and every .el inside it is
+# silently ignored. Verified: with bare `*`, `git check-ignore -q lisp/packages.el`
+# reports IGNORED. Do not change `/*` to `*`, `*/` or `**` either.
+#
+# To version a new authored file here: add a `!` line below, then run
+# tests/emacs-test. Add the `!` in the same commit that adds the file - no
+# speculative entries (notably no `!init.el`: package.el and customize can
+# both CREATE an init file, so a speculative entry is a permanent hole).
+#
+# Canonical clone: ~/prog/dotfiles. Other hosts may still track the files this
+# one no longer does.
+/*
+
+# .gitignore MUST be re-included: an ignore file works whether or not it is
+# tracked, so if `/*` swallowed this one, these rules would keep working on the
+# host that wrote them and silently not exist anywhere else.
+!.gitignore
+
+# Symlink to ../.emacs, kept as the find-user-init-file fallback. It is inert
+# while init always symlinks ~/.emacs, and costs nothing. This was argued and
+# kept deliberately - do not delete the line as "unused".
+!.emacs
+
+# Re-included before the draft lands, so the day early-init.el is added it is
+# not silently ignored.
+!early-init.el
+
+!.dir-locals.el
+
+# Authored elisp. Re-including the directory is what lets git descend into it.
+!lisp/
+
+# Re-include the directory, then exclude its contents, then re-include the one
+# file worth keeping. Collapsing `transient/*` + `!transient/history.el` into
+# `!transient/` re-admits transient/session-* - same parent-directory rule as
+# `/*` above, one level down.
+!transient/
+transient/*
+!transient/history.el
+
+# elpa/ is a depth-1 entry, so `/*` ALREADY matches it. It stays tracked pending
+# `git rm -r --cached .emacs.d/elpa`; gitignore never untracks, so until then
+# edits to elpa files still show in `git status` while NEW files inside it do
+# not. This file is not incomplete - adding a rule here does nothing on its own.
