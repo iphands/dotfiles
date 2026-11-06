@@ -68,8 +68,8 @@ test_dot_emacs_d_is_ignored_by_root_rule() {
 
 test_emacs_dir_is_elisp_only() {
 	local offenders
-	offenders=$(ls_files -- emacs | grep -v '\.el$' || true)
-	assert_empty "$offenders" "everything tracked under emacs/ is a .el file"
+	offenders=$(ls_files -- emacs | grep -v '\.el$' | grep -vx 'emacs/README\.md' || true)
+	assert_empty "$offenders" "everything tracked under emacs/ is a .el file (or emacs/README.md)"
 }
 
 test_no_generated_elisp_tracked_anywhere() {
