@@ -77,7 +77,16 @@ fi
 KERNEL="${CANDIDATES[0]}"
 SUFFIX="${KERNEL#/boot/vmlinuz-}" # builds /boot paths
 RELEASE="${SUFFIX#linux-}"        # uname -r form; see kernel-helper fix_rename()
-INITRD="/boot/initrd.img-${SUFFIX}"
+
+# Debian names it initrd.img-<ver>; Fedora/dracut names it initramfs-<ver>.img.
+# Gentoo hosts here boot monolithic with no initramfs at all.
+INITRD=""
+for f in "/boot/initrd.img-${SUFFIX}" "/boot/initramfs-${SUFFIX}.img"; do
+	if [[ -f "$f" ]]; then
+		INITRD="$f"
+		break
+	fi
+done
 
 ## Preflight -- everything that can fail, before anything is touched
 # (--dry stays usable as a normal user, so the root check is the one exception)
@@ -92,12 +101,22 @@ if [[ ! -d "/lib/modules/${RELEASE}" ]]; then
 	echo "WARNING: /lib/modules/${RELEASE} missing, continuing anyway (--force)"
 fi
 
+# No initrd is fine on a monolithic host, but if OTHER kernels here have one,
+# this kernel's is missing (failed dracut/update-initramfs) and booting it
+# would panic on mounting root -- after the containers are already down.
+if [[ -z "$INITRD" ]]; then
+	OTHER_INITRDS=(/boot/initrd.img-* /boot/initramfs-*.img)
+	if ((${#OTHER_INITRDS[@]})); then
+		((FORCE)) || die "no initramfs for ${SUFFIX}, but other kernels in /boot have one (--force to override)"
+		echo "WARNING: no initramfs for ${SUFFIX}, continuing anyway (--force)"
+	fi
+fi
+
 [[ "$RELEASE" == "$(uname -r)" ]] &&
 	echo "WARNING: selected kernel is already running"
 
 KEXEC_ARGS=("$KERNEL")
-# Gentoo hosts here boot monolithic with no initramfs at all; Debian always has one.
-if [[ -f "$INITRD" ]]; then
+if [[ -n "$INITRD" ]]; then
 	KEXEC_ARGS+=(--initrd="$INITRD")
 	INITRD_DESC="$INITRD"
 else
