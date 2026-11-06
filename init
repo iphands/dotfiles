@@ -57,13 +57,76 @@ install_systemd() {
   popd
 }
 
+# ~/.emacs.d is a REAL local directory owned by Emacs (elpa/, eln-cache/,
+# history, custom.el). Only the authored files are links into emacs/ here, so
+# nothing Emacs writes can land in this worktree. Packages come from the
+# network: run emacs-bootstrap.
+install_emacs() {
+  echo
+  echo "## Emacs"
+  local d="$HOME/.emacs.d"
+
+  # Emacs reads ~/.emacs BEFORE ~/.emacs.d/init.el, so any leftover would
+  # silently shadow the new config.
+  if [[ -L ~/.emacs ]]; then
+    echo "-- removing legacy ~/.emacs symlink"
+    rm ~/.emacs
+  elif [[ -e ~/.emacs ]]; then
+    echo "-- moving ~/.emacs to $current/ (it would shadow ~/.emacs.d/init.el)"
+    mv ~/.emacs "$current/"
+  fi
+
+  # Legacy layout: ~/.emacs.d -> this repo's .emacs.d, which made the worktree
+  # Emacs's state directory.
+  if [[ -L "$d" ]]; then
+    local old
+    old="$(readlink -f "$d")"
+    if [[ "$old" != "$PWD/.emacs.d" ]]; then
+      echo "-- WARNING: ~/.emacs.d is a symlink to $old (not this repo); leaving it alone, emacs not installed"
+      return 0
+    fi
+    echo "-- replacing legacy ~/.emacs.d symlink with a real directory"
+    rm "$d"
+    mkdir -p "$d"
+    # Carry over local state (history, recentf, smex, tramp, ...). Not elpa:
+    # emacs-bootstrap rebuilds it from the declared list.
+    local f
+    shopt -s nullglob dotglob
+    for f in "$old"/*; do
+      case "${f##*/}" in
+        elpa|auto-save-list|eln-cache|.gitignore|.emacs|.#*|*~) continue ;;
+      esac
+      echo "-- carrying over ${f##*/}"
+      cp -a "$f" "$d/"
+    done
+    shopt -u nullglob dotglob
+    local legacy
+    legacy="$HOME/.emacs.d.legacy-$(date +%Y%m%d%H%M%S)"
+    echo "-- old directory (incl. elpa) kept at $legacy"
+    mv "$old" "$legacy"
+  fi
+
+  mkdir -p "$d"
+  local var
+  for var in early-init.el init.el lisp; do
+    [[ -e "$PWD/emacs/$var" ]] || continue
+    if [[ -e "$d/$var" && ! -L "$d/$var" ]]; then
+      mv "$d/$var" "$current/"
+    fi
+    echo "-- installing ~/.emacs.d/$var"
+    ln -sfn "$PWD/emacs/$var" "$d/$var"
+  done
+
+  if [[ ! -d "$d/elpa" ]]; then
+    echo "-- no packages yet: run emacs-bootstrap"
+  fi
+}
+
 echo "## Dotfiles"
 for var in ".Xdefaults"\
   ".alacritty.toml" \
   ".bash_profile" \
   ".bashrc" \
-  ".emacs" \
-  ".emacs.d" \
   ".gitconfig" \
   ".gitconfig-meta" \
   ".gitignore" \
@@ -77,6 +140,8 @@ do
   fi
   ln -sf "$PWD/${var}" ~/
 done
+
+install_emacs
 
 install_scripts bin
 
