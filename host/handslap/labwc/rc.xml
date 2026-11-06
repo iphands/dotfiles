@@ -43,6 +43,11 @@
 				<keybind key="XF86MonBrightnessUp"><action name="Execute" command="~/bin/brightness up" /></keybind>
 				<keybind key="XF86MonBrightnessDown"><action name="Execute" command="~/bin/brightness down" /></keybind>
 
+				<keybind key="XF86AudioRaiseVolume"><action name="Execute" command="wpctl set-volume -l 1.0 @DEFAULT_AUDIO_SINK@ 5%+" /></keybind>
+				<keybind key="XF86AudioLowerVolume"><action name="Execute" command="wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-" /></keybind>
+				<keybind key="XF86AudioMute"><action name="Execute" command="wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle" /></keybind>
+				<keybind key="XF86AudioMicMute"><action name="Execute" command="wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle" /></keybind>
+
 				<keybind key="C-F1"><action name="GoToDesktop" to="1" /></keybind>
 				<keybind key="C-F2"><action name="GoToDesktop" to="2" /></keybind>
 				<keybind key="C-F3"><action name="GoToDesktop" to="3" /></keybind>
